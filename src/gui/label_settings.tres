@@ -1,0 +1,9 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://ypxn7vvltx0x"]
+
+[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="1_ggb8x"]
+
+[resource]
+font = ExtResource("1_ggb8x")
+outline_size = 7
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 4

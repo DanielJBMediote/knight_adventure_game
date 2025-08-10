@@ -1,0 +1,148 @@
+[gd_scene load_steps=17 format=3 uid="uid://dl4cn6ab4jmwo"]
+
+[sub_resource type="GDScript" id="GDScript_rpjwo"]
+script/source = "extends StaticBody2D
+
+@onready var fire_b: AnimatedSprite2D = $FireB
+@onready var fire_a: AnimatedSprite2D = $FireA
+@onready var fire_c: AnimatedSprite2D = $FireC
+
+func _ready() -> void:
+	fire_a.play(\"burning\")
+	fire_b.play(\"burning\")
+	fire_c.play(\"burning\")
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m5ppp"]
+region = Rect2(33, 66, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5ami"]
+region = Rect2(66, 66, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ah2el"]
+region = Rect2(99, 66, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7w5dh"]
+region = Rect2(132, 66, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7hcav"]
+region = Rect2(165, 66, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gy5dq"]
+region = Rect2(0, 99, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vqvlx"]
+region = Rect2(33, 99, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d2p22"]
+region = Rect2(66, 99, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5apwq"]
+region = Rect2(99, 99, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_quabl"]
+region = Rect2(132, 99, 33, 33)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wtw0c"]
+region = Rect2(165, 99, 33, 33)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bqgi8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m5ppp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q5ami")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ah2el")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7w5dh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7hcav")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gy5dq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vqvlx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d2p22")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5apwq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_quabl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wtw0c")
+}],
+"loop": true,
+"name": &"burning",
+"speed": 8.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_06wd3"]
+radius = 5.0
+height = 64.0
+
+[sub_resource type="Gradient" id="Gradient_okmkc"]
+offsets = PackedFloat32Array(0, 0.203846, 0.730769)
+colors = PackedColorArray(1, 1, 1, 1, 0.679926, 0.64577, 0.328071, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ln1v4"]
+gradient = SubResource("Gradient_okmkc")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Flame" type="StaticBody2D"]
+script = SubResource("GDScript_rpjwo")
+
+[node name="FireB" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.868946, 0.540927, 5.77569e-07, 1)
+self_modulate = Color(1, 1, 1, 0.717647)
+texture_filter = 3
+position = Vector2(0.703125, -35.1875)
+scale = Vector2(1.31061, 1.86742)
+sprite_frames = SubResource("SpriteFrames_bqgi8")
+animation = &"burning"
+frame_progress = 0.0842646
+
+[node name="FireA" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.803594, 0.204572, 0, 1)
+texture_filter = 3
+position = Vector2(-2.29688, -23)
+scale = Vector2(1.9214, 1.4697)
+sprite_frames = SubResource("SpriteFrames_bqgi8")
+animation = &"burning"
+frame_progress = 0.0506031
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 3
+region_enabled = true
+region_rect = Rect2(352, 264, 64, 24)
+
+[node name="FireC" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.505882)
+texture_filter = 3
+position = Vector2(-2, -10)
+scale = Vector2(0.924242, 0.606061)
+sprite_frames = SubResource("SpriteFrames_bqgi8")
+animation = &"burning"
+frame_progress = 0.0330801
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 7)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_06wd3")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(2.93359, 2.93359)
+energy = 3.0
+texture = SubResource("GradientTexture2D_ln1v4")
+offset = Vector2(0, -23)

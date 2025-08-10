@@ -1,0 +1,432 @@
+[gd_scene load_steps=24 format=3 uid="uid://cg3d3oyimla3v"]
+
+[ext_resource type="Script" uid="uid://n6naubd41nss" path="res://src/player/ui/player_stats_ui.gd" id="1_3g0kp"]
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface_new.png" id="2_nanys"]
+[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="4_j6y77"]
+[ext_resource type="LabelSettings" uid="uid://ypxn7vvltx0x" path="res://src/gui/label_settings.tres" id="5_3n3nu"]
+[ext_resource type="Texture2D" uid="uid://cw0oacjh3btgt" path="res://assets/ui/knight_portrait.png" id="5_nanys"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3g0kp"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nanys"]
+texture = ExtResource("2_nanys")
+texture_margin_left = 16.0
+texture_margin_right = 24.0
+region_rect = Rect2(48, 336, 300, 16)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ffnjg"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j4jm5"]
+texture = ExtResource("2_nanys")
+texture_margin_left = 16.0
+texture_margin_right = 24.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(48, 416, 300, 16)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j6y77"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qd2a2"]
+texture = ExtResource("2_nanys")
+texture_margin_left = 16.0
+texture_margin_right = 24.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(48, 368, 300, 16)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ffnjg"]
+font = ExtResource("4_j6y77")
+font_size = 32
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j4jm5"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_j6y77"]
+texture = ExtResource("2_nanys")
+texture_margin_left = 16.0
+texture_margin_right = 24.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(48, 384, 300, 16)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3n3nu"]
+font = ExtResource("4_j6y77")
+font_size = 32
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qd2a2"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_x8e1k"]
+texture = ExtResource("2_nanys")
+texture_margin_left = 16.0
+texture_margin_right = 24.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(48, 400, 300, 16)
+
+[sub_resource type="Gradient" id="Gradient_nanys"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.156863, 0.156863, 0.168627, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_squ0m"]
+gradient = SubResource("Gradient_nanys")
+width = 8
+height = 112
+
+[sub_resource type="Gradient" id="Gradient_65wfi"]
+colors = PackedColorArray(0.333333, 0.831373, 0, 1, 0.546174, 0.911802, 0.882732, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_l0fju"]
+gradient = SubResource("Gradient_65wfi")
+width = 8
+height = 112
+fill_from = Vector2(0, 1)
+fill_to = Vector2(0, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3n3nu"]
+atlas = ExtResource("2_nanys")
+region = Rect2(25, 112, 144, 136)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3g0kp"]
+atlas = ExtResource("2_nanys")
+region = Rect2(181, 120, 53, 48)
+
+[node name="StatsUi" type="Control" groups=["player_stats_ui"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 2.0
+offset_right = -335.0
+offset_bottom = -280.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3g0kp")
+metadata/_edit_lock_ = true
+
+[node name="HealthControl" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.143008
+anchor_top = 0.178082
+anchor_right = 0.460805
+anchor_bottom = 0.214612
+offset_left = 24.0005
+offset_right = 24.0005
+
+[node name="TextureProgress" type="ProgressBar" parent="HealthControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_3g0kp")
+theme_override_styles/fill = SubResource("StyleBoxTexture_nanys")
+value = 100.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ProgressBarBG" type="ProgressBar" parent="HealthControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_ffnjg")
+theme_override_styles/fill = SubResource("StyleBoxTexture_j4jm5")
+value = 90.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ProgressBar" type="ProgressBar" parent="HealthControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_j6y77")
+theme_override_styles/fill = SubResource("StyleBoxTexture_qd2a2")
+value = 80.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="HealthControl"]
+visible = false
+texture_filter = 3
+layout_mode = 0
+offset_left = 4.0
+offset_top = 2.0
+offset_right = 49.75
+offset_bottom = 48.5
+scale = Vector2(0.25, 0.25)
+text = "HP"
+label_settings = SubResource("LabelSettings_ffnjg")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Points" type="Label" parent="HealthControl"]
+visible = false
+texture_filter = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.566
+anchor_top = 0.525
+anchor_right = 0.566
+anchor_bottom = 0.525
+offset_left = -53.4479
+offset_top = -5.39999
+offset_right = 481.552
+offset_bottom = 48.6
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.2, 0.2)
+text = "999.999/999.999"
+label_settings = ExtResource("5_3n3nu")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ManaControl" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.143008
+anchor_top = 0.214612
+anchor_right = 0.460805
+anchor_bottom = 0.251142
+offset_left = 24.0005
+offset_right = 24.0005
+
+[node name="TextureProgress" type="ProgressBar" parent="ManaControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_3g0kp")
+theme_override_styles/fill = SubResource("StyleBoxTexture_nanys")
+value = 100.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ProgressBarBG" type="ProgressBar" parent="ManaControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_ffnjg")
+theme_override_styles/fill = SubResource("StyleBoxTexture_j4jm5")
+value = 100.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ProgressBar" type="ProgressBar" parent="ManaControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_j4jm5")
+theme_override_styles/fill = SubResource("StyleBoxTexture_j6y77")
+value = 100.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Points" type="Label" parent="ManaControl"]
+visible = false
+texture_filter = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.566524
+anchor_top = 2.42501
+anchor_right = 0.566524
+anchor_bottom = 2.42501
+offset_left = -53.4479
+offset_top = -20.7334
+offset_right = 481.552
+offset_bottom = 33.2666
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.2, 0.2)
+text = "999.999/999.999"
+label_settings = ExtResource("5_3n3nu")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="ManaControl"]
+visible = false
+texture_filter = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03125
+anchor_top = 0.1875
+anchor_right = 0.117188
+anchor_bottom = 0.828122
+offset_right = 33.0
+offset_bottom = 30.75
+scale = Vector2(0.25, 0.25)
+text = "MP"
+label_settings = SubResource("LabelSettings_3n3nu")
+justification_flags = 171
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="EnergyControl" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.143008
+anchor_top = 0.251142
+anchor_right = 0.460805
+anchor_bottom = 0.287671
+offset_left = 24.0005
+offset_right = 24.0005
+
+[node name="TextureProgress" type="ProgressBar" parent="EnergyControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_3g0kp")
+theme_override_styles/fill = SubResource("StyleBoxTexture_nanys")
+value = 100.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ProgressBarBG" type="ProgressBar" parent="EnergyControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_ffnjg")
+theme_override_styles/fill = SubResource("StyleBoxTexture_j4jm5")
+value = 90.0
+show_percentage = false
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ProgressBar" type="ProgressBar" parent="EnergyControl"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_qd2a2")
+theme_override_styles/fill = SubResource("StyleBoxTexture_x8e1k")
+value = 80.0
+show_percentage = false
+metadata/_edit_lock_ = true
+
+[node name="ExpControl" type="Control" parent="."]
+layout_mode = 1
+anchor_left = 0.138771
+anchor_top = 0.0319635
+anchor_right = 0.147246
+anchor_bottom = 0.287671
+metadata/_edit_use_anchors_ = true
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="ExpControl"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 88.0
+fill_mode = 3
+texture_under = SubResource("GradientTexture2D_squ0m")
+texture_progress = SubResource("GradientTexture2D_l0fju")
+metadata/_edit_use_anchors_ = true
+
+[node name="Border" type="TextureRect" parent="."]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0158898
+anchor_top = 0.0319635
+anchor_right = 0.135593
+anchor_bottom = 0.289954
+offset_right = 36.0
+offset_bottom = 36.0
+scale = Vector2(0.75, 0.75)
+texture = SubResource("AtlasTexture_3n3nu")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="TextureRect" parent="Border"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_nanys")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="LevelLabel" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.016
+anchor_top = 0.324
+anchor_right = 0.016
+anchor_bottom = 0.324
+offset_left = -0.104001
+offset_top = -15.912
+offset_right = 74.896
+offset_bottom = 5.088
+grow_vertical = 2
+scale = Vector2(1.5, 1.5)
+text = "Lv. 99"
+label_settings = ExtResource("5_3n3nu")
+vertical_alignment = 1
+uppercase = true
+
+[node name="TextureRect" type="TextureRect" parent="."]
+texture_filter = 3
+layout_mode = 0
+offset_left = 159.0
+offset_top = 23.0
+offset_right = 212.0
+offset_bottom = 71.0
+texture = SubResource("AtlasTexture_3g0kp")
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+texture_filter = 3
+layout_mode = 0
+offset_left = 215.0
+offset_top = 23.0
+offset_right = 268.0
+offset_bottom = 71.0
+texture = SubResource("AtlasTexture_3g0kp")

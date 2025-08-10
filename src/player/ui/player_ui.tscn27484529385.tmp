@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmqja38h84vuw"]
+
+[ext_resource type="Script" uid="uid://22a3dy4gvtfp" path="res://src/player/ui/player_ui.gd" id="1_p4omh"]
+[ext_resource type="PackedScene" uid="uid://cg3d3oyimla3v" path="res://src/player/ui/player_stats_ui.tscn" id="1_yougg"]
+
+[node name="PlayerUI" type="CanvasLayer" groups=["player_ui"]]
+script = ExtResource("1_p4omh")
+
+[node name="PlayerStatsUI" parent="." groups=["player_ui"] instance=ExtResource("1_yougg")]

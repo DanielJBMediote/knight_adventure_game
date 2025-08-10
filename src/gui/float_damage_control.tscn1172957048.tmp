@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://qcy4stxecqnd"]
+
+[ext_resource type="Script" uid="uid://ukms1pi3dpw2" path="res://src/gui/float_damage_control.gd" id="1_u0c03"]
+
+[node name="FloatDamageControl" type="Control"]
+layout_mode = 3
+anchor_right = 0.136719
+anchor_bottom = 0.129167
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u0c03")
+metadata/_edit_use_anchors_ = true
+
+[node name="TickTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
