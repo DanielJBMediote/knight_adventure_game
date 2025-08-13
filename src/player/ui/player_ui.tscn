@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bmqja38h84vuw"]
-
-[ext_resource type="PackedScene" uid="uid://cg3d3oyimla3v" path="res://src/player/ui/player_stats_ui.tscn" id="1_yougg"]
-
-[node name="PlayerUI" type="CanvasLayer" groups=["player_ui"]]
-
-[node name="PlayerStatsUI" parent="." instance=ExtResource("1_yougg")]

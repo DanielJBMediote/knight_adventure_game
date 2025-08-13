@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://en2ws0o3r862"
-path="res://.godot/imported/user_interface.png-4490d359538ff87640c94a3b57068fa9.ctex"
+uid="uid://mmrhjnq1k0cs"
+path="res://.godot/imported/Hurt.png-826fb2a8db9c57bcabd0d0486def093f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/user_interface.png"
-dest_files=["res://.godot/imported/user_interface.png-4490d359538ff87640c94a3b57068fa9.ctex"]
+source_file="res://assets/sprites/entities/enemies/skeleton_archer/Hurt.png"
+dest_files=["res://.godot/imported/Hurt.png-826fb2a8db9c57bcabd0d0486def093f.ctex"]
 
 [params]
 

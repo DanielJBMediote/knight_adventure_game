@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://cm3ky74r1wujk"]
+
+[ext_resource type="Script" uid="uid://d1fdwbkqvnrd3" path="res://src/actors/player/ui/player_status_effect_list_ui.gd" id="1_1hdkw"]
+
+[node name="PlayerStatusEffectListUI" type="Control"]
+layout_mode = 3
+anchors_preset = 9
+anchor_bottom = 1.0
+grow_vertical = 2
+script = ExtResource("1_1hdkw")
+
+[node name="StatusList" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_bottom = 0.0888889
+offset_right = 192.0
+metadata/_edit_use_anchors_ = true

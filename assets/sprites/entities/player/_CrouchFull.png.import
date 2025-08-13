@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://en2ws0o3r862"
-path="res://.godot/imported/user_interface.png-4490d359538ff87640c94a3b57068fa9.ctex"
+uid="uid://cgof8v0t348mb"
+path="res://.godot/imported/_CrouchFull.png-5145e4a7c02db2eb955729617b9025bf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/user_interface.png"
-dest_files=["res://.godot/imported/user_interface.png-4490d359538ff87640c94a3b57068fa9.ctex"]
+source_file="res://assets/sprites/entities/player/_CrouchFull.png"
+dest_files=["res://.godot/imported/_CrouchFull.png-5145e4a7c02db2eb955729617b9025bf.ctex"]
 
 [params]
 

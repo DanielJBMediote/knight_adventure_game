@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://rtxpfrnud2ta"]
+
+[ext_resource type="Script" uid="uid://dw1dndquyt44b" path="res://src/actors/enemies/_controllers/wander_controller.gd" id="1_ur0ol"]
+
+[node name="WanderController" type="Node2D"]
+script = ExtResource("1_ur0ol")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true

@@ -1,0 +1,102 @@
+[gd_scene load_steps=10 format=3 uid="uid://ciaj2edwf0e0c"]
+
+[ext_resource type="Script" uid="uid://c1h0q4kcxomc8" path="res://src/actors/enemies/_controllers/enemy_control_ui.gd" id="1_ck4s7"]
+[ext_resource type="FontFile" uid="uid://dnlfjy7j2gd3n" path="res://assets/fonts/PixelifySans-VariableFont_wght.ttf" id="2_1jutp"]
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="3_pn8ds"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rtbkc"]
+atlas = ExtResource("3_pn8ds")
+region = Rect2(64, 336, 260, 12)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1jutp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pn8ds"]
+atlas = ExtResource("3_pn8ds")
+region = Rect2(64, 452, 260, 12)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ck4s7"]
+texture = SubResource("AtlasTexture_pn8ds")
+region_rect = Rect2(0, 0, 260, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ck4s7"]
+atlas = ExtResource("3_pn8ds")
+region = Rect2(64, 356, 260, 12)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_1jutp"]
+texture = SubResource("AtlasTexture_ck4s7")
+region_rect = Rect2(0, 0, 260, 12)
+
+[node name="EnemyControlUI" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ck4s7")
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -92.0
+offset_top = -25.0
+offset_right = 93.0
+offset_bottom = 15.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="EnemyName" type="Label" parent="VBoxContainer/HBoxContainer"]
+texture_filter = 3
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_fonts/font = ExtResource("2_1jutp")
+theme_override_font_sizes/font_size = 16
+text = "EnemyName"
+
+[node name="EnemyLevel" type="Label" parent="VBoxContainer/HBoxContainer"]
+texture_filter = 3
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("2_1jutp")
+theme_override_font_sizes/font_size = 16
+text = "EnemyLevel"
+
+[node name="Healthbar" type="TextureRect" parent="VBoxContainer"]
+texture_filter = 3
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_vertical = 6
+texture = SubResource("AtlasTexture_rtbkc")
+expand_mode = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ProgressBarBG" type="ProgressBar" parent="VBoxContainer/Healthbar"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_1jutp")
+theme_override_styles/fill = SubResource("StyleBoxTexture_ck4s7")
+value = 60.0
+show_percentage = false
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/Healthbar"]
+texture_filter = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_1jutp")
+theme_override_styles/fill = SubResource("StyleBoxTexture_1jutp")
+value = 50.0
+show_percentage = false

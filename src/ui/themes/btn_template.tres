@@ -1,0 +1,18 @@
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://mt1b2qc0web0"]
+
+[ext_resource type="StyleBox" uid="uid://d0gnm8ch7lm54" path="res://src/ui/themes/mainmenu_butom_hover.tres" id="1_kiqwm"]
+[ext_resource type="StyleBox" uid="uid://djfwh5cg4fw7c" path="res://src/ui/themes/mainmenu_butom_normal.tres" id="2_kiqwm"]
+[ext_resource type="FontFile" uid="uid://dnlfjy7j2gd3n" path="res://assets/fonts/PixelifySans-VariableFont_wght.ttf" id="3_uj0ea"]
+
+[resource]
+default_font = ExtResource("3_uj0ea")
+default_font_size = 32
+Button/colors/font_color = Color(0.658824, 0.552941, 0.458824, 1)
+Button/colors/font_outline_color = Color(0.290196, 0.235294, 0.227451, 1)
+Button/constants/outline_size = 6
+Button/font_sizes/font_size = 48
+Button/styles/focus = ExtResource("1_kiqwm")
+Button/styles/hover = ExtResource("1_kiqwm")
+Button/styles/hover_pressed = ExtResource("1_kiqwm")
+Button/styles/normal = ExtResource("2_kiqwm")
+Button/styles/pressed = ExtResource("1_kiqwm")

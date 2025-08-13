@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://en2ws0o3r862"
-path="res://.godot/imported/user_interface.png-4490d359538ff87640c94a3b57068fa9.ctex"
+uid="uid://cj7y07kdinods"
+path="res://.godot/imported/Attack_3.png-90434b581e5d85ee3d0081111aeb140e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/user_interface.png"
-dest_files=["res://.godot/imported/user_interface.png-4490d359538ff87640c94a3b57068fa9.ctex"]
+source_file="res://assets/sprites/entities/enemies/skeleton_archer/Attack_3.png"
+dest_files=["res://.godot/imported/Attack_3.png-90434b581e5d85ee3d0081111aeb140e.ctex"]
 
 [params]
 

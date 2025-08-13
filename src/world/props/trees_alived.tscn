@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnqr4dwsl16tp"]
+
+[ext_resource type="Script" uid="uid://dxn5pvdupdk3b" path="res://src/world/props/trees_alived.gd" id="1_e5pvl"]
+[ext_resource type="Texture2D" uid="uid://bq3ahxhpp33qt" path="res://assets/sprites/props/trees/pack_1.png" id="1_edctb"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_edctb"]
+radius = 16.0
+height = 64.0
+
+[node name="TreesAlived" type="StaticBody2D"]
+collision_mask = 0
+script = ExtResource("1_e5pvl")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 3
+scale = Vector2(4, 4)
+texture = ExtResource("1_edctb")
+offset = Vector2(0, -60)
+hframes = 4
+vframes = 4
+frame = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("CapsuleShape2D_edctb")
+disabled = true

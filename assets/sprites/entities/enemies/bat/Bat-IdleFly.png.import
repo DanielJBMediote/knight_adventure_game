@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://en2ws0o3r862"
-path="res://.godot/imported/user_interface.png-4490d359538ff87640c94a3b57068fa9.ctex"
+uid="uid://bm0m5w1dstb5a"
+path="res://.godot/imported/Bat-IdleFly.png-8d695d6e505f120223a1c96dea88422e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/user_interface.png"
-dest_files=["res://.godot/imported/user_interface.png-4490d359538ff87640c94a3b57068fa9.ctex"]
+source_file="res://assets/sprites/entities/enemies/bat/Bat-IdleFly.png"
+dest_files=["res://.godot/imported/Bat-IdleFly.png-8d695d6e505f120223a1c96dea88422e.ctex"]
 
 [params]
 
