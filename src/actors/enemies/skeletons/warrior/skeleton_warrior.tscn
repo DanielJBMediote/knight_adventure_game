@@ -434,22 +434,20 @@ animations = [{
 "speed": 8.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5prew"]
-height = 56.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t48kw"]
+size = Vector2(64, 96)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5prew"]
 size = Vector2(99.5, 114)
 
 [node name="SkeletonWarrior" type="CharacterBody2D" groups=["enemies"]]
 collision_layer = 16
-collision_mask = 98
+collision_mask = 42
 floor_snap_length = 5.0
-safe_margin = 0.15
 script = ExtResource("1_w8w3d")
-wall_jump_force = 1200.0
+wall_jump_force = 850.0
 enemy_type = 1
-floor_raycast_offset = Vector2(0, 32)
-wall_raycast_offset = Vector2(100, 0)
+wall_detection_distance = 42.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 3
@@ -457,18 +455,13 @@ position = Vector2(0, -9.53674e-07)
 scale = Vector2(1.75, 1.75)
 sprite_frames = SubResource("SpriteFrames_1ek18")
 animation = &"jump"
-frame = 1
-frame_progress = 1.0
-offset = Vector2(0, -55)
+offset = Vector2(0, -44)
 flip_h = true
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 6)
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_5prew")
-
-[node name="DetectionZone" parent="." instance=ExtResource("11_07v5p")]
-radius_range = 400.0
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_t48kw")
 
 [node name="EnemyHitbox" type="Area2D" parent="."]
 collision_layer = 2048
@@ -478,25 +471,30 @@ collision_mask = 1032
 position = Vector2(-50, -58)
 shape = SubResource("RectangleShape2D_5prew")
 debug_color = Color(0.876399, 0.343111, 1.92523e-07, 0.42)
+metadata/_edit_lock_ = true
 
 [node name="EnemyHurtbox" parent="." instance=ExtResource("15_5prew")]
 radius = 32.0
 height = 116.0
 colision_position = Vector2(0, -42)
 
+[node name="DetectionZone" parent="." instance=ExtResource("11_07v5p")]
+radius_range = 400.0
+
 [node name="WanderController" parent="." instance=ExtResource("14_1v3lw")]
-wander_range = Vector2(800, 0)
+wander_range = Vector2(500, 0)
+enemy_type = 1
 
 [node name="EnemyStats" parent="." instance=ExtResource("12_5prew")]
 entity_name = "Skeleton Warrior"
-base_health_points = 45.0
-base_min_damage = 3.0
-base_max_damage = 4.0
-base_experience = 15.0
-base_bleed_chance = 100.0
-base_bleed_damage = 1.0
-base_poison_chance = 100.0
-base_poison_damage = 1.0
+base_health_points = 115.0
+base_health_points_regen = 1.25
+base_min_damage = 2.0
+base_max_damage = 5.0
+base_experience = 25.0
+base_bleed_chance = 5.0
+base_bleed_duration = 5.0
+base_bleed_damage = 0.15
 base_move_speed = 80.0
 
 [node name="EnemyControlUI" parent="." node_paths=PackedStringArray("enemy_stats") instance=ExtResource("13_7rc4i")]
@@ -510,9 +508,20 @@ enemy_stats = NodePath("../EnemyStats")
 offset_top = -144.0
 offset_bottom = -144.0
 
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+avoidance_mask = 0
+debug_enabled = true
+
+[node name="DebugLabel" type="Label" parent="."]
+visible = false
+offset_left = -96.0
+offset_top = -352.0
+offset_right = -51.0
+offset_bottom = -329.0
+text = "State:"
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_enemy_hurtbox_player_hitbox_entered"]
 [connection signal="trigger_player_entered" from="DetectionZone" to="." method="_on_detection_zone_trigger_player_entered"]
 [connection signal="trigger_player_exited" from="DetectionZone" to="." method="_on_detection_zone_trigger_player_exited"]
-[connection signal="body_entered" from="EnemyHitbox" to="." method="_on_enemy_hitbox_body_entered"]
-[connection signal="body_exited" from="EnemyHitbox" to="." method="_on_enemy_hitbox_body_exited"]
-[connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_enemy_hurtbox_player_hitbox_entered"]

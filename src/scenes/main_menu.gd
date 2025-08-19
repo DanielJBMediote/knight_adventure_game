@@ -2,7 +2,7 @@
 class_name MainMenu
 extends Control
 
-@onready var map_01: PackedScene = preload("res://src/world/maps/map01_graveward_at_night/map01_graveard_at_night.tscn")
+@onready var map_01: PackedScene = preload("res://src/world/maps/map_01/map01_graveward_at_night.tscn")
 
 @onready var button_play: Button = $Buttons/VBoxContainer/ButtonPlay
 @onready var button_load: Button = $Buttons/VBoxContainer/ButtonLoad

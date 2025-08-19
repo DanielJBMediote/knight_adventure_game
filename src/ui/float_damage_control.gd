@@ -3,6 +3,7 @@ extends Control
 
 signal trigged_hit(damage: float)
 
+@onready var custom_font = preload("res://assets/fonts/deltarune.ttf")
 @onready var float_label_scene: PackedScene = preload("res://src/ui/float_label.tscn")
 @onready var tick_timer: Timer = $TickTimer
 
@@ -66,6 +67,10 @@ func _apply_damage_on_finish_tick() -> void:
 func _show_damage(damage: float, is_critical: bool = false) -> void:
 	float_label = float_label_scene.instantiate()
 	float_label.text = str(roundi(damage))
+	
+	var font_config = FontVariation.new()
+	font_config.base_font = custom_font
+	float_label.add_theme_font_override("font", font_config)
 	
 	if is_critical:
 		float_label.modulate = Color.ORANGE_RED

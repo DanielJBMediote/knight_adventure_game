@@ -21,7 +21,7 @@ extends Control
 @onready var exp_control: Control = $MarginContainer/VBoxContainer/HBoxContainer/ExpControl
 @onready var exp_bar: TextureProgressBar = exp_control.get_node("TextureProgressBar")
 
-@onready var level_label: Label = $MarginContainer/VBoxContainer/LevelLabel
+@onready var level_label: Label = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/LevelLabel
 
 @onready var animation_player: AnimationPlayer = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/AnimationPlayer
 
@@ -51,8 +51,8 @@ func _ready() -> void:
 	PlayerEvents.update_health_points.connect(_on_health_updated)
 	PlayerEvents.update_mana_points.connect(_on_mana_updated)
 	PlayerEvents.update_energy_points.connect(_on_energy_updated)
-	PlayerEvents.update_exp.connect(_on_exp_update)
-	PlayerEvents.level_up.connect(_on_level_up)
+	PlayerEvents.add_exp.connect(_on_exp_add)
+	PlayerEvents.level_up.connect(_on_level_update)
 	PlayerEvents.energy_warning.connect(_on_energy_warning_emmited)
 	
 	# Inicializa com os valores atuais
@@ -80,19 +80,19 @@ func _on_regen_tick():
 	var current_health = PlayerStats.health_points
 	var health_regen_amount = PlayerStats.health_regen_per_seconds
 	if health_regen_amount > 0 and current_health < max_health:
-		PlayerEvents.recovery_health(health_regen_amount)
+		PlayerEvents.handle_event_recovery_health(health_regen_amount)
 	
 	var max_mana = PlayerStats.max_mana_points
 	var current_mana = PlayerStats.mana_points
 	var mana_regen_amount = PlayerStats.mana_regen_per_seconds
 	if mana_regen_amount > 0 and current_mana < max_mana:
-		PlayerEvents.recovery_mana(mana_regen_amount)
+		PlayerEvents.handle_event_recovery_mana(mana_regen_amount)
 		
 	var max_energy = PlayerStats.max_energy_points
 	var current_energy = PlayerStats.energy_points
 	var energy_regen_amount = PlayerStats.energy_regen_per_seconds
 	if energy_regen_amount > 0 and current_energy < max_energy:
-		PlayerEvents.recovery_energy(energy_regen_amount)
+		PlayerEvents.handle_event_recovery_energy(energy_regen_amount)
 
 func animate_bar_change(main_bar: ProgressBar, bg_bar: ProgressBar, new_value: float, is_increasing: bool, tween_ref: Tween):
 	if tween_ref:
@@ -117,7 +117,6 @@ func _update_health_bar(max_value: float, value: float) -> void:
 	# Ajusta o tamanho do container e das barras
 	var new_width = _calculate_bar_width(max_value)
 	_apply_bar_widths(health_control, health_bar, health_bar_bg, new_width)
-	
 	update_health_points_label(value)
 
 func _update_mana_bar(max_value: float, value: float) -> void:
@@ -190,11 +189,18 @@ func _on_energy_updated(new_value: float):
 	var is_increasing = new_value > energy_bar.value
 	animate_bar_change(energy_bar, energy_bar_bg, new_value, is_increasing, energy_tween)
 
-func _on_exp_update(new_value: float):
+func _on_exp_add(new_value: float):
 	var tween = create_tween().set_parallel(true)
 	tween.tween_property(exp_bar, "value", new_value, 1.0)
+	tween.finished.connect(_on_exp_tween_finished)
 
-func _on_level_up(new_level: int):
+func _on_exp_tween_finished():
+	# Notifica que a animação da barra terminou
+	#PlayerStats.exp_bar_completed.emit()
+	if exp_bar.value >= exp_bar.max_value:
+		PlayerEvents.handle_event_level_up(PlayerStats.level)
+
+func _on_level_update(new_level: int):
 	level_label.text = str("Lv.", new_level)
 	_update_exp_bar(PlayerStats.exp_to_next_level, PlayerStats.current_exp)
 

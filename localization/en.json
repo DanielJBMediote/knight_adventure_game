@@ -1,0 +1,58 @@
+{
+  "game_name": "Knight Adventure",
+  
+  "items": {
+	"potion_health": "Health Potion",
+	"potion_mana": "Mana Potion",
+	"potion_energy": "Energy Potion",
+	"potion_defense": "Defense Potion",
+	"potion_damage": "Damage Potion",
+	"potion_critical_rate": "Critical Rate Potion",
+	"potion_critical_damage": "Critical Damage Potion",
+	"potion_attack_speed": "Attack Speed Potion",
+	"potion_move_speed": "Speed Potion",
+	
+	"rarity": {
+		"common": "Common",
+		"uncommon": "Uncommon",
+		"rare": "Rare",
+		"epic": "Epic",
+		"legendary": "Legendary",
+		"mythical": "Mythical",
+	},
+	"rarity_prefix":{
+		"common": "",
+		"uncommon": "Improved",
+		"rare": "Superior",
+		"epic": "Epic",
+		"legendary": "Legendary",
+		"mythical": "Mythical",
+	},
+	"category": {
+		"consumables": "Consumables",
+		"loots": "Loots",
+		"quest": "Quest Item",
+		"equipments": "Equipments",
+		"others": "Others",
+	},
+	"sub_category":{
+		"potion": "Potion",
+		"weapon": "Weapon",
+		"armor": "Armor",
+		"accessory": "Accessory",
+		"food": "Food",
+		"resource": "Resource"
+	},
+	"descriptions": {
+		"potion_instant": "Instantly restores {amount} {attribute} points.",
+		"potion_buff": "Increases {attribute} by {amount}% for {duration} seconds.",
+	 },
+  },
+  
+  
+  "ui": {
+	"level": "Level",
+	"rarity": "Rarity",
+	"id": "ID"
+  }
+}

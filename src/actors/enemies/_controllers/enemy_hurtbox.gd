@@ -17,7 +17,7 @@ func _ready() -> void:
 	capsule_shape.height = height
 	collision_shape.shape = capsule_shape
 	collision_shape.position = colision_position
-	collision_shape.modulate = Color.BROWN
+	collision_shape.debug_color = Color(0.803922, 0.360784, 0.360784, 0.5)
 	add_child(collision_shape)
 
 func _on_area_entered(area: Area2D) -> void:

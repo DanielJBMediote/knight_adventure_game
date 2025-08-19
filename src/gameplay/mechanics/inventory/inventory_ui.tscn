@@ -1,0 +1,387 @@
+[gd_scene load_steps=27 format=3 uid="uid://bpeprk4yd5f6t"]
+
+[ext_resource type="Script" uid="uid://dw6w1cw3nbsgw" path="res://src/gameplay/mechanics/inventory/inventory_ui.gd" id="1_12ato"]
+[ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="2_qlwbu"]
+[ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="3_ua31u"]
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="4_yjujk"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="5_ua31u"]
+[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="6_qlwbu"]
+[ext_resource type="Texture2D" uid="uid://n7tct3q0h5fd" path="res://assets/sprites/entities/player/_Idle_Cutted.png" id="6_ua31u"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_un16p"]
+atlas = ExtResource("3_ua31u")
+region = Rect2(216, 24, 16, 17)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4m4mb"]
+texture = ExtResource("4_yjujk")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+region_rect = Rect2(576, 16, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2k7cr"]
+atlas = ExtResource("3_ua31u")
+region = Rect2(50, 20, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_281qb"]
+atlas = ExtResource("3_ua31u")
+region = Rect2(22, 19, 24, 26)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ad3cl"]
+texture = ExtResource("4_yjujk")
+texture_margin_left = 51.0
+texture_margin_top = 44.0
+texture_margin_right = 57.0
+texture_margin_bottom = 48.0
+region_rect = Rect2(25, 112, 144, 136)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yjujk"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p32c0"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i0h5i"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kkbk8"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7uc73"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3w65"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6l60w"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(288, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45avb"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(336, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xyatc"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(384, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vxkcf"]
+atlas = ExtResource("6_ua31u")
+region = Rect2(432, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vxkcf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yjujk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p32c0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i0h5i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kkbk8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7uc73")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d3w65")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6l60w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_45avb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xyatc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vxkcf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qlwbu"]
+texture = ExtResource("4_yjujk")
+texture_margin_left = 51.0
+texture_margin_top = 44.0
+texture_margin_right = 57.0
+texture_margin_bottom = 44.0
+region_rect = Rect2(25, 112, 144, 136)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ua31u"]
+atlas = ExtResource("3_ua31u")
+region = Rect2(113, 67, 30, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ri26"]
+atlas = ExtResource("3_ua31u")
+region = Rect2(145, 68, 30, 26)
+
+[node name="InventoryUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_12ato")
+metadata/_edit_lock_ = true
+metadata/_edit_use_anchors_ = true
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.392157)
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="CloseInventoryButton" type="Button" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme = ExtResource("2_qlwbu")
+icon = SubResource("AtlasTexture_un16p")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_4m4mb")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MainConteiner" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="InventoryHeader" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryHeader"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 1
+theme = ExtResource("5_ua31u")
+text = "Inventory"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InventoryControls" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryHeader"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 2
+
+[node name="PrevButton" type="Button" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryHeader/InventoryControls"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+theme = ExtResource("2_qlwbu")
+icon = SubResource("AtlasTexture_2k7cr")
+alignment = 0
+icon_alignment = 1
+
+[node name="NextButton" type="Button" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryHeader/InventoryControls"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+theme = ExtResource("2_qlwbu")
+icon = SubResource("AtlasTexture_281qb")
+icon_alignment = 1
+
+[node name="InventoryContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+metadata/_edit_use_anchors_ = true
+
+[node name="StatsAndEquipsPanel" type="Panel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer"]
+custom_minimum_size = Vector2(416, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_ad3cl")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer"]
+position = Vector2(100, 224)
+scale = Vector2(7, 7)
+sprite_frames = SubResource("SpriteFrames_vxkcf")
+frame_progress = 0.0345728
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme = ExtResource("5_ua31u")
+text = "Equipment"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 4
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer/HBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel2" type="Panel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer/HBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel3" type="Panel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer/HBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel4" type="Panel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer/HBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel5" type="Panel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer/HBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel6" type="Panel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel/MarginContainer/VBoxContainer/HBoxContainer/GridContainer"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="InventorySlotsPanel" type="Panel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_ad3cl")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsPanel/MarginContainer"]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="InventorySlotsGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 6
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="OrganizeButtonASC" type="Button" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme = ExtResource("2_qlwbu")
+icon = SubResource("AtlasTexture_ua31u")
+icon_alignment = 1
+
+[node name="OrganizeButtonDESC" type="Button" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme = ExtResource("2_qlwbu")
+icon = SubResource("AtlasTexture_8ri26")
+icon_alignment = 1
+
+[node name="PageLabel" type="Label" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsPanel/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.658824, 0.552941, 0.458824, 1)
+theme_override_colors/font_outline_color = Color(0.396078, 0.317647, 0.294118, 1)
+theme_override_constants/outline_size = 6
+theme_override_fonts/font = ExtResource("6_qlwbu")
+theme_override_font_sizes/font_size = 24
+text = "1/3"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/CloseInventoryButton" to="." method="_on_close_inventory_button_pressed"]

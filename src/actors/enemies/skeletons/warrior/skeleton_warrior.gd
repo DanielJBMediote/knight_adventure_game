@@ -5,6 +5,9 @@ extends TerrestrialEnemy
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var enemy_hitbox: Area2D = $EnemyHitbox
 @onready var enemy_stats: EnemyStats = $EnemyStats
+@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+
+@onready var debug_label: Label = $DebugLabel
 
 # Controllers
 @onready var wander_controller: WanderController = $WanderController
@@ -12,32 +15,35 @@ extends TerrestrialEnemy
 
 @export var min_time_state: float = 5.0
 @export var max_time_state: float = 10.0
+@export var navigation_update_interval := 0.2
 
 const SPRITE_OFFSET_FIX := 10
 const HITBOX_POSITION := Vector2(72, -60)
 const HITBOX_OFFSET := Vector2(72, -60)
 
-enum STATES { IDLE, WANDER, CHASE, ATTACKING }
+enum STATES {IDLE, WANDER, CHASE, ATTACKING}
 var state: STATES = STATES.IDLE
 
 var is_first_attack_after_chase := false
-
-var body_timer_on_dead: Timer
+var navigation_timer := 0.0
 
 func _ready() -> void:
 	super._ready()
-	get_tree().call_group("enemies", "_disable_enemy_hitbox", self)
+	#disable_enemy_hitbox()
 	pick_random_state([STATES.IDLE, STATES.WANDER])
 	wander_controller.start_position = global_position
+	wander_controller.enemy_type = Enemy.ENEMY_TYPES.FLYING
 	attack_names = ["attack_1", "attack_2", "attack_3"]
 	update_attack_speed()
 	
 	enemy_stats.trigged_dead.connect(_on_skeleton_death)
+		
+	navigation_agent.path_desired_distance = 10.0
+	navigation_agent.target_desired_distance = 10.0
+	navigation_agent.avoidance_enabled = true
 	
-	body_timer_on_dead = Timer.new()
-	body_timer_on_dead.one_shot = true
-	body_timer_on_dead.timeout.connect(_on_body_timer_on_dead_timeout)
-	add_child(body_timer_on_dead)
+	enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
+	enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
 
 func update_attack_speed():
 	var attk_speed = roundi(enemy_stats.attack_speed * 12)
@@ -55,7 +61,7 @@ func _physics_process(delta: float) -> void:
 	if is_in_knockback:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta * 0.5)
 		move_and_slide()
-		return  # Sai do physics process durante knockback
+		return # Sai do physics process durante knockback
 	
 	# Verifica se é hora de mudar de estado
 	if wander_controller.is_timeout and not is_in_knockback:
@@ -64,22 +70,43 @@ func _physics_process(delta: float) -> void:
 	# Executa a lógica de cada estado
 	match state:
 		STATES.IDLE:
+			debug_label.text = str("State: IDLE\n", "Position:", position)
 			handle_idle_state(delta)
 		STATES.WANDER:
+			debug_label.text = str("State: WANDER\n", "Position:", position, "\nTarget Pos (Wander): ", wander_controller.target_position)
 			handle_wander_state(delta)
 		STATES.CHASE:
+			debug_label.text = str("State: CHASE\n", "Position:", position, "\nTarget Pos (Player): ", target_player.position)
 			handle_chase_state(delta)
 		STATES.ATTACKING:
 			handle_attacking_state(delta)
 	
-	#if Input.is_action_just_pressed("jump"):
-		#velocity.y = -jump_force
 	super.apply_gravity(delta)
 	play_animations()
 	move_and_slide()
 
-func play_animations()-> void:
-	if is_in_knockback:
+func update_navigation_path() -> void:
+	if navigation_timer <= 0:
+		var target_pos = (target_player.global_position if state == STATES.CHASE
+						else wander_controller.target_position)
+		navigation_agent.target_position = target_pos
+		navigation_timer = navigation_update_interval
+	navigation_timer -= get_physics_process_delta_time()
+
+func apply_navigation_movement(speed_multiplier: float = 1.0) -> void:
+	if navigation_agent.is_navigation_finished():
+		velocity.x = 0
+		return
+	
+	var next_path_pos = navigation_agent.get_next_path_position()
+	var direction = Vector2(
+		sign(next_path_pos.x - global_position.x),
+		0
+	)
+	velocity.x = direction.x * enemy_stats.move_speed * speed_multiplier
+
+func play_animations() -> void:
+	if is_in_knockback or is_hurting:
 		animated_sprite_2d.play("hurt")
 		return
 	match state:
@@ -112,18 +139,18 @@ func set_random_state() -> void:
 	match state:
 		STATES.WANDER:
 			setup_wander_movement()
+
 func setup_wander_movement() -> void:
 	wander_controller.update_wander_position()
 	wander_controller.is_moving_to_target = true
-	
-	var move_direction = super.get_direction_to(wander_controller.target_position, global_position)
-	update_sprite_direction(move_direction == Vector2.RIGHT)
+	navigation_agent.target_position = wander_controller.target_position
+	update_sprite_direction(wander_controller.target_position.x > global_position.x)
 
 func update_sprite_direction(is_right: bool) -> void:
 	animated_sprite_2d.flip_h = !is_right
 	if animated_sprite_2d.animation == "run":
 		if !is_right:
-			animated_sprite_2d.offset.x = -SPRITE_OFFSET_FIX
+			animated_sprite_2d.offset.x = - SPRITE_OFFSET_FIX
 		else:
 			animated_sprite_2d.offset.x = SPRITE_OFFSET_FIX
 	else:
@@ -145,79 +172,85 @@ func handle_chase_state(delta: float) -> void:
 	if is_in_knockback:
 		return
 	
-	var chase_speed = enemy_stats.move_speed * 2
 	if target_player and is_instance_valid(target_player):
-		var direction = (target_player.global_position - global_position).normalized()
-		distance_to_player = super.get_distance_to_player()
+		distance_to_player = global_position.distance_to(target_player.global_position)
+		var target_direction = super.get_direction_to(target_player.global_position, global_position)
 		
-		update_sprite_direction(direction.x > 0)
-		update_enemy_hitbox_position(direction.x > 0)
+		# Atualiza o caminho de navegação
+		update_navigation_path()
+		apply_navigation_movement(3.0)
+		
+		# Atualiza direção do sprite
+		update_sprite_direction(target_direction == Vector2.RIGHT)
+		update_enemy_hitbox_position(target_direction == Vector2.RIGHT)
 		
 		# Verifica se há parede à frente
 		is_near_wall = false
+		var wall_direction = 0
 		for raycast in wall_raycasts:
 			raycast.force_raycast_update()
 			if super.is_colliding_with_wall(raycast):
 				is_near_wall = true
+				wall_direction = sign(raycast.target_position.x) # 1 para direita, -1 para esquerda
 				break
 		
-		# Movimento normal de perseguição
-		if distance_to_player <= min_attack_distance:
-			velocity = Vector2.ZERO
-		else: 
-			# Aplica movimento horizontal normalmente
-			velocity.x = direction.x * chase_speed
-			
-			# Se houver parede e puder pular, executa o pulo
-			if is_near_wall and can_wall_jump and is_on_floor():
-				super.perform_wall_jump(direction.x, chase_speed)
-			
-			# Mantém a gravidade ativa para rampas
-			super.apply_gravity(delta)
+		# Pulo na parede se estiver perto de uma e movendo na mesma direção
+		if is_near_wall and can_wall_jump and is_on_floor():
+			var move_direction = sign(velocity.x)
+			if move_direction != 0 and move_direction == wall_direction:
+				super.perform_wall_jump(move_direction, enemy_stats.move_speed * 2)
 		
-		if distance_to_player <= min_attack_distance and can_attack and attack_timer.time_left <= 0:
-			start_attack()
-			return
+		# Lógica de ataque
+		if distance_to_player <= min_attack_distance:
+			velocity.x = 0 # Mantém apenas o movimento vertical
+			
+			if can_attack and attack_timer.time_left <= 0:
+				start_attack()
 	else:
 		state = STATES.IDLE
 
-func handle_attacking_state(_delta: float) -> void:	
+func handle_attacking_state(_delta: float) -> void:
 	if is_in_knockback or not is_attacking:
 		state = STATES.CHASE
 		return
-	super.disable_enemy_hitbox(false)
+	#super.disable_enemy_hitbox(false)
 	
 	var move_direction = super.get_direction_to(target_player.global_position, global_position)
 	velocity = Vector2.ZERO
 	update_enemy_hitbox_shape()
 	update_sprite_direction(move_direction == Vector2.RIGHT)
 	update_enemy_hitbox_position(move_direction == Vector2.RIGHT)
-func handle_wander_state(_delta: float) -> void: 
+func handle_wander_state(delta: float) -> void:
+	# Atualiza o caminho de navegação
+	update_navigation_path()
+	
+	# Verifica se chegou ao destino ou se esta perto dele
+	var is_close_or_arrived = navigation_agent.is_navigation_finished() or navigation_agent.distance_to_target() < 40
+	if is_close_or_arrived:
+		set_random_state()
+		return
+	# Aplica movimento
+	apply_navigation_movement()
+	
 	# Verifica colisão com paredes
+	var wall_direction = 0
 	is_near_wall = false
 	for raycast in wall_raycasts:
 		raycast.force_raycast_update()
-		if is_colliding_with_wall(raycast):
+		if super.is_colliding_with_wall(raycast):
 			is_near_wall = true
+			wall_direction = sign(raycast.target_position.x) # 1 para direita, -1 para esquerda
 			break
 	
 	# Se houver parede, inverte a direção
-	if is_near_wall:
-		wander_controller.target_position = wander_controller.start_position  # Volta para a posição inicial
-		wander_controller.is_moving_to_target = not wander_controller.is_moving_to_target  # Inverte o movimento
-	
-	# Lógica normal de wander
-	var current_target = wander_controller.target_position if wander_controller.is_moving_to_target else wander_controller.start_position
-	var direction: Vector2 = (current_target - global_position).normalized()
-	velocity = direction * enemy_stats.move_speed
-	
-	if global_position.distance_to(current_target) < 2.0:
-		if wander_controller.is_moving_to_target:
-			wander_controller.is_moving_to_target = false
-		else:
-			set_random_state()
-	var move_direction = Vector2.RIGHT if direction.x > 0 else Vector2.LEFT
-	update_sprite_direction(move_direction == Vector2.RIGHT)
+	if is_near_wall and can_wall_jump and is_on_floor():
+		var move_direction = sign(velocity.x)
+		if move_direction != 0 and move_direction == wall_direction:
+			super.perform_wall_jump(move_direction, enemy_stats.move_speed * 2)
+
+	# Atualiza direção do sprite
+	var next_pos = navigation_agent.get_next_path_position()
+	#update_sprite_direction(next_pos.x > global_position.x)
 
 func start_attack():
 	if is_in_knockback and not can_attack:
@@ -230,13 +263,13 @@ func start_attack():
 		is_first_attack_after_chase = false
 	else:
 		current_attack_animation = AnimationUtils.pick_random_animation(attack_names)
-	super.disable_enemy_hitbox(false)
+	#super.disable_enemy_hitbox(false)
 func finish_attack():
 	is_attacking = false
 	can_attack = true
 	state = STATES.CHASE
 	is_first_attack_after_chase = false
-	super.disable_enemy_hitbox()
+	#super.disable_enemy_hitbox()
 
 func _on_detection_zone_trigger_player_entered(player: CharacterBody2D) -> void:
 	target_player = player
@@ -266,15 +299,7 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		else:
 			can_attack = false
 	if animation_name == "dead":
-		enemy_control_ui.visible = false
-		body_timer_on_dead.start(10.0)
-
-func _on_enemy_hitbox_body_entered(body: Node2D) -> void:
-	if target_player and target_player == body:
-		target_in_attack_range = true
-func _on_enemy_hitbox_body_exited(body: Node2D) -> void:
-	if target_player and target_player == body:
-		target_in_attack_range = false
+		enemy_control_ui.hide()
 
 func _on_enemy_hurtbox_player_hitbox_entered() -> void:
 	if target_player and not is_in_knockback and not is_dead:
@@ -284,8 +309,17 @@ func _on_enemy_hurtbox_player_hitbox_entered() -> void:
 		float_Damage_control.set_damage(data)
 
 func _on_skeleton_death():
-	super._on_dead()
 	animated_sprite_2d.play("dead")
-	
-func _on_body_timer_on_dead_timeout():
-	queue_free()
+	super._on_dead()
+
+func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
+	if target_player:
+		target_in_attack_range = true
+		can_attack = true
+		print("Player in Range")
+		
+func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
+	if target_player:
+		target_in_attack_range = false
+		can_attack = false
+		print("Player out of Range")

@@ -91,33 +91,22 @@ func _ready() -> void:
 	add_child(dash_timer)
 	
 	float_damage_control.trigged_hit.connect(_on_take_damage)
-	PlayerEvents.level_up.connect(_on_level_up)
+	PlayerEvents.level_up.connect(_show_level_up_label)
 	PlayerEvents.show_exp.connect(_show_experience)
 
-func apply_damage(damage_data: DamageData):
+func apply_damage_on_player(damage_data: DamageData, enemy_stats: EnemyStats):
+	damage_data = PlayerStats.calculate_damage_taken(damage_data, enemy_stats.entity_level)
 	float_damage_control.set_damage(damage_data)
 	
 	# Processa cada status effect
 	for effect in damage_data.status_effects:
 		if effect.active:
 			PlayerEvents.add_status_effect.emit(effect)
-			
-			# Configura timer para remoção automática
-			#var timer = Timer.new()
-			#timer.wait_time = effect.duration
-			#timer.one_shot = true
-			#timer.timeout.connect(_remove_status_effect.bind(effect))
-			#add_child(timer)
-			#timer.start()
-
-#func _remove_status_effect(effect: StatusEffectData) -> void:
-	#PlayerEvents.remove_status_effect.emit(effect)
 
 func _on_dash_timeout():
 	create_dash_effect()
 
 func _physics_process(delta) -> void:
-	
 	if not is_sliding:
 		current_rotation = lerp(current_rotation, 0.0, ROTATION_SPEED * delta)
 		sprite_2d.rotation_degrees = current_rotation
@@ -173,6 +162,8 @@ func calculate_distance_to_floors() -> void:
 		distance_to_floor_up = 9999.0
 
 func handle_actions() -> void:
+	if Input.is_action_just_pressed("Test"):
+		PlayerEvents.handle_event_add_experience(100)
 	if is_on_floor():
 		handle_actions_when_on_floor()
 	else:
@@ -180,11 +171,12 @@ func handle_actions() -> void:
 func handle_actions_when_on_floor() -> void:
 	is_jumping = false
 	is_dashing = false
-	if not is_dashing:
-		sprite_2d.modulate.a = 100
 	has_started_jump = false
 	has_played_peak_animation = false
 	air_dash_count = 1
+	
+	if not is_dashing:
+		sprite_2d.modulate.a = 100
 	
 	# Evitar de se mover ao estar realizando o rolamento
 	if not is_rolling and not is_attacking and not is_hurting:
@@ -235,7 +227,7 @@ func handle_actions_when_on_floor() -> void:
 	if Input.is_action_just_pressed("roll"):
 		if can_roll and PlayerStats.has_energy_to_roll():
 			is_rolling = true
-			PlayerEvents.spent_energy(PlayerStats.energy_cost_to_roll)
+			PlayerEvents.handle_event_spent_energy(PlayerStats.energy_cost_to_roll)
 		else:
 			if not PlayerStats.has_energy_to_roll():
 				PlayerEvents.energy_warning.emit()
@@ -501,30 +493,26 @@ func _on_hit_flash_animation_player_animation_finished(anim_name: StringName) ->
 	if anim_name == "hit_flash":
 		is_hurting = false
 		is_invulnerable = false
-	
-func _on_take_damage(damage: float)-> void:
-	PlayerEvents.take_damage(damage)
+		is_rolling = false
 
-func _on_level_up(level: int):
+func _on_take_damage(damage: float)-> void:
+	PlayerEvents.handle_event_spent_health(damage)
+
+func _show_level_up_label(level: int):
 	var float_label: FloatLabel = preload("res://src/ui/float_label.tscn").instantiate()
 	float_label.text = "Level Up!"
 	
-	var custom_font = load("res://assets/fonts/PixelifySans-VariableFont_wght.ttf")  # Ajuste o caminho
-	var font_config = FontVariation.new()
-	font_config.base_font = custom_font
-	
-	float_label.add_theme_font_override("font", font_config)
-	float_label.add_theme_font_size_override("font_size", 32)
-	float_label.position = float_damage_control.position
-	float_label.modulate = Color.CHARTREUSE
+	#float_label.add_theme_font_size_override("font_size", 32)
+	float_label.modulate = Color.LIME_GREEN
 	add_child(float_label)
+	float_label.position.y = float_damage_control.position.y
 
 func _show_experience(amount: float):
-	PlayerEvents.add_experience(amount)
+	#PlayerEvents.handle_event_add_experience(amount)
 	var float_label_scene = load("res://src/ui/float_label.tscn")
 	var float_label: FloatLabel = float_label_scene.instantiate()
 	float_label.modulate = Color.ORANGE
-	float_label.position = Vector2(position.x, position.y - 500)
-	float_label.add_theme_font_size_override("font_size", 32)
-	float_label.text = str("+", roundi(amount), "Exp")
+	float_label.add_theme_font_size_override("font_size", 20)
+	float_label.text = str("+", roundi(amount), " EXP")
 	add_child(float_label)
+	float_label.position.y = float_damage_control.position.y

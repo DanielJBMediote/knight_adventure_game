@@ -3,6 +3,7 @@ class_name DamageData
 
 var damage: float = 0.0
 var is_critical: bool = false
+var is_knockback_hit: bool = false
 var status_effects: Array[StatusEffectData] = []
 
 func _init():

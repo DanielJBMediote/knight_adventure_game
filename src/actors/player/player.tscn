@@ -1,9 +1,8 @@
-[gd_scene load_steps=53 format=3 uid="uid://doom7rgxnt8p7"]
+[gd_scene load_steps=50 format=3 uid="uid://doom7rgxnt8p7"]
 
 [ext_resource type="Script" uid="uid://8ad2aca7mrv6" path="res://src/actors/player/player.gd" id="1_5f2sf"]
 [ext_resource type="Shader" uid="uid://cgycaixyakajw" path="res://src/shaders/hit_flash.tres" id="1_jiejy"]
 [ext_resource type="PackedScene" uid="uid://bvqyc2eh1vtgt" path="res://src/actors/player/dash_effect.tscn" id="2_244u8"]
-[ext_resource type="PackedScene" uid="uid://bmqja38h84vuw" path="res://src/actors/player/ui/player_ui.tscn" id="3_mf2ua"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="5_5f2sf"]
 [ext_resource type="Texture2D" uid="uid://c7l8jx0c4ywdj" path="res://assets/sprites/entities/player/_Full_Sritesheet.png" id="19_vwsmr"]
 
@@ -20,15 +19,6 @@ size = Vector2(51.1666, 52.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wlj80"]
 size = Vector2(20, 26)
-
-[sub_resource type="Gradient" id="Gradient_hrerp"]
-offsets = PackedFloat32Array(0, 0.37234, 0.718085)
-colors = PackedColorArray(0.733008, 0.733004, 0.733005, 1, 0.205117, 0.205117, 0.205117, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_oyld2"]
-gradient = SubResource("Gradient_hrerp")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="Animation" id="Animation_l271a"]
 resource_name = "AttackLeft_1"
@@ -77,7 +67,7 @@ tracks/3/path = NodePath("PlayerHitbox/CollisionShape2D:disabled")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.3),
+"times": PackedFloat32Array(0, 0.2, 0.4),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [true, false, true]
@@ -3149,7 +3139,6 @@ dash_node = ExtResource("2_244u8")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -64)
-process_callback = 0
 limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 16.0
@@ -3158,7 +3147,6 @@ drag_horizontal_enabled = true
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture_filter = 3
 material = SubResource("ShaderMaterial_jiejy")
 scale = Vector2(3, 3)
 texture = ExtResource("19_vwsmr")
@@ -3169,7 +3157,6 @@ vframes = 14
 frame = 96
 region_enabled = true
 region_rect = Rect2(0, 0, 1440, 1120)
-metadata/_edit_lock_ = true
 
 [node name="CharacterCollisionShape" type="CollisionShape2D" parent="."]
 position = Vector2(0, -16)
@@ -3196,13 +3183,6 @@ position = Vector2(-5.5, -14)
 shape = SubResource("RectangleShape2D_wlj80")
 debug_color = Color(0.567545, 0.072939, 0.0843144, 0.42)
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
-texture_filter = 3
-position = Vector2(2, -17)
-scale = Vector2(4.22461, 4.22461)
-texture = SubResource("GradientTexture2D_oyld2")
-metadata/_edit_lock_ = true
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 &"": SubResource("AnimationLibrary_hja65")
@@ -3222,8 +3202,6 @@ metadata/_edit_lock_ = true
 target_position = Vector2(0, -64)
 collision_mask = 2
 metadata/_edit_lock_ = true
-
-[node name="PlayerUI" parent="." instance=ExtResource("3_mf2ua")]
 
 [node name="FloatDamageControl" parent="." instance=ExtResource("5_5f2sf")]
 offset_left = -64.0

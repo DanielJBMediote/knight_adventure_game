@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://fujugraamx3i"]
+[gd_scene load_steps=11 format=3 uid="uid://fujugraamx3i"]
 
 [ext_resource type="Texture2D" uid="uid://b6idf060gdxpr" path="res://assets/sprites/tilesets/tiles.png" id="1_k6i0n"]
 
@@ -7,6 +7,21 @@ tile_data = PackedInt32Array(0, 458753, 4, 65536, 458753, 5, 1, 458753, 4, 65537
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_ius7d"]
 tile_data = PackedInt32Array(262144, 327681, 5, 327680, 327681, 6, 196609, 393217, 4, 262145, 393217, 5, 327681, 393217, 6, 196610, 327681, 5, 262146, 327681, 6, 327682, 458753, 6, 131075, 393217, 4, 196611, 393217, 5, 262147, 393217, 6, 327683, 458753, 6, 131076, 327681, 5, 196612, 327681, 6, 262148, 458753, 6, 327684, 458753, 6, 65541, 393217, 4, 131077, 393217, 5, 196613, 393217, 6, 262149, 458753, 6, 327685, 458753, 6, 65542, 327681, 5, 131078, 327681, 6, 196614, 458753, 6, 262150, 458753, 6, 327686, 458753, 6, 7, 393217, 4, 65543, 393217, 5, 131079, 393217, 6, 196615, 458753, 6, 262151, 458753, 6, 327687, 458753, 6)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_5l2p6"]
+tile_data = PackedInt32Array(0, 262145, 0, 65536, 262145, 1, 1, 327681, 0, 65537, 327681, 1, 2, 327681, 2, 65538, 327681, 3)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_i5i2s"]
+tile_data = PackedInt32Array(0, 262145, 0, 65536, 262145, 1, 1, 327681, 0, 65537, 327681, 1, 2, 327681, 2, 65538, 327681, 3, 3, 65537, 2, 65539, 65537, 3)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_f4hfl"]
+tile_data = PackedInt32Array(0, 65537, 0, 65536, 65537, 1, 131072, 1, 4, 196608, 1, 4, 262144, 1, 4, 1, 131073, 0, 65537, 131073, 1, 131073, 131073, 2, 196609, 131073, 4, 262145, 131073, 4, 2, 196609, 0, 65538, 196609, 1, 131074, 262145, 4, 196610, 262145, 4, 262146, 262145, 4)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_nn8js"]
+tile_data = PackedInt32Array(0, 393217, 2, 65536, 393217, 3, 1, 327681, 0, 65537, 327681, 1, 2, 393217, 0, 65538, 393217, 1)
+
+[sub_resource type="TileMapPattern" id="TileMapPattern_edmg3"]
+tile_data = PackedInt32Array(0, 131073, 0, 65536, 131073, 1, 1, 196609, 0, 65537, 196609, 1, 131073, 262145, 4, 196609, 262145, 4, 262145, 196609, 2, 327681, 196609, 3, 262146, 393217, 2, 327682, 393217, 3, 262147, 327681, 0, 327683, 327681, 1, 262148, 393217, 0, 327684, 393217, 1)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2ntdj"]
 texture = ExtResource("1_k6i0n")
@@ -405,6 +420,11 @@ terrain_set_0/terrain_1/color = Color(0.256764, 0.210682, 0.160284, 1)
 sources/1 = SubResource("TileSetAtlasSource_2ntdj")
 pattern_0 = SubResource("TileMapPattern_k6i0n")
 pattern_1 = SubResource("TileMapPattern_ius7d")
+pattern_2 = SubResource("TileMapPattern_5l2p6")
+pattern_3 = SubResource("TileMapPattern_i5i2s")
+pattern_4 = SubResource("TileMapPattern_f4hfl")
+pattern_5 = SubResource("TileMapPattern_nn8js")
+pattern_6 = SubResource("TileMapPattern_edmg3")
 
 [node name="plataform" type="TileMapLayer"]
 tile_set = SubResource("TileSet_pnes3")

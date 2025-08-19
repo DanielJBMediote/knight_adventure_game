@@ -5,6 +5,7 @@ const GRAVITY := 2000.0
 const WALL_JUMP_COOLDOWN := 1.0
 
 @export var wall_jump_force := 800.0
+
 var can_wall_jump := true
 var wall_jump_timer: Timer
 
@@ -28,7 +29,7 @@ func is_colliding_with_wall(raycast: RayCast2D) -> bool:
 		return false
 		
 	var collision_normal = raycast.get_collision_normal()
-	var angle = rad_to_deg(collision_normal.angle_to(Vector2.UP))
+	var angle = abs(rad_to_deg(collision_normal.angle_to(Vector2.UP)))
 	
 	# Considera como parede se o ângulo estiver entre 75-105 graus (aproximadamente vertical)
 	return angle > 75 and angle < 105
@@ -37,23 +38,20 @@ func perform_wall_jump(direction_x: float, jump_speed: float):
 	if not can_wall_jump or not is_on_floor():
 		return
 	
+	# Verifica se há parede na direção do movimento
 	var wall_in_front = false
 	for raycast in wall_raycasts:
 		raycast.force_raycast_update()
-		# Verifica se o raycast está apontando na mesma direção do movimento
-		if sign(raycast.target_position.x) == sign(direction_x):
-			if raycast.is_colliding():
-				wall_in_front = true
-				break
+		if sign(raycast.target_position.x) == sign(direction_x) and raycast.is_colliding():
+			wall_in_front = true
+			break
 	
 	if not wall_in_front:
 		return
 	
 	# Aplica força do pulo
 	velocity.y = -wall_jump_force
-	
-	# Aplica um pequeno impulso para longe da parede
-	velocity.x = -direction_x * jump_speed
+	velocity.x = -direction_x * jump_speed  # Impulso para longe da parede
 	
 	# Ativa cooldown
 	can_wall_jump = false
@@ -71,7 +69,7 @@ func take_knockback(knock_force: float, attacker_position: Vector2):
 	# Interrompe qualquer ataque em andamento
 	is_attacking = false
 	can_attack = false
-	super.disable_enemy_hitbox()
+	#super.disable_enemy_hitbox()
 	
 	# Calcula direção do knockback
 	var knockback_direction = (global_position - attacker_position).normalized()

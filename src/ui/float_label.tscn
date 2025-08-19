@@ -1,17 +1,16 @@
 [gd_scene load_steps=3 format=3 uid="uid://bfxxa6n55tiku"]
 
-[ext_resource type="FontFile" uid="uid://dmcjflisd3gnl" path="res://assets/fonts/deltarune.ttf" id="1_7r8sf"]
+[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="1_wg3l0"]
 [ext_resource type="Script" uid="uid://db7jh7e3im0yb" path="res://src/ui/float_label.gd" id="2_yox0o"]
 
 [node name="FloatLabel" type="Label"]
 texture_filter = 3
-offset_right = 210.0
-offset_bottom = 43.0
+offset_right = 96.0
+offset_bottom = 32.0
 theme_override_constants/outline_size = 2
-theme_override_fonts/font = ExtResource("1_7r8sf")
-theme_override_font_sizes/font_size = 42
-text = "1234567890"
+theme_override_fonts/font = ExtResource("1_wg3l0")
+theme_override_font_sizes/font_size = 24
+text = "Exp Crit!"
 horizontal_alignment = 1
 vertical_alignment = 1
-uppercase = true
 script = ExtResource("2_yox0o")

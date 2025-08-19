@@ -2,38 +2,31 @@ class_name FlyingEnemy
 extends Enemy
 
 @export var knockback_air_force := -1.0 
-@export var ideal_flying_height := 80.0  # Altura ideal acima do jogador
+
+@export var ideal_flying_height := 80.0
+@export var height_smoothing := 2.0
+@export var min_flight_height := 50.0
 
 var height_adjust_speed: float = 150.0  # Velocidade de ajuste
-var height_smoothing: float = 2.0  # Fator de suavização
 var last_height = 0.0
 
 func _ready() -> void:
 	super._ready()
 	enemy_type = ENEMY_TYPES.FLYING
 
-func adjust_height_to_ground(delta: float):
-	var target_adjustment = min_floor_distance - distance_to_floor
-	var speed = height_adjust_speed
-	var target_y = position.y
+func adjust_flight_height(delta: float):
+	if not target_player:
+		return
 	
-	if not is_near_wall:
-		if distance_to_floor <= min_floor_distance:
-			# Está muito baixo - subir suavemente
-			target_y = position.y - (target_adjustment * speed * delta)
-		else:
-			if distance_to_floor >= min_floor_distance or distance_to_floor == 9999.0:
-				# Está muito alto - descer suavemente
-				target_y = position.y + (10 * delta)
-			else:
-				# Ajuste fino
-				target_y = position.y + (target_adjustment * speed * delta)
+	var target_height = target_player.global_position.y - ideal_flying_height
+	var new_height = lerp(global_position.y, target_height, delta * height_smoothing)
 	
-	# Interpolação suave para a posição alvo
-	position.y = lerp(position.y, target_y, delta * height_smoothing)
+	# Limita a altura mínima em relação ao chão
+	var floor_dist = get_distance_to_floor()
+	if floor_dist < min_floor_distance:
+		new_height = min(new_height, global_position.y - (min_floor_distance - floor_dist))
 	
-	last_height = position.y
-	floor_raycast.force_raycast_update()
+	global_position.y = new_height
 
 func take_knockback(knock_force: float, attacker_position: Vector2):
 	if is_invulnerable or is_in_knockback:

@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://b3iacnu0qyy6c"]
+
+[ext_resource type="Script" uid="uid://dirkxfg16rje0" path="res://src/world/maps/_configs/map_data.gd" id="1_gn1dk"]
+[ext_resource type="PackedScene" uid="uid://doom7rgxnt8p7" path="res://src/actors/player/player.tscn" id="1_v5ogm"]
+[ext_resource type="PackedScene" uid="uid://bm3d45tncritm" path="res://src/actors/enemies/skeletons/warrior/skeleton_warrior.tscn" id="2_20gau"]
+[ext_resource type="PackedScene" uid="uid://cc8hjpk4p2yx7" path="res://src/actors/enemies/bat/bat.tscn" id="4_rfhtd"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_gn1dk"]
+vertices = PackedVector2Array(1117.28, 534, 1034, 534, 1034, 310, 1661.28, 214, 950, 310, 950, 502, 854, 502, 554, 374, 854, 598, 650, 598, 650, 534, 554, 534, 374, 374, 374, 470, 106, 470, 106, 10, 2582, 10, 1794.77, 214, 2332.86, 437.453, 2115.39, 406.383, 2582, 219.453)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 5, 6, 7), PackedInt32Array(6, 8, 9, 10), PackedInt32Array(10, 11, 7, 6), PackedInt32Array(12, 13, 14, 15), PackedInt32Array(7, 12, 15, 16, 4), PackedInt32Array(2, 4, 16, 3), PackedInt32Array(17, 3, 16), PackedInt32Array(18, 19, 17, 16, 20)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(96, 480, 384, 480, 384, 384, 544, 384, 544, 544, 640, 544, 640, 608, 864, 608, 864, 512, 960, 512, 960, 320, 1024, 320, 1024, 544, 1120, 544, 1664, 224, 1792, 224, 2112, 416, 2336, 448, 2592, 224, 2592, 0, 96, 0)])
+
+[node name="MapTest" type="Node2D"]
+script = ExtResource("1_gn1dk")
+map_name = "Test"
+level_mob_min = 1
+level_mob_max = 5
+boss_level = 10
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 2
+collision_mask = 28
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(0, -32)
+polygon = PackedVector2Array(1664, 256, 1120, 576, 1024, 576, 1024, 352, 960, 352, 960, 544, 864, 544, 864, 640, 640, 640, 640, 576, 544, 576, 544, 416, 384, 416, 384, 512, 96, 512, 96, 32, 0, 32, 0, 704, 1280, 704, 1792, 416, 2304, 672, 2720, 416, 2752, 256, 2784, -192, 2592, -192, 2592, 256, 2336, 480, 2112, 448, 1952, 352, 1792, 256)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_gn1dk")
+
+[node name="SkeletonWarrior" parent="." instance=ExtResource("2_20gau")]
+position = Vector2(2240, 384)
+
+[node name="Bat" parent="." instance=ExtResource("4_rfhtd")]
+position = Vector2(2368, 192)
+
+[node name="Player" parent="." instance=ExtResource("1_v5ogm")]
+position = Vector2(256, 416)

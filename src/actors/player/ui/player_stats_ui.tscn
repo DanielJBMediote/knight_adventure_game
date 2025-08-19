@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://cg3d3oyimla3v"]
+[gd_scene load_steps=28 format=3 uid="uid://cg3d3oyimla3v"]
 
 [ext_resource type="Script" uid="uid://n6naubd41nss" path="res://src/actors/player/ui/player_stats_ui.gd" id="1_3g0kp"]
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="2_nanys"]
@@ -7,10 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://cw0oacjh3btgt" path="res://assets/ui/knight_portrait.png" id="5_nanys"]
 [ext_resource type="Shader" uid="uid://be3ok0qckphnj" path="res://src/shaders/flash_bar.tres" id="6_dyclp"]
 [ext_resource type="PackedScene" uid="uid://cm3ky74r1wujk" path="res://src/actors/player/ui/player_status_effect_list_ui.tscn" id="6_squ0m"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3n3nu"]
-atlas = ExtResource("2_nanys")
-region = Rect2(25, 112, 144, 136)
 
 [sub_resource type="Gradient" id="Gradient_nanys"]
 offsets = PackedFloat32Array(0)
@@ -29,10 +25,6 @@ gradient = SubResource("Gradient_65wfi")
 width = 8
 fill_from = Vector2(0, 1)
 fill_to = Vector2(0, 0)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3g0kp"]
-atlas = ExtResource("2_nanys")
-region = Rect2(181, 120, 53, 48)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3g0kp"]
 
@@ -138,10 +130,10 @@ script = ExtResource("1_3g0kp")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
-offset_left = 16.0
-offset_top = 16.0
+offset_left = 32.0
+offset_top = 32.0
 offset_right = 512.0
-offset_bottom = 164.0
+offset_bottom = 123.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
@@ -152,23 +144,11 @@ theme_override_constants/separation = 8
 
 [node name="Border" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 texture_filter = 3
-custom_minimum_size = Vector2(48, 48)
 layout_mode = 2
-texture = SubResource("AtlasTexture_3n3nu")
+texture = ExtResource("5_nanys")
 expand_mode = 3
 stretch_mode = 4
 metadata/_edit_use_anchors_ = true
-
-[node name="Sprite2D" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer/Border"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("5_nanys")
-metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
 
 [node name="ExpControl" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -182,15 +162,15 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -4.0
-offset_top = -96.0
+offset_top = -87.0
 offset_right = 4.0
 grow_horizontal = 2
 grow_vertical = 0
-value = 14.0
+value = 100.0
 fill_mode = 3
+nine_patch_stretch = true
 texture_under = SubResource("GradientTexture2D_squ0m")
 texture_progress = SubResource("GradientTexture2D_l0fju")
-texture_progress_offset = Vector2(0, 32)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -198,18 +178,16 @@ size_flags_horizontal = 3
 size_flags_vertical = 8
 theme_override_constants/separation = 16
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 texture_filter = 3
 layout_mode = 2
-texture = SubResource("AtlasTexture_3g0kp")
-
-[node name="TextureRect2" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
-texture_filter = 3
-layout_mode = 2
-texture = SubResource("AtlasTexture_3g0kp")
+size_flags_horizontal = 0
+size_flags_vertical = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("4_j6y77")
+theme_override_font_sizes/font_size = 16
+text = "Lv. 99"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -452,14 +430,6 @@ metadata/_edit_lock_ = true
 libraries = {
 &"": SubResource("AnimationLibrary_kohvm")
 }
-
-[node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-texture_filter = 3
-layout_mode = 2
-text = "Lv. 99"
-label_settings = ExtResource("5_3n3nu")
-vertical_alignment = 1
-uppercase = true
 
 [node name="PlayerStatusEffectListUI" parent="MarginContainer/VBoxContainer" instance=ExtResource("6_squ0m")]
 layout_mode = 2

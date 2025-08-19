@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://ciaj2edwf0e0c"]
 
 [ext_resource type="Script" uid="uid://c1h0q4kcxomc8" path="res://src/actors/enemies/_controllers/enemy_control_ui.gd" id="1_ck4s7"]
-[ext_resource type="FontFile" uid="uid://dnlfjy7j2gd3n" path="res://assets/fonts/PixelifySans-VariableFont_wght.ttf" id="2_1jutp"]
+[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="2_lrmdu"]
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="3_pn8ds"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rtbkc"]
@@ -54,17 +54,17 @@ size_flags_vertical = 0
 texture_filter = 3
 layout_mode = 2
 size_flags_horizontal = 2
-theme_override_fonts/font = ExtResource("2_1jutp")
+theme_override_fonts/font = ExtResource("2_lrmdu")
 theme_override_font_sizes/font_size = 16
-text = "EnemyName"
+text = "EnemyInfo."
 
 [node name="EnemyLevel" type="Label" parent="VBoxContainer/HBoxContainer"]
 texture_filter = 3
 layout_mode = 2
 size_flags_horizontal = 10
-theme_override_fonts/font = ExtResource("2_1jutp")
+theme_override_fonts/font = ExtResource("2_lrmdu")
 theme_override_font_sizes/font_size = 16
-text = "EnemyLevel"
+text = "EnemyInfo."
 
 [node name="Healthbar" type="TextureRect" parent="VBoxContainer"]
 texture_filter = 3

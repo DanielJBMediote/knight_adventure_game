@@ -1,7 +1,8 @@
-[gd_scene load_steps=91 format=3 uid="uid://cc8hjpk4p2yx7"]
+[gd_scene load_steps=92 format=3 uid="uid://cc8hjpk4p2yx7"]
 
 [ext_resource type="Texture2D" uid="uid://bm0m5w1dstb5a" path="res://assets/sprites/entities/enemies/bat/Bat-IdleFly.png" id="1_p0hut"]
 [ext_resource type="Script" uid="uid://6gabuqunp5hr" path="res://src/actors/enemies/bat/bat.gd" id="1_qt1fd"]
+[ext_resource type="PackedScene" uid="uid://cunu457c06cqm" path="res://src/gameplay/items/potions/potion_item.tscn" id="2_55kbc"]
 [ext_resource type="Texture2D" uid="uid://d0o5ykvol8jai" path="res://assets/sprites/entities/enemies/bat/Bat-Attack1.png" id="2_famla"]
 [ext_resource type="Texture2D" uid="uid://c6jqo0osuh63m" path="res://assets/sprites/entities/enemies/bat/Bat-WakeUp.png" id="2_q3gx4"]
 [ext_resource type="Texture2D" uid="uid://csdakid7boepc" path="res://assets/sprites/entities/enemies/bat/Bat-Hurt.png" id="2_weqtw"]
@@ -567,27 +568,27 @@ animations = [{
 radius = 32.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c5sj0"]
-size = Vector2(90, 96)
+size = Vector2(96, 64)
 
 [node name="Bat" type="CharacterBody2D" groups=["enemies"]]
 z_index = 1
 collision_layer = 16
 collision_mask = 34
 motion_mode = 1
-platform_on_leave = 1
+platform_floor_layers = 4294901762
 script = ExtResource("1_qt1fd")
-floor_raycast_offset = Vector2(0, 128)
-wall_raycast_offset = Vector2(100, 0)
-attack_cooldown = 1.0
+min_flight_height = 70.0
 attack_names = Array[String](["attack_bite", "attack_slash"])
+loots = Array[PackedScene]([ExtResource("2_55kbc")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 3
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_c5sj0")
-animation = &"hurt"
-frame = 4
+animation = &"attack_bite"
+frame = 10
 frame_progress = 1.0
+flip_h = true
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -600,15 +601,16 @@ base_health_points = 50.0
 base_health_points_regen = 1.0
 base_min_damage = 2.0
 base_max_damage = 3.0
-base_poison_chance = 50.0
+base_poison_chance = 7.5
 base_poison_duration = 5.0
+base_poison_damage = 1.0
 base_move_speed = 85.0
 
 [node name="WanderController" parent="." instance=ExtResource("11_ykyxn")]
 wander_range = Vector2(300, 50)
 
 [node name="DetectionZone" parent="." instance=ExtResource("12_cww7r")]
-radius_range = 350.0
+radius_range = 500.0
 
 [node name="EnemyHitbox" type="Area2D" parent="."]
 collision_layer = 2048
@@ -616,9 +618,8 @@ collision_mask = 1024
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyHitbox"]
-position = Vector2(45, 16)
+position = Vector2(48, 0)
 shape = SubResource("RectangleShape2D_c5sj0")
-disabled = true
 debug_color = Color(0.724805, 0, 0.0693719, 0.42)
 
 [node name="EnemyHurtbox" parent="." instance=ExtResource("14_yvpm3")]
@@ -636,10 +637,21 @@ enemy_stats = NodePath("../EnemyStats")
 offset_top = -96.0
 offset_bottom = -96.0
 
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+debug_enabled = true
+debug_path_custom_color = Color(0.784537, 0.0808502, 0.248662, 1)
+
+[node name="DebugLabel" type="Label" parent="."]
+visible = false
+offset_left = -96.0
+offset_top = -192.0
+offset_right = -51.0
+offset_bottom = -169.0
+text = "State:"
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="trigged_dead" from="EnemyStats" to="." method="_on_dead"]
 [connection signal="trigger_player_entered" from="DetectionZone" to="." method="_on_target_player_entered"]
 [connection signal="trigger_player_exited" from="DetectionZone" to="." method="_on_target_player_exited"]
-[connection signal="area_entered" from="EnemyHitbox" to="." method="_on_enemy_hitbox_area_entered"]
-[connection signal="area_exited" from="EnemyHitbox" to="." method="_on_enemy_hitbox_area_exited"]
 [connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_player_hitbox_area_entered"]

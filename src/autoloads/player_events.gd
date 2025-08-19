@@ -8,7 +8,7 @@ signal update_energy_points(new_energy_points: float)
 signal energy_warning()
 
 signal show_exp(amount: float)
-signal update_exp(exp: float)
+signal add_exp(exp: float)
 signal level_up(level: int)
 
 signal add_status_effect(effect: StatusEffectData)
@@ -17,17 +17,20 @@ signal clear_status_effects()
 
 signal trigged_player_dead()
 
-func take_damage(damage: float) -> void:
+func _init() -> void:
+	ItemManager.use_potion.connect(_on_use_potion)
+
+func handle_event_spent_health(damage: float) -> void:
 	var current_health = PlayerStats.health_points
 	var new_health = current_health - damage
 	
 	if new_health <= 0:
-		print("Player die")
 		trigged_player_dead.emit()
 	
 	PlayerStats.update_health(new_health)
 	update_health_points.emit(new_health)
-func recovery_health(health: float) -> void:
+
+func handle_event_recovery_health(health: float) -> void:
 	var current_health = PlayerStats.health_points
 	var new_health = current_health + health
 	
@@ -37,7 +40,7 @@ func recovery_health(health: float) -> void:
 	PlayerStats.update_health(new_health)
 	update_health_points.emit(new_health)
 
-func spent_mana(value: float) -> void:
+func handle_event_spent_mana(value: float) -> void:
 	var current_value = PlayerStats.mana_points
 	var new_value = current_value - value
 	
@@ -46,7 +49,8 @@ func spent_mana(value: float) -> void:
 	
 	PlayerStats.update_mana(new_value)
 	update_mana_points.emit(new_value)
-func recovery_mana(value: float) -> void:
+
+func handle_event_recovery_mana(value: float) -> void:
 	var current_value = PlayerStats.mana_points
 	var new_value = current_value + value
 	
@@ -56,7 +60,7 @@ func recovery_mana(value: float) -> void:
 	PlayerStats.update_mana(new_value)
 	update_mana_points.emit(new_value)
 
-func spent_energy(value: float) -> void:
+func handle_event_spent_energy(value: float) -> void:
 	var current_value = PlayerStats.energy_points
 	var new_value = current_value - value
 	
@@ -65,7 +69,8 @@ func spent_energy(value: float) -> void:
 	
 	PlayerStats.update_energy(new_value)
 	update_energy_points.emit(new_value)
-func recovery_energy(value: float)-> void:
+
+func handle_event_recovery_energy(value: float)-> void:
 	var current_value = PlayerStats.energy_points
 	var new_value = current_value + value
 	
@@ -75,10 +80,18 @@ func recovery_energy(value: float)-> void:
 	PlayerStats.update_energy(new_value)
 	update_energy_points.emit(new_value)
 
-func add_experience(amount: float) -> void:
+func handle_event_add_experience(amount: float) -> void:
+	var current_exp = PlayerStats.current_exp + amount
+	add_exp.emit(current_exp)
 	PlayerStats.add_experience(amount)
-	var current_exp = PlayerStats.current_exp
-	update_exp.emit(current_exp)
+	show_exp.emit(amount)
 
-func on_level_up(level: int):
+func handle_event_level_up(level: int):
 	level_up.emit(level)
+
+func _on_use_potion(potion: PotionItem, test: Object) -> bool:
+	print("Potion use: ", potion.item_name)
+	print("Effects: ", potion.item_description)
+	
+	return true
+	
