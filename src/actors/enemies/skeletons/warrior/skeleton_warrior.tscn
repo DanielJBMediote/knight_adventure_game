@@ -1,10 +1,11 @@
-[gd_scene load_steps=72 format=3 uid="uid://bm3d45tncritm"]
+[gd_scene load_steps=77 format=3 uid="uid://bm3d45tncritm"]
 
 [ext_resource type="Texture2D" uid="uid://bjgo34ib8em0t" path="res://assets/sprites/entities/enemies/skeleton_warrior/Idle.png" id="1_boscd"]
 [ext_resource type="Texture2D" uid="uid://ua7t4hd0a1xe" path="res://assets/sprites/entities/enemies/skeleton_warrior/Attack_1.png" id="1_ku71e"]
 [ext_resource type="Script" uid="uid://cqxfk4dlfcpfo" path="res://src/actors/enemies/skeletons/warrior/skeleton_warrior.gd" id="1_w8w3d"]
 [ext_resource type="Texture2D" uid="uid://c8gn4pgjeepin" path="res://assets/sprites/entities/enemies/skeleton_warrior/Attack_2.png" id="2_2yty7"]
 [ext_resource type="Texture2D" uid="uid://0nie2mi0a4jq" path="res://assets/sprites/entities/enemies/skeleton_warrior/Run.png" id="2_jqkq4"]
+[ext_resource type="Shader" uid="uid://cgycaixyakajw" path="res://src/shaders/hit_flash.tres" id="2_kkjuk"]
 [ext_resource type="Texture2D" uid="uid://dx3jb3f558k76" path="res://assets/sprites/entities/enemies/skeleton_warrior/Attack_3.png" id="3_1ek18"]
 [ext_resource type="Texture2D" uid="uid://dh1obiff4v2j5" path="res://assets/sprites/entities/enemies/skeleton_warrior/Dead.png" id="4_2yty7"]
 [ext_resource type="Texture2D" uid="uid://bvgnjpwy0r6sw" path="res://assets/sprites/entities/enemies/skeleton_warrior/Hurt.png" id="4_w8w3d"]
@@ -16,6 +17,11 @@
 [ext_resource type="PackedScene" uid="uid://rtxpfrnud2ta" path="res://src/actors/enemies/_controllers/wander_controller.tscn" id="14_1v3lw"]
 [ext_resource type="PackedScene" uid="uid://bw7gs5y32rs22" path="res://src/actors/enemies/_controllers/enemy_hurtbox.tscn" id="15_5prew"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="16_7rc4i"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oaf8t"]
+shader = ExtResource("2_kkjuk")
+shader_parameter/BooleanParameter = false
+shader_parameter/hint = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1v3lw"]
 atlas = ExtResource("1_ku71e")
@@ -440,21 +446,60 @@ size = Vector2(64, 96)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5prew"]
 size = Vector2(99.5, 114)
 
+[sub_resource type="Animation" id="Animation_ukdjr"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:material:shader_parameter/BooleanParameter")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_t48kw"]
+resource_name = "hit_flash"
+length = 0.2
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:material:shader_parameter/BooleanParameter")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kkjuk"]
+_data = {
+&"RESET": SubResource("Animation_ukdjr"),
+&"hit_flash": SubResource("Animation_t48kw")
+}
+
 [node name="SkeletonWarrior" type="CharacterBody2D" groups=["enemies"]]
 collision_layer = 16
-collision_mask = 42
+collision_mask = 34
 floor_snap_length = 5.0
 script = ExtResource("1_w8w3d")
 wall_jump_force = 850.0
 enemy_type = 1
 wall_detection_distance = 42.0
+attack_cooldown = 1.25
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-texture_filter = 3
+material = SubResource("ShaderMaterial_oaf8t")
 position = Vector2(0, -9.53674e-07)
 scale = Vector2(1.75, 1.75)
 sprite_frames = SubResource("SpriteFrames_1ek18")
-animation = &"jump"
+animation = &"hurt"
 offset = Vector2(0, -44)
 flip_h = true
 metadata/_edit_lock_ = true
@@ -479,7 +524,7 @@ height = 116.0
 colision_position = Vector2(0, -42)
 
 [node name="DetectionZone" parent="." instance=ExtResource("11_07v5p")]
-radius_range = 400.0
+radius_range = 700.0
 
 [node name="WanderController" parent="." instance=ExtResource("14_1v3lw")]
 wander_range = Vector2(500, 0)
@@ -487,11 +532,12 @@ enemy_type = 1
 
 [node name="EnemyStats" parent="." instance=ExtResource("12_5prew")]
 entity_name = "Skeleton Warrior"
-base_health_points = 115.0
+base_health_points = 200.0
 base_health_points_regen = 1.25
-base_min_damage = 2.0
-base_max_damage = 5.0
-base_experience = 25.0
+base_min_damage = 20.0
+base_max_damage = 30.0
+base_crit_rate = 25.0
+base_experience = 75.0
 base_bleed_chance = 5.0
 base_bleed_duration = 5.0
 base_bleed_damage = 0.15
@@ -521,7 +567,13 @@ offset_right = -51.0
 offset_bottom = -329.0
 text = "State:"
 
+[node name="HitFlashAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_kkjuk")
+}
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_enemy_hurtbox_player_hitbox_entered"]
 [connection signal="trigger_player_entered" from="DetectionZone" to="." method="_on_detection_zone_trigger_player_entered"]
 [connection signal="trigger_player_exited" from="DetectionZone" to="." method="_on_detection_zone_trigger_player_exited"]
+[connection signal="trigged_dead" from="EnemyStats" to="." method="_on_enemy_stats_trigged_dead"]

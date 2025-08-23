@@ -57,41 +57,5 @@ func perform_wall_jump(direction_x: float, jump_speed: float):
 	can_wall_jump = false
 	wall_jump_timer.start(WALL_JUMP_COOLDOWN)
 
-func take_knockback(knock_force: float, attacker_position: Vector2):
-	if is_invulnerable or is_in_knockback:
-		return
-	
-	# Configura estado de knockback
-	is_in_knockback = true
-	is_hurting = true
-	is_invulnerable = true
-	
-	# Interrompe qualquer ataque em andamento
-	is_attacking = false
-	can_attack = false
-	#super.disable_enemy_hitbox()
-	
-	# Calcula direção do knockback
-	var knockback_direction = (global_position - attacker_position).normalized()
-	
-	# Aplica o knockback
-	velocity = knockback_direction * knock_force * knockback_resistance
-	
-	# Configura timer para recuperação
-	if knockback_timer:
-		knockback_timer.stop()
-	else:
-		knockback_timer = Timer.new()
-		add_child(knockback_timer)
-		knockback_timer.timeout.connect(_on_knockback_finished)
-	
-	knockback_timer.start(0.3)  # Duração do knockback
-
-func _on_knockback_finished():
-	is_in_knockback = false
-	is_hurting = false
-	is_invulnerable = false
-	can_attack = true
-
 func _on_wall_jump_cooldown_finished():
 	can_wall_jump = true

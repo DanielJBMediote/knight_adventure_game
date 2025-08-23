@@ -1,61 +1,71 @@
 extends Node
 
+signal page_changed
+
 signal inventory_updated
 signal inventory_saved()
 signal inventory_loaded()
-signal close_open_inventory(is_open: bool)
+signal update_inventory_visible(is_open: bool)
 
-var is_open: bool = false
+signal update_item_information(item: Item)
 
-static var items: Array[Item] = []
-static var slots: Array[Item] = []
+var items: Array[Item] = []
+var slots: Array[Item] = []
 static var current_page: int = 0
 
 const MAX_SLOTS := 54
 const SLOTS_PER_PAGE := 18
+
+var is_open: bool = false
+var current_select_item: Item
 
 func _ready():
 	# Inicializa slots vazios
 	for i in range(MAX_SLOTS):  # Número de slots
 		slots.append(null)
 	
-	#create_ramdon_items()
+	create_ramdon_items()
 
 func create_ramdon_items() -> void:
-	for i in 200:
-		var item = PotionItem.new()
-		add_item(item)
+	for i in 1000:
+		#var gem = GemItem.new()
+		#add_item(gem)
+		var potion = PotionItem.new()
+		add_item(potion)
 
 func handle_inventory_visibility() -> void:
 	is_open = !is_open
-	close_open_inventory.emit(is_open)
+	update_inventory_visible.emit(is_open)
 
 func add_item(item: Item) -> bool:
+	# Cria uma cópia do item para trabalhar
+	var item_copy = item._duplicate()
+	
 	# Se o item não for stackable, trata como item único
-	item.use_item.connect(PlayerEvents._on_item_used)
-		
-	if not item.stackable:
-		return add_single_item(item)
+	if not item_copy.stackable:
+		return add_single_item(item_copy)
 	
 	# Tenta adicionar a stacks existentes primeiro
-	var remaining_stack = item.current_stack
-	remaining_stack = try_add_to_existing_stacks(item, remaining_stack)
+	var remaining_stack = item_copy.current_stack
+	remaining_stack = try_add_to_existing_stacks(item_copy, remaining_stack)
 	
 	# Se ainda sobrar itens, adiciona em slots vazios
 	if remaining_stack > 0:
-		remaining_stack = add_to_empty_slots(item, remaining_stack)
+		remaining_stack = add_to_empty_slots(item_copy, remaining_stack)
 	
 	# Retorna true se pelo menos parte do stack foi adicionada
 	inventory_updated.emit()
-	return remaining_stack < item.current_stack
+	return remaining_stack < item_copy.current_stack
 
 func add_single_item(item: Item) -> bool:
 	# Procura por um slot vazio para item único
 	for i in range(slots.size()):
 		if slots[i] == null:
-			slots[i] = item.duplicate()  # Usa duplicate para não compartilhar referência
-			slots[i].current_stack = 1  # Garante que itens únicos tenham stack 1
-			items.append(slots[i])
+			var item_copy = item._duplicate()
+			item_copy.current_stack = 1  # Garante que itens únicos tenham stack 1
+			slots[i] = item_copy
+			items.append(item_copy)
+			inventory_updated.emit()
 			return true
 	return false
 
@@ -75,12 +85,6 @@ func try_add_to_existing_stacks(item: Item, remaining_stack: int) -> int:
 			slots[i].current_stack += amount_to_add
 			remaining_stack -= amount_to_add
 			
-			# Atualiza o item correspondente no array items
-			for j in range(items.size()):
-				if items[j] == slots[i]:
-					items[j].current_stack = slots[i].current_stack
-					break
-			
 			if remaining_stack <= 0:
 				return 0
 	
@@ -89,12 +93,12 @@ func try_add_to_existing_stacks(item: Item, remaining_stack: int) -> int:
 func add_to_empty_slots(item: Item, remaining_stack: int) -> int:
 	for i in range(slots.size()):
 		if slots[i] == null:
-			var new_item = item.duplicate()
-			var stack_size = min(remaining_stack, new_item.max_stack)
+			var item_copy = item._duplicate()
+			var stack_size = min(remaining_stack, item_copy.max_stack)
 			
-			new_item.current_stack = stack_size
-			slots[i] = new_item
-			items.append(new_item)
+			item_copy.current_stack = stack_size
+			slots[i] = item_copy
+			items.append(item_copy)
 			
 			remaining_stack -= stack_size
 			
@@ -108,13 +112,89 @@ func remove_item(item: Item):
 	if slot_index != -1:
 		var item_index = items.find(item)
 		if item_index != -1:
-			items.erase(item)
+			items.remove_at(item_index)
 		slots[slot_index] = null
 		inventory_updated.emit()
+
+func sort_inventory(mode: String = "ASC"):
+	# Filtra apenas slots com itens (remove nulls)
+	var non_null_slots: Array[Item] = []
+	var null_count = 0
+	
+	for slot in slots:
+		if slot != null:
+			non_null_slots.append(slot)
+		else:
+			null_count += 1
+	
+	# Ordena os itens não nulos
+	non_null_slots.sort_custom(_sort_items.bind(mode))
+	
+	# Reconstrói o array de slots com itens ordenados + slots vazios no final
+	slots.clear()
+	slots.append_array(non_null_slots)
+	
+	# Adiciona os slots vazios no final
+	for i in range(null_count):
+		slots.append(null)
+	
+	# Atualiza o array items para refletir a ordenação (cria novas referências)
+	items.clear()
+	for slot in non_null_slots:
+		items.append(slot)
+	
+	# Emite sinal de atualização
+	inventory_updated.emit()
+
+# Função de comparação personalizada para ordenação
+func _sort_items(a: Item, b: Item, mode: String) -> bool:
+	# 1. Ordena por Category
+	if a.item_category != b.item_category:
+		if mode == "ASC":
+			return a.item_category < b.item_category
+		else:
+			return a.item_category > b.item_category
+	
+	# 2. Se Category igual, ordena por SubCategory
+	if a.item_subcategory != b.item_subcategory:
+		if mode == "ASC":
+			return a.item_subcategory < b.item_subcategory
+		else:
+			return a.item_subcategory > b.item_subcategory
+	
+	# 3. Se SubCategory igual, ordena por Rarity
+	if a.item_rarity != b.item_rarity:
+		if mode == "ASC":
+			return a.item_rarity < b.item_rarity
+		else:
+			return a.item_rarity > b.item_rarity
+	
+	# 4. Se o nível é igual, ordena por Nível
+	if a.item_level != b.item_level:
+		if mode == "ASC":
+			return a.item_level < b.item_level
+		else:
+			return a.item_level > b.item_level
+	
+	if a.current_stack != b.current_stack:
+		if mode == "ASC":
+			return a.current_stack < b.current_stack
+		else:
+			return a.current_stack > b.current_stack
+	
+		
+	# Fallback. Se tudo igual, mantém ordem original (estável)
+	return false
+
+# Função auxiliar para conectar os botões corretamente
+func connect_sort_buttons(asc_button: Button, desc_button: Button) -> void:
+	asc_button.pressed.connect(sort_inventory.bind("ASC"))
+	desc_button.pressed.connect(sort_inventory.bind("DESC"))
 
 func change_page(direction: int) -> void:
 	current_page = wrapi(current_page + direction, 0, MAX_SLOTS / SLOTS_PER_PAGE)
 	inventory_updated.emit()
+	page_changed.emit()
 
 func get_current_page_items() -> Array[Item]:
 	var start_index = current_page * SLOTS_PER_PAGE

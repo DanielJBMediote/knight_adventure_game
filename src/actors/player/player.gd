@@ -59,9 +59,18 @@ var air_dash_count := 1  # Quantidade de dash no ar permitido
 # Váriaveis responsável pela transição do crouch
 var is_crouch_transition_complete = false # Valor que manipula a transição de Crouch
  
-# 1 = normal, <1 = menos knockback, >1 = mais knockback
-@export var knockback_resistance: float = 1.0
-@export var knockback_force: float = 300.0
+@export var knockback_resistance: float = 1.0:
+	set(value):
+		knockback_resistance = value
+		if PlayerStats:
+			PlayerStats.set_knockback_resistance(value)
+
+@export var knockback_force: float = 300.0:
+	set(value):
+		knockback_force = value
+		if PlayerStats:
+			PlayerStats.set_knockback_force(value)
+
 var is_invulnerable: bool = false
 
 # Váriaveis responsável pelos ataques/combos
@@ -80,6 +89,11 @@ var is_falling := false
 
 func _ready() -> void:
 	add_to_group("player")
+	
+	if PlayerStats:
+		PlayerStats.set_knockback_resistance(knockback_resistance)
+		PlayerStats.set_knockback_force(knockback_force)
+	
 	floor_down_raycast.enabled = true
 	floor_up_raycast.enabled = true
 	

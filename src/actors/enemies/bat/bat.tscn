@@ -1,12 +1,12 @@
-[gd_scene load_steps=92 format=3 uid="uid://cc8hjpk4p2yx7"]
+[gd_scene load_steps=96 format=3 uid="uid://cc8hjpk4p2yx7"]
 
 [ext_resource type="Texture2D" uid="uid://bm0m5w1dstb5a" path="res://assets/sprites/entities/enemies/bat/Bat-IdleFly.png" id="1_p0hut"]
 [ext_resource type="Script" uid="uid://6gabuqunp5hr" path="res://src/actors/enemies/bat/bat.gd" id="1_qt1fd"]
-[ext_resource type="PackedScene" uid="uid://cunu457c06cqm" path="res://src/gameplay/items/potions/potion_item.tscn" id="2_55kbc"]
 [ext_resource type="Texture2D" uid="uid://d0o5ykvol8jai" path="res://assets/sprites/entities/enemies/bat/Bat-Attack1.png" id="2_famla"]
 [ext_resource type="Texture2D" uid="uid://c6jqo0osuh63m" path="res://assets/sprites/entities/enemies/bat/Bat-WakeUp.png" id="2_q3gx4"]
 [ext_resource type="Texture2D" uid="uid://csdakid7boepc" path="res://assets/sprites/entities/enemies/bat/Bat-Hurt.png" id="2_weqtw"]
 [ext_resource type="Texture2D" uid="uid://d0360jg3f2t78" path="res://assets/sprites/entities/enemies/bat/Bat-Run.png" id="3_g00nq"]
+[ext_resource type="Shader" uid="uid://cgycaixyakajw" path="res://src/shaders/hit_flash.tres" id="3_jrggf"]
 [ext_resource type="Texture2D" uid="uid://dag6lrk0nf1db" path="res://assets/sprites/entities/enemies/bat/Bat-Attack2.png" id="3_qt1fd"]
 [ext_resource type="Texture2D" uid="uid://ooha02pf2xck" path="res://assets/sprites/entities/enemies/bat/Bat-Die.png" id="4_c5sj0"]
 [ext_resource type="Texture2D" uid="uid://dtqv6aps05w7j" path="res://assets/sprites/entities/enemies/bat/Bat-Sleep.png" id="5_5udcu"]
@@ -16,6 +16,11 @@
 [ext_resource type="PackedScene" uid="uid://ciaj2edwf0e0c" path="res://src/actors/enemies/_controllers/enemy_control_ui.tscn" id="12_ykyxn"]
 [ext_resource type="PackedScene" uid="uid://bw7gs5y32rs22" path="res://src/actors/enemies/_controllers/enemy_hurtbox.tscn" id="14_yvpm3"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="15_4siq7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8os3d"]
+shader = ExtResource("3_jrggf")
+shader_parameter/BooleanParameter = false
+shader_parameter/hint = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fcdqn"]
 atlas = ExtResource("3_qt1fd")
@@ -570,6 +575,44 @@ radius = 32.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c5sj0"]
 size = Vector2(96, 64)
 
+[sub_resource type="Animation" id="Animation_tqihg"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:material:shader_parameter/BooleanParameter")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_olv3m"]
+resource_name = "hit_flash"
+length = 0.2
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:material:shader_parameter/BooleanParameter")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.110188, 0.2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [false, true, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_j2j1b"]
+_data = {
+&"RESET": SubResource("Animation_tqihg"),
+&"hit_flash": SubResource("Animation_olv3m")
+}
+
 [node name="Bat" type="CharacterBody2D" groups=["enemies"]]
 z_index = 1
 collision_layer = 16
@@ -578,11 +621,11 @@ motion_mode = 1
 platform_floor_layers = 4294901762
 script = ExtResource("1_qt1fd")
 min_flight_height = 70.0
+attack_cooldown = 1.0
 attack_names = Array[String](["attack_bite", "attack_slash"])
-loots = Array[PackedScene]([ExtResource("2_55kbc")])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-texture_filter = 3
+material = SubResource("ShaderMaterial_8os3d")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_c5sj0")
 animation = &"attack_bite"
@@ -597,14 +640,13 @@ metadata/_edit_lock_ = true
 
 [node name="EnemyStats" parent="." instance=ExtResource("11_c5sj0")]
 entity_name = "Dark Bat"
-base_health_points = 50.0
-base_health_points_regen = 1.0
-base_min_damage = 2.0
-base_max_damage = 3.0
-base_poison_chance = 7.5
+base_min_damage = 10.0
+base_max_damage = 20.0
+base_experience = 50.0
+base_poison_chance = 20.0
 base_poison_duration = 5.0
-base_poison_damage = 1.0
-base_move_speed = 85.0
+base_poison_damage = 0.5
+base_move_speed = 65.0
 
 [node name="WanderController" parent="." instance=ExtResource("11_ykyxn")]
 wander_range = Vector2(300, 50)
@@ -639,8 +681,6 @@ offset_bottom = -96.0
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 avoidance_enabled = true
-debug_enabled = true
-debug_path_custom_color = Color(0.784537, 0.0808502, 0.248662, 1)
 
 [node name="DebugLabel" type="Label" parent="."]
 visible = false
@@ -650,8 +690,13 @@ offset_right = -51.0
 offset_bottom = -169.0
 text = "State:"
 
+[node name="HitFlashAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_j2j1b")
+}
+
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
-[connection signal="trigged_dead" from="EnemyStats" to="." method="_on_dead"]
+[connection signal="trigged_dead" from="EnemyStats" to="." method="_on_enemy_stats_trigged_dead"]
 [connection signal="trigger_player_entered" from="DetectionZone" to="." method="_on_target_player_entered"]
 [connection signal="trigger_player_exited" from="DetectionZone" to="." method="_on_target_player_exited"]
 [connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_player_hitbox_area_entered"]

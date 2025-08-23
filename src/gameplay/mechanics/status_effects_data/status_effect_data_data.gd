@@ -11,3 +11,20 @@ var duration: float = 0.0
 
 func _init() -> void:
 	pass
+
+func get_effect_name() -> String:
+	match effect:
+		EFFECT.POISON:
+			return "Poisoning"
+		EFFECT.BLEED:
+			return "Bleeding"
+		EFFECT.FREEZE:
+			return "Freezening"
+		EFFECT.STUN:
+			return "Stunned"
+		EFFECT.HP_REGEN:
+			return "Health Regen"
+		EFFECT.MP_REGEN:
+			return "Mana Regen"
+		
+	return "Unknown Effect"

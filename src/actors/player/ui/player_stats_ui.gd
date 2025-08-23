@@ -55,6 +55,7 @@ func _ready() -> void:
 	PlayerEvents.level_up.connect(_on_level_update)
 	PlayerEvents.energy_warning.connect(_on_energy_warning_emmited)
 	
+	
 	# Inicializa com os valores atuais
 	_update_health_bar(PlayerStats.max_health_points, PlayerStats.health_points)
 	_update_mana_bar(PlayerStats.max_mana_points, PlayerStats.mana_points)
@@ -156,17 +157,18 @@ func _calculate_bar_width(max_value: float, base_value: float = DEFAULT_POINTS_V
 
 # Função para aplicar os tamanhos de forma consistente
 func _apply_bar_widths(control: Control, bar: ProgressBar, bg_bar: ProgressBar, width: float):
+	return
 	# Ajusta o container
-	control.custom_minimum_size.x = width
-	control.size.x = width
+	#control.custom_minimum_size.x = width
+	#control.size.x = width
 	
 	# Ajusta as barras
-	bar.size.x = width
-	bg_bar.size.x = width
+	#bar.size.x = width
+	#bg_bar.size.x = width
 	
 	# Garante que as barras herdem o mesmo tamanho do container
-	bar.custom_minimum_size.x = width
-	bg_bar.custom_minimum_size.x = width
+	#bar.custom_minimum_size.x = width
+	#bg_bar.custom_minimum_size.x = width
 
 func update_health_points_label(value: float):
 	var max_value = PlayerStats.max_health_points

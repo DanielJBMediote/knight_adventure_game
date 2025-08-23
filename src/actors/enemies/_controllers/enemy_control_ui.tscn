@@ -55,7 +55,7 @@ texture_filter = 3
 layout_mode = 2
 size_flags_horizontal = 2
 theme_override_fonts/font = ExtResource("2_lrmdu")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 12
 text = "EnemyInfo."
 
 [node name="EnemyLevel" type="Label" parent="VBoxContainer/HBoxContainer"]
@@ -63,12 +63,12 @@ texture_filter = 3
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_fonts/font = ExtResource("2_lrmdu")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 12
 text = "EnemyInfo."
 
 [node name="Healthbar" type="TextureRect" parent="VBoxContainer"]
 texture_filter = 3
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 size_flags_vertical = 6
 texture = SubResource("AtlasTexture_rtbkc")

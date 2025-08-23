@@ -1,6 +1,6 @@
 [gd_resource type="Theme" load_steps=2 format=3 uid="uid://cjexjpecooqvc"]
 
-[ext_resource type="FontFile" uid="uid://dnlfjy7j2gd3n" path="res://assets/fonts/PixelifySans-VariableFont_wght.ttf" id="1_smk5l"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="1_smk5l"]
 
 [resource]
 Label/colors/font_color = Color(0.764706, 0.72549, 0.611765, 1)

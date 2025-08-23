@@ -1,0 +1,235 @@
+[gd_scene load_steps=26 format=3 uid="uid://cf0qdgwe72vtp"]
+
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_doq6e"]
+[ext_resource type="Script" uid="uid://0dcg17eebqna" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_and_equips_panel.gd" id="2_iqjlt"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="2_xven0"]
+[ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="3_iqjlt"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_d3dn8"]
+[ext_resource type="Texture2D" uid="uid://n7tct3q0h5fd" path="res://assets/sprites/entities/player/_Idle_Cutted.png" id="5_s20js"]
+[ext_resource type="Texture2D" uid="uid://s5epdhw2o7gb" path="res://assets/sprites/items/icons/Icon300.png" id="6_cxpm7"]
+[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="8_d3dn8"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ad3cl"]
+texture = ExtResource("1_doq6e")
+texture_margin_left = 51.0
+texture_margin_top = 44.0
+texture_margin_right = 45.0
+texture_margin_bottom = 48.0
+region_rect = Rect2(25, 112, 144, 136)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yjujk"]
+atlas = ExtResource("5_s20js")
+region = Rect2(0, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p32c0"]
+atlas = ExtResource("5_s20js")
+region = Rect2(48, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i0h5i"]
+atlas = ExtResource("5_s20js")
+region = Rect2(96, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kkbk8"]
+atlas = ExtResource("5_s20js")
+region = Rect2(144, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7uc73"]
+atlas = ExtResource("5_s20js")
+region = Rect2(192, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d3w65"]
+atlas = ExtResource("5_s20js")
+region = Rect2(240, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6l60w"]
+atlas = ExtResource("5_s20js")
+region = Rect2(288, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45avb"]
+atlas = ExtResource("5_s20js")
+region = Rect2(336, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xyatc"]
+atlas = ExtResource("5_s20js")
+region = Rect2(384, 0, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vxkcf"]
+atlas = ExtResource("5_s20js")
+region = Rect2(432, 0, 48, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vxkcf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yjujk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p32c0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i0h5i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kkbk8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7uc73")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d3w65")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6l60w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_45avb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xyatc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vxkcf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qlwbu"]
+texture = ExtResource("1_doq6e")
+texture_margin_left = 51.0
+texture_margin_top = 44.0
+texture_margin_right = 57.0
+texture_margin_bottom = 44.0
+region_rect = Rect2(25, 112, 144, 136)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_auooh"]
+bg_color = Color(0.439216, 0.364706, 0.345098, 1)
+border_width_top = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d3dn8"]
+bg_color = Color(0.0980392, 0.0980392, 0.101961, 1)
+border_width_top = 1
+corner_radius_top_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_orxmo"]
+bg_color = Color(0.188235, 0.168627, 0.160784, 1)
+border_width_top = 1
+
+[sub_resource type="Theme" id="Theme_auooh"]
+TabContainer/colors/font_outline_color = Color(0.658824, 0.552941, 0.458824, 1)
+TabContainer/colors/font_selected_color = Color(0.764706, 0.72549, 0.611765, 1)
+TabContainer/constants/outline_size = 2
+TabContainer/constants/side_margin = 0
+TabContainer/font_sizes/font_size = 20
+TabContainer/fonts/font = ExtResource("8_d3dn8")
+TabContainer/styles/tab_hovered = SubResource("StyleBoxFlat_auooh")
+TabContainer/styles/tab_selected = SubResource("StyleBoxFlat_d3dn8")
+TabContainer/styles/tab_unselected = SubResource("StyleBoxFlat_orxmo")
+
+[node name="StatsAndEquipsPanel" type="Panel"]
+custom_minimum_size = Vector2(456, 456)
+offset_right = 416.0
+offset_bottom = 468.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_ad3cl")
+script = ExtResource("2_iqjlt")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="EquipAndStatsLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme = ExtResource("2_xven0")
+text = "Stats"
+
+[node name="ToggleStatsEquipsButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+focus_mode = 0
+theme = ExtResource("3_iqjlt")
+theme_override_colors/font_outline_color = Color(0.396078, 0.317647, 0.294118, 1)
+theme_override_colors/font_color = Color(0.764706, 0.72549, 0.611765, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_d3dn8")
+text = "Equipments"
+icon = ExtResource("6_cxpm7")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="MarginContainer/VBoxContainer"]
+visible = false
+position = Vector2(68, 208)
+scale = Vector2(7, 7)
+sprite_frames = SubResource("SpriteFrames_vxkcf")
+frame_progress = 0.0345728
+metadata/_edit_lock_ = true
+
+[node name="EquipmentsSlotsGrid" type="GridContainer" parent="MarginContainer/VBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(208, 320)
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="Panel" type="Panel" parent="MarginContainer/VBoxContainer/EquipmentsSlotsGrid"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel2" type="Panel" parent="MarginContainer/VBoxContainer/EquipmentsSlotsGrid"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel3" type="Panel" parent="MarginContainer/VBoxContainer/EquipmentsSlotsGrid"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel4" type="Panel" parent="MarginContainer/VBoxContainer/EquipmentsSlotsGrid"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel5" type="Panel" parent="MarginContainer/VBoxContainer/EquipmentsSlotsGrid"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="Panel6" type="Panel" parent="MarginContainer/VBoxContainer/EquipmentsSlotsGrid"]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+
+[node name="StatsContent" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TabContainer" type="TabContainer" parent="MarginContainer/VBoxContainer/StatsContent"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_auooh")
+tab_focus_mode = 0

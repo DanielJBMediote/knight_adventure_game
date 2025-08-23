@@ -1,4 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://cu3jjchhevkc"]
+[gd_scene load_steps=5 format=3 uid="uid://cu3jjchhevkc"]
+
+[sub_resource type="Gradient" id="Gradient_mia1m"]
+offsets = PackedFloat32Array(0.207921, 0.386139, 0.663366)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.248, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7pdyw"]
+gradient = SubResource("Gradient_mia1m")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="Gradient" id="Gradient_af1rt"]
 offsets = PackedFloat32Array(0, 0.149573, 0.282051, 0.751773)
@@ -9,18 +18,14 @@ gradient = SubResource("Gradient_af1rt")
 fill_from = Vector2(0.555556, 1)
 fill_to = Vector2(0.551282, 0)
 
-[sub_resource type="Environment" id="Environment_af1rt"]
-glow_enabled = true
-glow_strength = 2.0
-glow_blend_mode = 0
-
 [node name="DroppedItemEffect" type="Node2D"]
-clip_children = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.5, 3.75)
+[node name="EffectBottom" type="Sprite2D" parent="."]
+position = Vector2(0, -10)
+texture = SubResource("GradientTexture2D_7pdyw")
+offset = Vector2(0, 10)
+
+[node name="LineEffect" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 3.75)
 texture = SubResource("GradientTexture2D_mia1m")
-offset = Vector2(0, -24.5)
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_af1rt")
+offset = Vector2(0, -32)

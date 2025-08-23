@@ -26,7 +26,7 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(0, -256, -7680, -256, -
 [node name="Map_Graveard" type="Node2D" groups=["maps"]]
 script = ExtResource("1_vlgfo")
 map_name = "Graveward at Night"
-level_mob_min = 1
+level_mob_min = 3
 level_mob_max = 5
 boss_level = 10
 metadata/_edit_horizontal_guides_ = [400.0]
@@ -74,19 +74,43 @@ position = Vector2(1376, 192)
 min_attack_distance = 110.0
 
 [node name="Bat3" parent="Entities" instance=ExtResource("7_q0ktx")]
-position = Vector2(-4672, -128)
+position = Vector2(-4768, -128)
 
 [node name="Bat6" parent="Entities" instance=ExtResource("7_q0ktx")]
 position = Vector2(-3936, -160)
 
+[node name="Bat7" parent="Entities" instance=ExtResource("7_q0ktx")]
+position = Vector2(-1856, -96)
+
+[node name="Bat8" parent="Entities" instance=ExtResource("7_q0ktx")]
+position = Vector2(-1472, 32)
+
 [node name="Bat4" parent="Entities" instance=ExtResource("7_q0ktx")]
-position = Vector2(-6656, -128)
+position = Vector2(-6784, 0)
 
 [node name="Bat5" parent="Entities" instance=ExtResource("7_q0ktx")]
-position = Vector2(-5856, -128)
+position = Vector2(-5888, 64)
 
 [node name="SkeletonWarrior" parent="Entities" instance=ExtResource("14_4hgur")]
 position = Vector2(-992, 224)
+
+[node name="SkeletonWarrior7" parent="Entities" instance=ExtResource("14_4hgur")]
+position = Vector2(-768, 224)
+
+[node name="SkeletonWarrior2" parent="Entities" instance=ExtResource("14_4hgur")]
+position = Vector2(-6336, 352)
+
+[node name="SkeletonWarrior3" parent="Entities" instance=ExtResource("14_4hgur")]
+position = Vector2(-5600, 352)
+
+[node name="SkeletonWarrior4" parent="Entities" instance=ExtResource("14_4hgur")]
+position = Vector2(-4192, 0)
+
+[node name="SkeletonWarrior5" parent="Entities" instance=ExtResource("14_4hgur")]
+position = Vector2(-2656, -96)
+
+[node name="SkeletonWarrior6" parent="Entities" instance=ExtResource("14_4hgur")]
+position = Vector2(-2432, -96)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 script = ExtResource("8_vrosl")
@@ -96,10 +120,9 @@ motion_scale = Vector2(0, 0)
 metadata/_edit_lock_ = true
 
 [node name="NightSKy" type="Sprite2D" parent="ParallaxBackground/Sky"]
-scale = Vector2(1.69231, 1.69231)
+scale = Vector2(1.76923, 1.76923)
 texture = ExtResource("9_jvgfb")
 centered = false
-metadata/_edit_lock_ = true
 
 [node name="Houses" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_mirroring = Vector2(1128, 0)
@@ -149,7 +172,7 @@ metadata/_edit_lock_ = true
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="CanvasLayer"]
-energy = 0.65
+energy = 0.3
 blend_mode = 1
 
 [node name="FogEffectScreen" parent="." instance=ExtResource("13_b74gt")]

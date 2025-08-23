@@ -6,9 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="5_5f2sf"]
 [ext_resource type="Texture2D" uid="uid://c7l8jx0c4ywdj" path="res://assets/sprites/entities/player/_Full_Sritesheet.png" id="19_vwsmr"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jiejy"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hod3v"]
 shader = ExtResource("1_jiejy")
-shader_parameter/BooleanParameter = true
+shader_parameter/BooleanParameter = false
 shader_parameter/hint = Color(1, 1, 1, 1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_244u8"]
@@ -3117,10 +3117,10 @@ tracks/0/path = NodePath("Sprite2D:material:shader_parameter/BooleanParameter")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.0514652, 0.151528),
+"times": PackedFloat32Array(0, 0.1, 0.2),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [true, false, true]
+"values": [false, true, false]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j2873"]
@@ -3130,7 +3130,6 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
-z_index = 1
 collision_layer = 8
 collision_mask = 38
 floor_snap_length = 5.0
@@ -3147,7 +3146,7 @@ drag_horizontal_enabled = true
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_jiejy")
+material = SubResource("ShaderMaterial_hod3v")
 scale = Vector2(3, 3)
 texture = ExtResource("19_vwsmr")
 offset = Vector2(-4, -35)

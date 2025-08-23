@@ -16,8 +16,16 @@ enum ENEMY_TYPES { FLYING, TERRESTRIAL }
 @export var knockback_resistance: float = 1.0
 @export var climb_speed := 80.0  # Velocidade de subida
 @export var time_dead_before_free:= 1.0
+@export var knockback_air_force := -1.0 
 
-@export var loots: Array[PackedScene] = []
+@export var loot_categories: Array[Item.ItemCategory] = [
+	Item.ItemCategory.LOOTS, 
+	Item.ItemCategory.CONSUMABLES
+]
+
+@export var drop_chance_multiplier: float = 1.0  # Multiplicador para ajustar a chance de drop
+@export var min_drops: int = 0
+@export var max_drops: int = 2
 
 var floor_raycast: RayCast2D
 var wall_raycasts: Array[RayCast2D] = []
@@ -97,7 +105,7 @@ func get_distance_to_player() -> float:
 	else:
 		return 0.0
 
-func disable_enemy_hitbox(disabled: bool = true)-> void:
+func disable_enemy_hitbox(disabled: bool = false)-> void:
 	var hitbox = get_node("EnemyHitbox") as Area2D
 	hitbox.get_node("CollisionShape2D").disabled = disabled
 
@@ -107,6 +115,45 @@ func pick_random_state(states_list: Array):
 func get_direction_to(positionA: Vector2, positionB: Vector2):
 	var direction = (positionA - positionB).normalized()
 	return Vector2.RIGHT if direction.x > 0 else Vector2.LEFT
+
+func take_knockback(knock_force: float, attacker_position: Vector2):
+	if is_invulnerable or is_in_knockback:
+		return
+	
+	# Configura estado de knockback
+	is_in_knockback = true
+	is_hurting = true
+	is_invulnerable = true
+	
+	# Interrompe qualquer ataque em andamento
+	is_attacking = false
+	can_attack = false
+	
+	disable_enemy_hitbox()
+	
+	# Calcula direção do knockback
+	var knockback_direction = (global_position - attacker_position).normalized()
+	if enemy_type == ENEMY_TYPES.FLYING:
+		knockback_direction.y = knockback_air_force  # Mais para cima para um efeito melhor
+	
+	# Aplica o knockback
+	velocity = knockback_direction * knock_force * knockback_resistance
+	
+	# Configura timer para recuperação
+	if knockback_timer:
+		knockback_timer.stop()
+	else:
+		knockback_timer = Timer.new()
+		add_child(knockback_timer)
+		knockback_timer.timeout.connect(_on_knockback_finished)
+	
+	knockback_timer.start(0.3)  # Duração do knockback
+
+func _on_knockback_finished():
+	is_in_knockback = false
+	is_hurting = false
+	is_invulnerable = false
+	can_attack = true
 
 func hit_player(enemy_stats: EnemyStats):
 	var is_player_in_close_range = target_player and distance_to_player < 30.0 # Aqui considera o player ocupando o mesmo lugar do Mob
@@ -121,6 +168,26 @@ func hit_player(enemy_stats: EnemyStats):
 		attack_timer.start(attack_cooldown)
 		can_attack = false
 
+func take_hit_with_knockback() -> bool:
+	if is_dead:
+		return false
+
+	var enemy_stats: EnemyStats = get_node_or_null("EnemyStats")
+	var float_damage_control: FloatDamageControl = get_node_or_null("FloatDamageControl")
+	
+	if enemy_stats == null or float_damage_control == null:
+		printerr("EnemyStats or FloatDamageControl is nulls, check tree.")
+		return false
+		
+	if target_player and not is_in_knockback and not is_invulnerable:
+		var damage_data = PlayerStats.calculate_attack_damage()
+		is_hurting = true
+		enemy_stats.on_take_damage(damage_data.damage)
+		float_damage_control.set_damage(damage_data)
+		return damage_data.is_knockback_hit
+	
+	return false
+
 func _on_attack_cooldown_finished():
 	can_attack = true
 	if target_player:
@@ -129,33 +196,51 @@ func _on_attack_cooldown_finished():
 func _on_dead_timer_timeout() -> void:
 	queue_free()
 
-func _on_dead() -> void:
+func _on_dead(exp: float) -> void:
 	is_dead = true
 	drop_loots()
+	PlayerEvents.handle_event_add_experience(exp)
 	if time_dead_before_free >= 1.0:
 		add_child(dead_timer)
 		dead_timer.start()
 	
 func drop_loots() -> void:
-	if loots.is_empty():
+	if loot_categories.is_empty():
 		return
-		
+	
 	var drop_zone = get_tree().get_first_node_in_group("items_dropped_zone")
 	if !drop_zone:
 		printerr("Nenhuma zona de drop encontrada!")
 		return
 	
-	for loot_resource in loots:
-		var item_resource = loot_resource.instantiate()
-		if item_resource is Item:
+	# Obtém o nível do inimigo (assumindo que EnemyStats existe)
+	var enemy_level = 1
+	var enemy_stats: EnemyStats = get_node_or_null("EnemyStats")
+	if enemy_stats:
+		enemy_level = enemy_stats.entity_level
+	
+	# Gera os itens de loot
+	var loot_items = LootManager.generate_loot_for_enemy(enemy_level, loot_categories)
+	
+	# Determina quantos itens dropar (com base nas configurações)
+	var num_drops = clamp(randi() % (max_drops + 1), min_drops, max_drops)
+	num_drops = min(num_drops, loot_items.size())
+	
+	# Dropa os itens
+	for i in range(num_drops):
+		if i < loot_items.size():
+			var item_resource = loot_items[i]
 			var item_scene = preload("res://src/gameplay/items/item_object.tscn")
 			var item_instance: ItemObject = item_scene.instantiate()
 			
 			item_instance.item_resource = item_resource
 			
 			if item_instance.can_spawn():
-				# Atribui o recurso à cena
-				
-				# Posiciona o item
-				item_instance.position = global_position + Vector2(randf_range(-20, 20), randf_range(-20, 20))
+				# Posiciona o item com algum espalhamento
+				var spread_distance = 30.0
+				var random_offset = Vector2(
+					randf_range(-spread_distance, spread_distance),
+					randf_range(-spread_distance, spread_distance)
+				)
+				item_instance.position = global_position + random_offset
 				drop_zone.add_child(item_instance)

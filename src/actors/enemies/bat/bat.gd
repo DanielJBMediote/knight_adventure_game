@@ -3,9 +3,11 @@ extends FlyingEnemy
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var enemy_hitbox: Area2D = $EnemyHitbox
+@onready var enemy_hurtbox: EnemyHurtbox = $EnemyHurtbox
 @onready var enemy_stats: EnemyStats = $EnemyStats
 @onready var float_damage_control: FloatDamageControl = $FloatDamageControl
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+@onready var hit_flash_animation: AnimationPlayer = $HitFlashAnimation
 
 @onready var debug_label: Label = $DebugLabel
 
@@ -43,11 +45,13 @@ func _ready() -> void:
 	navigation_agent.target_desired_distance = 10.0
 	navigation_agent.avoidance_enabled = true
 	
+	enemy_stats.trigged_dead.connect(_on_enemy_stats_trigged_dead)
 	enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
 	enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
+	enemy_hurtbox.player_hitbox_entered.connect(_on_player_hurtbox_entered)
+	hit_flash_animation.animation_finished.connect(_on_hit_flash_animation_finished)
 	
-	enemy_stats.trigged_dead.connect(_on_bat_dead)
-	
+
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
@@ -224,12 +228,11 @@ func start_attack():
 	can_attack = false
 	current_attack_animation = AnimationUtils.pick_random_animation(attack_names)
 	#super.disable_enemy_hitbox(false)
-	
+
 func finish_attack():
 	is_attacking = false
 	can_attack = true
 	state = STATES.CHASE
-	#super.disable_enemy_hitbox()
 
 func update_enemy_hitbox_position(is_right: bool) -> void:
 	var collision_shape: CollisionShape2D = enemy_hitbox.get_node("CollisionShape2D")
@@ -281,11 +284,17 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		finish_attack()
 		if target_in_attack_range:  # Só ataca se ainda estiver no alcance
 			super.hit_player(enemy_stats)
+			can_attack = true
 		else:
 			# Se o player saiu do alcance, reseta o ataque mas mantém o cooldown
 			can_attack = false
 	if animated_sprite_2d.animation == "dying":
 		enemy_control_ui.hide()
+
+func _on_hit_flash_animation_finished():
+		is_hurting = false
+		is_invulnerable = false
+
 func _on_target_player_entered(body: Node2D) -> void:
 	target_player = body
 	state = STATES.CHASE
@@ -304,25 +313,6 @@ func _on_target_player_exited(body: Node2D) -> void:
 			setup_wander_movement()
 		else:
 			state = STATES.IDLE
-func _on_player_hitbox_area_entered() -> void:
-	if target_player and not is_in_knockback and not is_invulnerable:
-		var data = PlayerStats.calculate_attack_damage()
-		is_hurting = true
-		animated_sprite_2d.play("hurt")
-		enemy_stats.on_take_damage(data.damage)
-		float_damage_control.set_damage(data)
-		if data.is_knockback_hit:
-			super.take_knockback(target_player.knockback_force, target_player.global_position)
-
-#func _on_player_entered_in_attack_zone(body: Node2D) -> void:
-	#if target_player and body == target_player:
-		#target_in_attack_range = true
-		#can_attack = true
-#
-#func _on_player_exited_in_attack_zone(body: Node2D) -> void:
-	#if target_player and body == target_player:
-		#target_in_attack_range = false
-		#can_attack = false
 
 func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
 	if target_player:
@@ -334,6 +324,12 @@ func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
 		target_in_attack_range = false
 		can_attack = false
 
-func _on_bat_dead() -> void:
+func _on_player_hurtbox_entered() -> void:
+	hit_flash_animation.play("hit_flash")
+	if target_player and take_hit_with_knockback():
+		animated_sprite_2d.play("hurt")
+		take_knockback(target_player.knockback_force, target_player.global_position)
+
+func _on_enemy_stats_trigged_dead(exp_amount: float) -> void:
 	animated_sprite_2d.play("dying")
-	super._on_dead()
+	super._on_dead(exp_amount)

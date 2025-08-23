@@ -9,24 +9,28 @@ const MAX_CRITICAL_RATE := 100.0  # 100% máximo
 const MAX_CRITICAL_DAMAGE := 300.0  # 300% máximo
 const MAX_STATUS_CHANCE := 100.0  # 100% máximo
 
+## Define the name of Entity
 @export var entity_name := ""
-@export var entity_level := 1
+## Define the Level of Entity (Based on game difficult and map levels)
+@export var entity_level := 0
 
 # Stats básicos
 ## Base of Health Points
-@export var base_health_points := 0.0
+@export var base_health_points := 100.0
 ## Base of Health Regen per seconds
-@export var base_health_points_regen := 0.0
+@export var base_health_points_regen := 1.0
 ## Base of minimum dmage
-@export var base_min_damage := 0.0
+@export var base_min_damage := 1.0
 ## Base of maximum dmage
-@export var base_max_damage := 0.0
+@export var base_max_damage := 1.0
 ## Base of Critical Damage, default is 100% of damage, it will increment per level and difficult.
 @export var base_crit_damage := 100.0
 ## Base of Critical Damage, default is 5% of rate, it will increment per level and difficult.
 @export var base_crit_rate := 5.0 
 ## Base of Mob Experience, default is 10.0, it will increment per level and difficult.
 @export var base_experience := 10.0
+
+@export var base_defense := 1.0
 
 # Stats de status effects
 @export var base_bleed_chance := 0.0 # Chance de aplicar sangramento
@@ -74,21 +78,11 @@ func setup_stats() -> void:
 	var min_map_level = map_enemy_level["mobs"][0]
 	var max_map_level = map_enemy_level["mobs"][1]
 	
-	var difficulty_factor = {
-		GameEvents.Difficulty.NORMAL: 1.0,
-		GameEvents.Difficulty.PAINFUL: 1.2,
-		GameEvents.Difficulty.FATAL: 1.5,
-		GameEvents.Difficulty.INFERNAL: 2.0
-	}[current_difficulty]
+	var stats_mod_factor = GameEvents.get_stats_modificator(current_difficulty)
+	var level_increment = GameEvents.get_additional_levels_modificator(current_difficulty)
 	
-	var level_increment = {
-		GameEvents.Difficulty.NORMAL: 0.0,
-		GameEvents.Difficulty.PAINFUL: 5.0,
-		GameEvents.Difficulty.FATAL: 15.0,
-		GameEvents.Difficulty.INFERNAL: 25.0
-	}[current_difficulty]
-		
-	entity_level = randi_range(min_map_level, max_map_level) + level_increment
+	if entity_level == 0:
+		entity_level = randi_range(min_map_level, max_map_level) + level_increment
 	
 	# Fatores de escalonamento
 	var level_factor := 1.0 + (entity_level - 1) * 0.1
@@ -96,22 +90,22 @@ func setup_stats() -> void:
 	var damage_factor := 1.0 + (entity_level - 1) * 0.50
 	
 	# Calcula stats de vida
-	health_points = base_health_points * (health_factor * difficulty_factor)
-	health_regen_per_seconds = base_health_points_regen * (level_factor * difficulty_factor)
+	health_points = base_health_points * (health_factor * stats_mod_factor)
+	health_regen_per_seconds = base_health_points_regen * (level_factor * stats_mod_factor)
 	
 	# Calcula stats de dano
-	min_attack_damage = base_min_damage * (damage_factor * difficulty_factor)
-	max_attack_damage = base_max_damage * (damage_factor * difficulty_factor)
+	min_attack_damage = base_min_damage * (damage_factor * stats_mod_factor)
+	max_attack_damage = base_max_damage * (damage_factor * stats_mod_factor)
 	
 	# Calcula stats de velocidade
-	attack_speed = base_attack_speed * difficulty_factor
-	move_speed = base_move_speed * difficulty_factor
+	attack_speed =  clamp(base_attack_speed * stats_mod_factor, 1.0, 2.0)
+	move_speed = clamp(base_move_speed * stats_mod_factor, 1.0, 2.0)
 	
 	# Fórmulas balanceadas para CRITICAL RATE e CRITICAL DAMAGE
-	calculate_critical_stats(level_factor, difficulty_factor)
+	calculate_critical_stats(level_factor, stats_mod_factor)
 	
 	# Fórmulas balanceadas para STATUS EFFECTS
-	calculate_status_effects_stats(level_factor, difficulty_factor)
+	calculate_status_effects_stats(level_factor, stats_mod_factor)
 	
 	# Inicializa a vida atual
 	current_health_points = health_points
@@ -119,7 +113,7 @@ func setup_stats() -> void:
 	
 	# Experiência
 	var exp_factor = 1.0 + (entity_level - 1) * 0.65
-	base_experience *= exp_factor * difficulty_factor
+	base_experience *= exp_factor * stats_mod_factor
 
 func calculate_critical_stats(level_factor: float, difficulty_factor: float) -> void:
 	# Critical Rate - escala suavemente até o máximo
@@ -134,7 +128,7 @@ func calculate_critical_stats(level_factor: float, difficulty_factor: float) -> 
 		crit_rate = min(base_crit_rate * crit_rate_factor * difficulty_factor, MAX_CRITICAL_RATE)
 	
 	# Critical Damage - escala gradualmente até 300%
-	var crit_damage_growth = 0.5  # % adicional por nível (ajuste conforme necessário)
+	var crit_damage_growth = 0.15  # % adicional por nível (ajuste conforme necessário)
 	var max_crit_damage_level = 90  # Nível onde atinge 300%
 	
 	if entity_level >= max_crit_damage_level:
@@ -203,9 +197,12 @@ func calculate_base_attack_damage() -> DamageData:
 	damage_data.damage = damage
 	return damage_data
 
+func calculate_damage_taken(damage: float) -> float:
+	return damage
+
 func on_take_damage(damage: float):
+	damage = calculate_damage_taken(damage)
 	current_health_points = max(current_health_points - damage, 0)
 	health_changed.emit(current_health_points)
 	if current_health_points <= 0:
-		trigged_dead.emit()
-		PlayerEvents.handle_event_add_experience(base_experience)
+		trigged_dead.emit(base_experience)

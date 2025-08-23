@@ -1,67 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://cc8bkuey3se7e"]
+[gd_scene load_steps=5 format=3 uid="uid://cc8bkuey3se7e"]
 
 [ext_resource type="Script" uid="uid://f8sfvmdgws4m" path="res://src/scenes/main_menu.gd" id="1_h03rr"]
 [ext_resource type="Texture2D" uid="uid://cnhfvy3bl2w6a" path="res://assets/sprites/backgrounds/night_sky.png" id="1_qkuje"]
-[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="2_f0s2b"]
 [ext_resource type="PackedScene" uid="uid://b2ix11uucxp0a" path="res://src/shaders/fog_effect.tscn" id="2_ljhhu"]
-[ext_resource type="FontFile" uid="uid://dnlfjy7j2gd3n" path="res://assets/fonts/PixelifySans-VariableFont_wght.ttf" id="3_5mgu5"]
 [ext_resource type="Theme" uid="uid://mt1b2qc0web0" path="res://src/ui/themes/btn_template.tres" id="5_h03rr"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_f0s2b"]
-atlas = ExtResource("2_f0s2b")
-region = Rect2(784, 84, 128, 40)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ljhhu"]
-texture = SubResource("AtlasTexture_f0s2b")
-texture_margin_left = 64.0
-texture_margin_right = 64.0
-expand_margin_top = 2.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_5mgu5"]
-texture = SubResource("AtlasTexture_f0s2b")
-texture_margin_left = 64.0
-texture_margin_right = 64.0
-expand_margin_top = 2.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h03rr"]
-texture = SubResource("AtlasTexture_f0s2b")
-texture_margin_left = 64.0
-texture_margin_right = 64.0
-expand_margin_top = 2.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_h03rr"]
-atlas = ExtResource("2_f0s2b")
-region = Rect2(784, 36, 128, 40)
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tmx6h"]
-texture = SubResource("AtlasTexture_h03rr")
-texture_margin_left = 64.0
-texture_margin_right = 64.0
-expand_margin_top = 2.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_35tjg"]
-texture = SubResource("AtlasTexture_f0s2b")
-texture_margin_left = 64.0
-texture_margin_right = 64.0
-expand_margin_top = 2.0
-expand_margin_bottom = 8.0
-
-[sub_resource type="Theme" id="Theme_ljhhu"]
-default_font = ExtResource("3_5mgu5")
-default_font_size = 32
-Button/colors/font_color = Color(0.658824, 0.552941, 0.458824, 1)
-Button/colors/font_outline_color = Color(0.290196, 0.235294, 0.227451, 1)
-Button/constants/outline_size = 6
-Button/font_sizes/font_size = 48
-Button/styles/focus = SubResource("StyleBoxTexture_ljhhu")
-Button/styles/hover = SubResource("StyleBoxTexture_5mgu5")
-Button/styles/hover_pressed = SubResource("StyleBoxTexture_h03rr")
-Button/styles/normal = SubResource("StyleBoxTexture_tmx6h")
-Button/styles/pressed = SubResource("StyleBoxTexture_35tjg")
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -98,14 +40,12 @@ theme_override_constants/separation = 24
 alignment = 1
 
 [node name="ButtonPlay" type="Button" parent="Buttons/VBoxContainer"]
-texture_filter = 3
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_default_cursor_shape = 2
-theme = SubResource("Theme_ljhhu")
-theme_type_variation = &"FlatButton"
-text = "Play"
+theme = ExtResource("5_h03rr")
+text = "New Game"
 
 [node name="ButtonLoad" type="Button" parent="Buttons/VBoxContainer"]
 layout_mode = 2
@@ -113,8 +53,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 theme = ExtResource("5_h03rr")
-theme_type_variation = &"FlatButton"
-text = "Load"
+text = "Load Game"
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = -2

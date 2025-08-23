@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmuqxxj6ynfqa"]
+
+[ext_resource type="Script" uid="uid://biwu18uemd06n" path="res://src/gameplay/items/loots/gems/gem_item.gd" id="1_xrfaw"]
+
+[node name="GemItem" type="Node"]
+script = ExtResource("1_xrfaw")

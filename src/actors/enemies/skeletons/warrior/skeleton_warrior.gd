@@ -4,8 +4,10 @@ extends TerrestrialEnemy
 @onready var float_Damage_control: FloatDamageControl = $FloatDamageControl
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var enemy_hitbox: Area2D = $EnemyHitbox
+@onready var enemy_hurtbox: EnemyHurtbox = $EnemyHurtbox
 @onready var enemy_stats: EnemyStats = $EnemyStats
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+@onready var hit_flash_animation: AnimationPlayer = $HitFlashAnimation
 
 @onready var debug_label: Label = $DebugLabel
 
@@ -29,21 +31,24 @@ var navigation_timer := 0.0
 
 func _ready() -> void:
 	super._ready()
-	#disable_enemy_hitbox()
 	pick_random_state([STATES.IDLE, STATES.WANDER])
 	wander_controller.start_position = global_position
 	wander_controller.enemy_type = Enemy.ENEMY_TYPES.FLYING
 	attack_names = ["attack_1", "attack_2", "attack_3"]
 	update_attack_speed()
 	
-	enemy_stats.trigged_dead.connect(_on_skeleton_death)
-		
+	enemy_stats.trigged_dead.connect(_on_enemy_stats_trigged_dead)
+	
 	navigation_agent.path_desired_distance = 10.0
 	navigation_agent.target_desired_distance = 10.0
 	navigation_agent.avoidance_enabled = true
 	
+	enemy_hurtbox.player_hitbox_entered.connect(_on_player_hitbox_area_entered)
+	
 	enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
 	enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
+	
+	hit_flash_animation.animation_finished.connect(_on_hit_flash_animation_finished)
 
 func update_attack_speed():
 	var attk_speed = roundi(enemy_stats.attack_speed * 12)
@@ -162,8 +167,6 @@ func update_enemy_hitbox_position(is_right: bool) -> void:
 		collision_shape.position = HITBOX_OFFSET
 	else:
 		collision_shape.position = Vector2(-HITBOX_OFFSET.x, HITBOX_OFFSET.y)
-func update_enemy_hitbox_shape() -> void:
-	pass
 
 func handle_idle_state(_delta: float) -> void:
 	velocity = Vector2.ZERO
@@ -213,11 +216,9 @@ func handle_attacking_state(_delta: float) -> void:
 	if is_in_knockback or not is_attacking:
 		state = STATES.CHASE
 		return
-	#super.disable_enemy_hitbox(false)
-	
+
 	var move_direction = super.get_direction_to(target_player.global_position, global_position)
 	velocity = Vector2.ZERO
-	update_enemy_hitbox_shape()
 	update_sprite_direction(move_direction == Vector2.RIGHT)
 	update_enemy_hitbox_position(move_direction == Vector2.RIGHT)
 func handle_wander_state(delta: float) -> void:
@@ -263,13 +264,11 @@ func start_attack():
 		is_first_attack_after_chase = false
 	else:
 		current_attack_animation = AnimationUtils.pick_random_animation(attack_names)
-	#super.disable_enemy_hitbox(false)
 func finish_attack():
 	is_attacking = false
 	can_attack = true
 	state = STATES.CHASE
 	is_first_attack_after_chase = false
-	#super.disable_enemy_hitbox()
 
 func _on_detection_zone_trigger_player_entered(player: CharacterBody2D) -> void:
 	target_player = player
@@ -298,28 +297,32 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 			super.hit_player(enemy_stats)
 		else:
 			can_attack = false
+	if animated_sprite_2d.animation == "hurt":
+		is_hurting = false
+		is_invulnerable = false
 	if animation_name == "dead":
 		enemy_control_ui.hide()
 
-func _on_enemy_hurtbox_player_hitbox_entered() -> void:
-	if target_player and not is_in_knockback and not is_dead:
-		var data = PlayerStats.calculate_attack_damage()
-		super.take_knockback(target_player.knockback_force, target_player.global_position)
-		enemy_stats.on_take_damage(data.damage)
-		float_Damage_control.set_damage(data)
+func _on_hit_flash_animation_finished() -> void:
+	is_hurting = false
+	is_invulnerable = false
 
-func _on_skeleton_death():
-	animated_sprite_2d.play("dead")
-	super._on_dead()
+func _on_player_hitbox_area_entered() -> void:
+	hit_flash_animation.play("hit_flash")
+	if target_player and take_hit_with_knockback():
+		take_knockback(target_player.knockback_force, target_player.global_position)
+
 
 func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
 	if target_player:
 		target_in_attack_range = true
 		can_attack = true
-		print("Player in Range")
 		
 func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
 	if target_player:
 		target_in_attack_range = false
 		can_attack = false
-		print("Player out of Range")
+
+func _on_enemy_stats_trigged_dead(exp_amount: float) -> void:
+	animated_sprite_2d.play("dead")
+	super._on_dead(exp_amount)

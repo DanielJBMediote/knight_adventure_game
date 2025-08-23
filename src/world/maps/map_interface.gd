@@ -46,6 +46,6 @@ func _on_timeout(label: Label, texture_rect: TextureRect) -> void:
 	tween.tween_property(label, "modulate:a", 0.0, 0.5)
 	tween.tween_callback(label.set.bind("visible_characters", -1)) # Resetar visible_characters
 
-func set_map_name(name: String) -> void:
+func set_map_name(new_name: String) -> void:
 	var label = map_name.get_node("Label")
-	label.text = name
+	label.text = new_name

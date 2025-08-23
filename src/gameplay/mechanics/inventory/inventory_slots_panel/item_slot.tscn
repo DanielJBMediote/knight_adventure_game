@@ -1,0 +1,45 @@
+[gd_scene load_steps=3 format=3 uid="uid://csei5wo5mukis"]
+
+[ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_nkqjl"]
+[ext_resource type="Script" uid="uid://ccfhx2mtxkqs" path="res://src/gameplay/mechanics/inventory/inventory_slots_panel/item_slot.gd" id="1_q2usb"]
+
+[node name="ItemSlot" type="Panel"]
+custom_minimum_size = Vector2(96, 96)
+offset_right = 96.0
+offset_bottom = 96.0
+script = ExtResource("1_q2usb")
+
+[node name="UniqueBorder" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_nkqjl")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="BackgroundTexture" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ItemTexture" type="TextureRect" parent="MarginContainer"]
+custom_minimum_size = Vector2(74, 74)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Stacks" type="Label" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8

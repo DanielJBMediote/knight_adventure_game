@@ -2,11 +2,11 @@
 
 [ext_resource type="StyleBox" uid="uid://d0gnm8ch7lm54" path="res://src/ui/themes/mainmenu_butom_hover.tres" id="1_kiqwm"]
 [ext_resource type="StyleBox" uid="uid://djfwh5cg4fw7c" path="res://src/ui/themes/mainmenu_butom_normal.tres" id="2_kiqwm"]
-[ext_resource type="FontFile" uid="uid://dnlfjy7j2gd3n" path="res://assets/fonts/PixelifySans-VariableFont_wght.ttf" id="3_uj0ea"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="3_4clib"]
 
 [resource]
-default_font = ExtResource("3_uj0ea")
-default_font_size = 32
+default_font = ExtResource("3_4clib")
+default_font_size = 24
 Button/colors/font_color = Color(0.658824, 0.552941, 0.458824, 1)
 Button/colors/font_outline_color = Color(0.290196, 0.235294, 0.227451, 1)
 Button/constants/outline_size = 6

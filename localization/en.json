@@ -12,6 +12,72 @@
 	"potion_attack_speed": "Attack Speed Potion",
 	"potion_move_speed": "Speed Potion",
 	
+	"gem_health": "Health Gem",
+	"gem_mana": "Mana Gem",
+	"gem_energy": "Health Gem",
+	"gem_defense": "Defense Gem",
+	"gem_damage": "Damage Gem",
+	"gem_critical_rate": "Critical Rate Gem",
+	"gem_critical_damage": "Critical Damage Gem",
+	"gem_attack_speed": "Attack Speed Gem",
+	"gem_move_speed": 	"Speed Gem",
+	
+	"gem_health_regen": "Unique Life Gem",
+	"gem_mana_regen": "Unique Power Gem",
+	"gem_energy_regen": "Unique Energised Gem",
+	"gem_exp_buff": "Unique Knowledge Gem",
+	
+	"descriptions": {
+		
+		"potion_instant": "Instantly restores {amount} {attribute} points.",
+		"potion_buff": "Increases {attribute} by {amount}% for {duration} seconds.",
+		
+		"gem_attribute_desc": {
+			"health": "provides {value} of Health Points",
+			"mana": "provides {value} of Mana Points",
+			"energy": "provides {value} of Energy Points",
+			"damage": "increases your Damage by {value}",
+			"defense": "increases your Defense by {value}",
+			"critical_rate": "increases your Critical Rate by {value}",
+			"critical_damage": "increases your Critical Damage by {value}",
+			"attack_speed": "increases you Attack Speed by {value}",
+			"move_speed": 	"increases you Move Speed by {value}",
+			
+			"health_regen": "provides health regen per seconds",
+			"mana_regen": "provides mana regen per seconds",
+			"energy_regen": "provides energy regen per seconds",
+			"exp_buff": "provides additional EXP when defeat monsters or complete missions"
+		},
+		"gem_attribute": "A {quality_prefix} gem that {gem_attribute_desc}.",
+		"unique_gem": "It's a unique jewel that increses your base attribute value.",
+		
+		"unique_gem_health_regen": 
+			"\"A pulsating gem with a bright red core that exudes comforting warmth. It is said to have been formed from the crystallized tears of a reborn phoenix. Its life-giving power continually restores the wearer's strength, like a heart that never stops beating.\"",
+		"unique_gem_mana_regen": 
+			"\"This deep blue gem contains swirls of arcane energy that slowly swirl within. Created during an astral convergence, it whispers cosmic secrets and channels the mystical currents of the universe to fuel the wearer's magical reserves.\"",
+		"unique_gem_energy_regen": 
+			"\"A shimmering green gem that seems to breathe with primordial energy. Forged in the core of an ancient meteorite, it emits a gentle vibration that revitalizes the body and mind, granting its possessor tireless vigor and supernatural agility.\"",
+		"unique_gem_exp_buff": 
+			"\"This translucent golden gem contains geometric patterns that constantly rearrange themselves, like an infinite puzzle. Legend has it that it was carved by the first celestial archivist, and its brilliance accelerates understanding of the world, transforming each experience into crystallized wisdom.\"",
+	 },
+	
+	"gem_quality": {
+		"fragmented": "Fragmented",
+		"common": "Common",
+		"refined": "Refined",
+		"flawless": "Flawless",
+		"exquisite": "Exquisite",
+		"pristine": "Pristine",
+	},
+	"gem_quality_prefix": {
+		"fragmented": "low quality",
+		"common": "simple",
+		"refined": "refined",
+		"flawless": "flawless",
+		"exquisite": "legendary exquisite",
+		"pristine": "mythical pristine",
+			
+	},
 	"rarity": {
 		"common": "Common",
 		"uncommon": "Uncommon",
@@ -41,18 +107,73 @@
 		"armor": "Armor",
 		"accessory": "Accessory",
 		"food": "Food",
-		"resource": "Resource"
+		"resource": "Resource",
+		"gem": "Gem"
 	},
-	"descriptions": {
-		"potion_instant": "Instantly restores {amount} {attribute} points.",
-		"potion_buff": "Increases {attribute} by {amount}% for {duration} seconds.",
-	 },
   },
-  
-  
   "ui": {
+	"id": "ID",
 	"level": "Level",
+	"level_required": "Level Required",
 	"rarity": "Rarity",
-	"id": "ID"
-  }
+	"category": "Category",
+	"sub_category": "Sub-Category",
+	"items": "Items",
+	"equipments": "Equipments",
+	"equip_item": "Equip",
+	"use_item": "Use",
+	"no_attributes": "No Attributes",
+	"stats": {
+		"_name":"Stats",
+		"offensive": "Offensive",
+		"defensive": "Defensive",
+		"others": "Others",
+		"knockback_resistance": "Knockback Resistance",
+		"knockback_force": "Knockback Force",
+		"reduction": "Reduction",
+		"increase": "Increase",
+		"normal": "Normal"
+	},
+	"attributes": {
+		"_name": "Attributes",
+		"health": "Health",
+		"health_regen": "Health Regen",
+		"mana": "Mana",
+		"mana_regen": "Mana Regen",
+		"energy": "Energy",
+		"energy_regen": "Energy Regen",
+		"defense": "Defense",
+		"damage": "Damage",
+		"critical_rate": "Critical Rate",
+		"critical_damage": "Critical Damage",
+		"attack_speed": "Attack Speed",
+		"move_speed": "Speed",
+		"bleed_hit_rate": "Bleed Hit Rate",
+		"poison_hit_rate": "Posion Hit Rate",
+		"exp_buff": "Additional Experience"
+	},
+	"experience": "Experience",
+	"exp_buff": "Aditional Exp",
+	"effects": {
+		"_name": "Effects",
+		"health_regen": "Health Regen",
+		"mana_regen": "Mana Regen",
+		"energy_regen": "Energy Regen",
+		"poison": "Poison",
+		"poisoning": "Poisoning",
+		"bleed": "Bleed",
+		"bleeding": "Bleeding",
+		"stun": "Stun",
+		"stunned": "Stunned",
+	},
+	"inventory": "Inventory",
+	"close": "Close",
+	"open": "Open",
+	"refresh": "Refresh",
+	"new_game": "New Game",
+	"load_game": "Load Game",
+	"settigns": "Settings",
+	"exit": "Exit",
+	"language": "Language"
+  },
 }

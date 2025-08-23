@@ -1,12 +1,12 @@
 class_name ItemObject
 extends RigidBody2D
 
-@onready var sprite_2d: Sprite2D = $Sprite2D
+@onready var animation: AnimationPlayer = $ItemAnimation
+@onready var item_texture_sprite: Sprite2D = $Sprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var area_2d: Area2D = $Area2D
 @onready var dropped_item_effect: Node2D = $DroppedItemEffect
-
-@export var item_resource: Item
+@onready var item_interaction: Control = $ItemInteraction
 
 # Configurações de física
 @export var item_gravity_scale: float = 1.0
@@ -22,6 +22,10 @@ extends RigidBody2D
 @export var max_spawn_torque: float = 10.0
 
 const ItemRarity = Item.ItemRarity
+const ItemSubCategory = Item.ItemSubCategory
+
+var player: Player
+var item_resource: Item
 
 const COLORS_EFFECT := {
 	ItemRarity.COMMON: Color.DIM_GRAY,
@@ -31,6 +35,12 @@ const COLORS_EFFECT := {
 	ItemRarity.LEGENDARY: Color.ORANGE,
 	ItemRarity.MYTHICAL: Color.RED,
 }
+
+#func _init(_item_res: Item) -> void:
+	#if _item_res:
+		#item_resource = _item_res
+		#return
+	#queue_free()
 
 func _ready() -> void:
 	if !item_resource:
@@ -42,9 +52,20 @@ func _ready() -> void:
 	setup_physics()
 	# Aplica força inicial aleatória
 	apply_random_force()
-	setup_appearance()
+	setup_rarity_bright()
+	setup_pulse_animation()
+	item_interaction.hide()
 	
-	area_2d.body_entered.connect(_on_area_2d_body_entered)
+	area_2d.body_entered.connect(_on_player_body_entered)
+	area_2d.body_exited.connect(_on_player_body_exited)
+
+func _input(event: InputEvent) -> void:
+	if item_resource == null:
+		return
+
+	if event.is_action_pressed("interact"):
+		collect()
+		pass
 
 func setup_physics() -> void:
 	# Configura propriedades físicas
@@ -62,15 +83,22 @@ func setup_physics() -> void:
 	collision_layer = 0b0001  # Camada 1 - Itens
 	collision_mask = 0b0111   # Colide com chão, paredes e jogador
 
-func setup_appearance() -> void:
+func setup_pulse_animation():
+	if item_resource == null:
+		return
+	var item_subcategory = item_resource.item_subcategory
+	
+	match item_subcategory:
+		ItemSubCategory.POTION:
+			animation.play("pulse_potions")
+		ItemSubCategory.GEM:
+			animation.play("pulse_gems")
+
+func setup_rarity_bright() -> void:
 	if item_resource.item_texture:
-		sprite_2d.texture = item_resource.item_texture
-		#sprite_2d.scale = Vector2(1, 1)
-		if item_resource.item_subcategory == Item.ItemSubCategory.POTION:
-			dropped_item_effect.scale = Vector2(0.55, 1)
-			dropped_item_effect.position = Vector2(0.0, -5.0)
+		item_texture_sprite.texture = item_resource.item_texture
 		
-		dropped_item_effect.get_node("Sprite2D").modulate = COLORS_EFFECT[item_resource.item_rarity]
+	dropped_item_effect.modulate = COLORS_EFFECT[item_resource.item_rarity]
 
 func apply_random_force() -> void:
 	# Aplica força linear aleatória
@@ -88,22 +116,23 @@ func apply_random_force() -> void:
 		torque *= -1  # 50% de chance para cada direção
 	#apply_torque_impulse(torque)
 
-func _on_area_2d_body_entered(body: Node) -> void:
-	if body is Player:
+func collect() -> bool:
+	if player and item_resource:
 		# Tenta adicionar o item ao inventário
 		if InventoryManager.add_item(item_resource):
 			# Se foi adicionado com sucesso, remove o item do mundo
 			queue_free()
-			
-			# Efeito visual de coleta (opcional)
-			spawn_collect_effect()
-		else:
-			# Inventário cheio - faz o item quicar
-			var bounce_direction = (global_position - body.global_position).normalized()
-			apply_central_impulse(bounce_direction * 100)
+			return true
+		# Efeito visual de coleta (opcional)
+		#spawn_collect_effect()
+	return false
 
 func can_spawn() -> bool:
-	return randf() * 1.0 <= item_resource.spawn_chance
+	var can_spawn := false
+	if item_resource:
+		var factor = randf() * 1.0
+		can_spawn = factor <= item_resource.spawn_chance
+	return can_spawn
 
 func spawn_collect_effect() -> void:
 	# Cria um efeito visual quando o item é coletado
@@ -111,3 +140,13 @@ func spawn_collect_effect() -> void:
 	#effect.global_position = global_position
 	#get_parent().add_child(effect)
 	pass
+
+func _on_player_body_entered(body: Node) -> void:
+	if body is Player:
+		player = body
+		item_interaction.show()
+			
+func _on_player_body_exited(body: Node) -> void:
+	if body is Player:
+		player = null
+		item_interaction.hide()
