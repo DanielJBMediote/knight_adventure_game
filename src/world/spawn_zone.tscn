@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://bc0emswvufmdk"]
+
+[ext_resource type="Script" uid="uid://dxgbh0g0v18c8" path="res://src/world/spawn_zone.gd" id="1_idbf3"]
+[ext_resource type="PackedScene" uid="uid://dex7w4b0ble5e" path="res://src/scenes/effects/smoke_effects.tscn" id="3_1210i"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5lb1s"]
+size = Vector2(2560, 640)
+
+[node name="SpawnZone" type="Node2D"]
+script = ExtResource("1_idbf3")
+
+[node name="TriggerPlayerZone" type="Area2D" parent="."]
+collision_layer = 524288
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TriggerPlayerZone"]
+position = Vector2(0, -320)
+shape = SubResource("RectangleShape2D_5lb1s")
+debug_color = Color(0.776607, 0.358479, 1, 0.0666667)
+
+[node name="SpawnTimer" type="Timer" parent="."]
+
+[node name="WaveCooldownTimer" type="Timer" parent="."]
+
+[node name="SmokeEffects" parent="." instance=ExtResource("3_1210i")]
+scale = Vector2(2, 2)
+animation = &"spawn_1"
+frame = 15

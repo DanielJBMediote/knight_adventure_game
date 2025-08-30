@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cg3d3oyimla3v"]
+[gd_scene load_steps=29 format=3 uid="uid://cg3d3oyimla3v"]
 
 [ext_resource type="Script" uid="uid://n6naubd41nss" path="res://src/actors/player/ui/player_stats_ui.gd" id="1_3g0kp"]
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="2_nanys"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cw0oacjh3btgt" path="res://assets/ui/knight_portrait.png" id="5_nanys"]
 [ext_resource type="Shader" uid="uid://be3ok0qckphnj" path="res://src/shaders/flash_bar.tres" id="6_dyclp"]
 [ext_resource type="PackedScene" uid="uid://cm3ky74r1wujk" path="res://src/actors/player/ui/player_status_effect_list_ui.tscn" id="6_squ0m"]
+[ext_resource type="PackedScene" uid="uid://cvbmrrputn3w6" path="res://src/gameplay/mechanics/inventory/currency/currency_info_ui.tscn" id="8_hbqpj"]
 
 [sub_resource type="Gradient" id="Gradient_nanys"]
 offsets = PackedFloat32Array(0)
@@ -40,7 +41,7 @@ region_rect = Rect2(48, 336, 300, 16)
 texture = ExtResource("2_nanys")
 texture_margin_left = 16.0
 texture_margin_right = 24.0
-region_rect = Rect2(48, 452, 300, 16)
+region_rect = Rect2(48, 441, 300, 16)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_j6y77"]
 
@@ -48,7 +49,7 @@ region_rect = Rect2(48, 452, 300, 16)
 texture = ExtResource("2_nanys")
 texture_margin_left = 16.0
 texture_margin_right = 24.0
-region_rect = Rect2(48, 356, 300, 16)
+region_rect = Rect2(48, 368, 300, 16)
 
 [sub_resource type="LabelSettings" id="LabelSettings_ffnjg"]
 font = ExtResource("4_j6y77")
@@ -62,7 +63,7 @@ outline_color = Color(0, 0, 0, 1)
 texture = ExtResource("2_nanys")
 texture_margin_left = 16.0
 texture_margin_right = 24.0
-region_rect = Rect2(48, 388, 300, 16)
+region_rect = Rect2(48, 393, 300, 16)
 
 [sub_resource type="LabelSettings" id="LabelSettings_3n3nu"]
 font = ExtResource("4_j6y77")
@@ -81,7 +82,7 @@ shader_parameter/ColorParameter = Color(0.666667, 0.192157, 0.192157, 1)
 texture = ExtResource("2_nanys")
 texture_margin_left = 16.0
 texture_margin_right = 26.0
-region_rect = Rect2(48, 420, 300, 16)
+region_rect = Rect2(48, 416, 300, 16)
 
 [sub_resource type="Animation" id="Animation_dyclp"]
 length = 0.001
@@ -200,7 +201,6 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="TextureProgress" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HealthControl"]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -215,7 +215,6 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="ProgressBarBG" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HealthControl"]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -230,7 +229,6 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HealthControl"]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -291,7 +289,6 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="TextureProgress" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/ManaControl"]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -306,7 +303,6 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="ProgressBarBG" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/ManaControl"]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -321,7 +317,6 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/ManaControl"]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -383,7 +378,6 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="TextureProgress" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/EnergyControl"]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -398,7 +392,6 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="ProgressBarBG" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/EnergyControl"]
-texture_filter = 3
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -413,7 +406,6 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/EnergyControl"]
-texture_filter = 3
 material = SubResource("ShaderMaterial_65wfi")
 layout_mode = 1
 anchors_preset = 15
@@ -434,3 +426,8 @@ libraries = {
 
 [node name="PlayerStatusEffectListUI" parent="MarginContainer/VBoxContainer" instance=ExtResource("6_squ0m")]
 layout_mode = 2
+
+[node name="CurrencyInfoUI" parent="MarginContainer" instance=ExtResource("8_hbqpj")]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0

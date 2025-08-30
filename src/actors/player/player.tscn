@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://doom7rgxnt8p7"]
+[gd_scene load_steps=49 format=3 uid="uid://doom7rgxnt8p7"]
 
 [ext_resource type="Script" uid="uid://8ad2aca7mrv6" path="res://src/actors/player/player.gd" id="1_5f2sf"]
 [ext_resource type="Shader" uid="uid://cgycaixyakajw" path="res://src/shaders/hit_flash.tres" id="1_jiejy"]
@@ -3102,10 +3102,6 @@ _data = {
 &"SlidingWallRight": SubResource("Animation_5f2sf")
 }
 
-[sub_resource type="Animation" id="Animation_j2873"]
-length = 0.2
-step = 0.05
-
 [sub_resource type="Animation" id="Animation_o04tx"]
 resource_name = "hit_flash"
 length = 0.2
@@ -3125,7 +3121,6 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_j2873"]
 _data = {
-&"RESET": SubResource("Animation_j2873"),
 &"hit_flash": SubResource("Animation_o04tx")
 }
 
@@ -3156,12 +3151,16 @@ vframes = 14
 frame = 96
 region_enabled = true
 region_rect = Rect2(0, 0, 1440, 1120)
+metadata/_edit_lock_ = true
 
 [node name="CharacterCollisionShape" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2(0, -16)
 shape = SubResource("RectangleShape2D_244u8")
+metadata/_edit_lock_ = true
 
 [node name="PlayerHitbox" type="Area2D" parent="."]
+visible = false
 collision_layer = 512
 collision_mask = 4100
 metadata/_edit_lock_ = true
@@ -3171,8 +3170,10 @@ position = Vector2(-40, -16)
 shape = SubResource("RectangleShape2D_ylhto")
 disabled = true
 debug_color = Color(0.577714, 0.0961307, 0.379876, 0.42)
+metadata/_edit_lock_ = true
 
 [node name="PlayerHurtbox" type="Area2D" parent="."]
+visible = false
 collision_layer = 1024
 collision_mask = 2048
 metadata/_edit_lock_ = true
@@ -3181,6 +3182,7 @@ metadata/_edit_lock_ = true
 position = Vector2(-5.5, -14)
 shape = SubResource("RectangleShape2D_wlj80")
 debug_color = Color(0.567545, 0.072939, 0.0843144, 0.42)
+metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

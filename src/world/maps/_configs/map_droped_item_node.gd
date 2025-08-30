@@ -6,7 +6,7 @@ func _ready() -> void:
 	# Debug para verificar se o nó está no grupo
 	print("Zona de drop registrada:", name)
 
-func add_item_in_map(item_obj: ItemObject) -> void:
+func add_item_in_map(item_obj: ItemBody) -> void:
 	if item_obj:
 		add_child(item_obj)
 		print("Item adicionado:", item_obj.name)

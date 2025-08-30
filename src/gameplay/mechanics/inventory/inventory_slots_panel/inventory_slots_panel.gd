@@ -1,7 +1,7 @@
 class_name InventorySlotsPanel
 extends Panel
 
-@export var item_slot: PackedScene = preload("res://src/gameplay/mechanics/inventory/inventory_slots_panel/item_slot.tscn")
+@export var item_slot: PackedScene = preload("res://src/gameplay/mechanics/inventory/inventory_slots_panel/inventory_item_slot.tscn")
 
 @onready var inventory_slots_grid: GridContainer = $MarginContainer/VBoxContainer/InventorySlotsGrid
 @onready var organize_button_asc: Button = $MarginContainer/VBoxContainer/HBoxContainer/OrganizeButtonASC
@@ -11,10 +11,11 @@ extends Panel
 const MAX_SLOTS := 18 
 static var slots: Array[InventoryItemSlot] = []
 
-func _ready() -> void:
+func _ready() -> void: 
 	for i in MAX_SLOTS:
 		var slot: InventoryItemSlot = item_slot.instantiate()
 		inventory_slots_grid.add_child(slot)
+		slot.name = str("ItemSlot",i)
 		slots.append(slot)
 
 	InventoryManager.inventory_updated.connect(_update_inventory)
@@ -33,13 +34,15 @@ func _on_organize_desc() -> void:
 # Toda vez que algum item for atualizado no InventoryManger, 
 # o iventário será atualizado.
 func _update_inventory():
+	var current_page = InventoryManager.current_page
 	var current_items = InventoryManager.get_current_page_items()
 	for i in range(slots.size()):
+		slots[i].slot_index = i + (current_page * MAX_SLOTS)
 		if i < current_items.size():
-			slots[i].set_item(current_items[i])
+			slots[i].setup_item(current_items[i])
 		else:
 			# Limpa o slot se não houver item nesta posição
-			slots[i].set_item(null)
+			slots[i].setup_item(null)
 
 func _update_page_label():
 	page_label.text = "%d/%d" % [InventoryManager.current_page + 1, InventoryManager.MAX_SLOTS / InventoryManager.SLOTS_PER_PAGE]

@@ -9,8 +9,11 @@ extends Control
 @onready var prev_button: Button = $MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryHeader/InventoryControls/PrevButton
 @onready var next_button: Button = $MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryHeader/InventoryControls/NextButton
 
+func _init() -> void:
+	pass
 
 func _ready() -> void:
+	inventory_slots_panel._update_inventory()
 	update_inventory_actions_buttons()
 	
 	InventoryManager.update_inventory_visible.connect(_on_inventory_open_close)
@@ -42,3 +45,4 @@ func _on_inventory_open_close(is_open: bool) -> void:
 		InventoryManager.inventory_updated.emit()
 	else:
 		self.hide()
+		

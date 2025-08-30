@@ -1,0 +1,302 @@
+[gd_scene load_steps=17 format=3 uid="uid://crtugfpy0cjod"]
+
+[ext_resource type="Script" uid="uid://kt6ob3p4g3oh" path="res://src/gameplay/mechanics/inventory/item_details_modal/inventory_item_info_ui.gd" id="1_2ld60"]
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_iwre5"]
+[ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="3_1icw5"]
+[ext_resource type="Texture2D" uid="uid://grrmo7an5bti" path="res://src/ui/themes/items_themes/bg_gradient_item_uncommon.tres" id="3_3v8mp"]
+[ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="4_catel"]
+[ext_resource type="Theme" uid="uid://cplm3n583p8ad" path="res://src/ui/themes/v_scroll_without_bar.tres" id="4_m0r25"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_1xqwx"]
+[ext_resource type="PackedScene" uid="uid://c0c5fotfyaqcc" path="res://src/gameplay/mechanics/inventory/item_details_modal/item_price.tscn" id="6_n44wp"]
+[ext_resource type="Texture2D" uid="uid://d3i02shfxgboc" path="res://assets/sprites/items/potions/critical_damage_potion_03.png" id="8_3v8mp"]
+[ext_resource type="Theme" uid="uid://cjghsixcdlswl" path="res://src/ui/themes/item_info_action_btn.tres" id="8_hdk3s"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ua31u"]
+texture = ExtResource("1_iwre5")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(237, 120, 52, 48)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n44wp"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.95, 0.7, 0, 1)
+border_blend = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n44wp"]
+atlas = ExtResource("4_catel")
+region = Rect2(214, 69, 23, 23)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_n44wp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3tkmh"]
+atlas = ExtResource("4_catel")
+region = Rect2(180, 29, 25, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hdk3s"]
+atlas = ExtResource("4_catel")
+region = Rect2(216, 24, 17, 16)
+
+[node name="InventoryItemInfoUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_2ld60")
+metadata/_edit_lock_ = true
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+metadata/_edit_lock_ = true
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(420, 520)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -208.0
+offset_top = -270.0
+offset_right = 208.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxTexture_ua31u")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="TextureMargin" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+metadata/_edit_use_anchors_ = true
+
+[node name="RarityBackgroundTexture" type="TextureRect" parent="Panel/TextureMargin"]
+layout_mode = 2
+texture = ExtResource("3_3v8mp")
+
+[node name="UniqueBorderTexture" type="Panel" parent="Panel/TextureMargin"]
+layout_mode = 2
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_n44wp")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme = ExtResource("4_m0r25")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Header" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="ItemName" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(300, 32)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("5_1xqwx")
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 3
+
+[node name="ItemType" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_fonts/font = ExtResource("5_1xqwx")
+text = "--/--"
+autowrap_mode = 3
+
+[node name="LevelContainer" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Header"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Header/LevelContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("5_1xqwx")
+text = "Lv."
+
+[node name="Value" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Header/LevelContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("5_1xqwx")
+text = "--"
+
+[node name="ItemBaseStats" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Header"]
+layout_mode = 2
+
+[node name="LabelType" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Header/ItemBaseStats"]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("5_1xqwx")
+text = "Damage:"
+
+[node name="LabelValues" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Header/ItemBaseStats"]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("5_1xqwx")
+text = "xxx - xxx"
+
+[node name="Content" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 312)
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 32
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Content"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="ItemAttributes" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Content/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="ItemTextureRect" type="TextureRect" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Content/HBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_horizontal = 6
+texture = ExtResource("8_3v8mp")
+expand_mode = 3
+stretch_mode = 5
+metadata/_edit_use_anchors_ = true
+
+[node name="ItemDescription" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Content"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_fonts/font = ExtResource("5_1xqwx")
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
+
+[node name="ItemPrice" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Content" instance=ExtResource("6_n44wp")]
+layout_mode = 2
+
+[node name="BonusAttributes" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Content"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Content/BonusAttributes"]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("5_1xqwx")
+text = "Set Attributes:"
+
+[node name="AttributeLabel" type="Label" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Content/BonusAttributes"]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_fonts/font = ExtResource("5_1xqwx")
+text = "+ 5% Damage"
+
+[node name="Footer" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(372, 64)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 10
+
+[node name="ActionButton" type="Button" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("8_hdk3s")
+text = "Action"
+clip_text = true
+
+[node name="TrashItemButton" type="Button" parent="Panel/MarginContainer/ScrollContainer/VBoxContainer/Footer"]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 3
+theme = ExtResource("8_hdk3s")
+icon = SubResource("AtlasTexture_n44wp")
+icon_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="AdvancedViewButton" type="Button" parent="Panel/MarginContainer/Buttons"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+focus_mode = 0
+theme = ExtResource("3_1icw5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_n44wp")
+icon = SubResource("AtlasTexture_3tkmh")
+icon_alignment = 1
+expand_icon = true
+
+[node name="CloseButton" type="Button" parent="Panel/MarginContainer/Buttons"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+focus_mode = 0
+theme = ExtResource("3_1icw5")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_n44wp")
+icon = SubResource("AtlasTexture_hdk3s")
+icon_alignment = 1
+expand_icon = true
+
+[connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/VBoxContainer/Footer/ActionButton" to="." method="_on_use_equip_item_button_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/VBoxContainer/Footer/TrashItemButton" to="." method="_on_trash_item_button_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Buttons/AdvancedViewButton" to="." method="_on_advanced_view_button_pressed"]
+[connection signal="pressed" from="Panel/MarginContainer/Buttons/CloseButton" to="." method="_on_close_button_pressed"]

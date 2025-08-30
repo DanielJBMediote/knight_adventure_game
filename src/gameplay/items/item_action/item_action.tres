@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ItemAction" load_steps=2 format=3 uid="uid://edxh6ehtxba4"]
+
+[ext_resource type="Script" uid="uid://cydluv81cyqa" path="res://src/gameplay/items/item_action/item_action.gd" id="1_k7dct"]
+
+[resource]
+script = ExtResource("1_k7dct")
+action_type = 0
+duration = 0.0
+metadata/_custom_type_script = "uid://cydluv81cyqa"

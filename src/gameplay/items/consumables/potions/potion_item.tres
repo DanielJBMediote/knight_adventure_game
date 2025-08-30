@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="PotionItem" load_steps=3 format=3 uid="uid://bsu7r5vy64l1w"]
+
+[ext_resource type="Script" uid="uid://eufa774v484h" path="res://src/gameplay/items/consumables/potions/potion_item.gd" id="1_383wc"]
+[ext_resource type="Texture2D" uid="uid://cxf4lljbmytr3" path="res://assets/sprites/items/potions/health_potion_02.png" id="1_injda"]
+
+[resource]
+script = ExtResource("1_383wc")
+potion_type = 0
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 0
+item_subcategory = 7
+item_rarity = 0
+spawn_chance = 1.0
+item_texture = ExtResource("1_injda")
+stackable = true
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_price = 0
+item_level = 0
+item_usable = false
+metadata/_custom_type_script = "uid://eufa774v484h"

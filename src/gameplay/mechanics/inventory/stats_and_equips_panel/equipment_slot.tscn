@@ -1,0 +1,133 @@
+[gd_scene load_steps=7 format=3 uid="uid://m0vqy4aot5xa"]
+
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_ie8xj"]
+[ext_resource type="Script" uid="uid://b7whyubgh2rmn" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipment_slot.gd" id="2_5iu7f"]
+[ext_resource type="Theme" uid="uid://k0ll6m3w6kk3" path="res://src/ui/themes/items_themes/unique_border.tres" id="3_xkhuf"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="6_mnqdt"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qlwbu"]
+texture = ExtResource("1_ie8xj")
+texture_margin_left = 48.0
+texture_margin_top = 44.0
+texture_margin_right = 48.0
+texture_margin_bottom = 44.0
+region_rect = Rect2(293, 120, 52, 48)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fub5i"]
+bg_color = Color(0.0941176, 0.0941176, 0.105882, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.658824, 0.552941, 0.458824, 1)
+
+[node name="EquipmentSlotUI" type="Panel"]
+custom_minimum_size = Vector2(96, 96)
+anchors_preset = -1
+anchor_right = 0.075
+anchor_bottom = 0.133333
+offset_right = -96.0
+offset_bottom = -96.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+script = ExtResource("2_5iu7f")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="RarityTexture" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="EquipmentTexture" type="TextureRect" parent="MarginContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="TextureRect" type="Panel" parent="MarginContainer/MarginContainer"]
+custom_minimum_size = Vector2(24, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_fub5i")
+
+[node name="EquipmentLevel" type="Label" parent="MarginContainer/MarginContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -7.5
+offset_right = 9.0
+offset_bottom = 7.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.658824, 0.552941, 0.458824, 1)
+theme_override_colors/font_outline_color = Color(0.188235, 0.168627, 0.160784, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("6_mnqdt")
+text = "98"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="UniqueBorder" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.0
+offset_top = -46.0
+offset_right = 46.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("3_xkhuf")
+metadata/_edit_lock_ = true
+
+[node name="BackgroundItem" type="TextureRect" parent="."]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(1, 1, 1, 0.392157)
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 3
+stretch_mode = 5

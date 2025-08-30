@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bivderlem0rfr"]
+[gd_scene load_steps=2 format=3 uid="uid://c8and80a8q8yw"]
 
-[ext_resource type="Script" uid="uid://uxp3xk3njykq" path="res://src/actors/enemies/_controllers/enemy_stats.gd" id="1_gcvjl"]
+[ext_resource type="Script" uid="uid://uxp3xk3njykq" path="res://src/actors/enemies/_controllers/enemy_stats.gd" id="1_pub0g"]
 
 [node name="EnemyStats" type="Node"]
-script = ExtResource("1_gcvjl")
+script = ExtResource("1_pub0g")

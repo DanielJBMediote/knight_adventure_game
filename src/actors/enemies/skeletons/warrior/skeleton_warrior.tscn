@@ -12,9 +12,9 @@
 [ext_resource type="Texture2D" uid="uid://cqktg337ub5nw" path="res://assets/sprites/entities/enemies/skeleton_warrior/Run+attack.png" id="7_88qpo"]
 [ext_resource type="Texture2D" uid="uid://bocr6sloamau6" path="res://assets/sprites/entities/enemies/skeleton_warrior/Walk.png" id="9_1ek18"]
 [ext_resource type="PackedScene" uid="uid://crghd6gyb71w5" path="res://src/actors/enemies/_controllers/detection_zone.tscn" id="11_07v5p"]
-[ext_resource type="PackedScene" uid="uid://bivderlem0rfr" path="res://src/actors/enemies/_controllers/enemy_stats.tscn" id="12_5prew"]
 [ext_resource type="PackedScene" uid="uid://ciaj2edwf0e0c" path="res://src/actors/enemies/_controllers/enemy_control_ui.tscn" id="13_7rc4i"]
 [ext_resource type="PackedScene" uid="uid://rtxpfrnud2ta" path="res://src/actors/enemies/_controllers/wander_controller.tscn" id="14_1v3lw"]
+[ext_resource type="PackedScene" uid="uid://c8and80a8q8yw" path="res://src/actors/enemies/_controllers/enemy_stats.tscn" id="14_kkjuk"]
 [ext_resource type="PackedScene" uid="uid://bw7gs5y32rs22" path="res://src/actors/enemies/_controllers/enemy_hurtbox.tscn" id="15_5prew"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="16_7rc4i"]
 
@@ -493,6 +493,7 @@ wall_jump_force = 850.0
 enemy_type = 1
 wall_detection_distance = 42.0
 attack_cooldown = 1.25
+loot_categories = Array[int]([2, 0, 1])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_oaf8t")
@@ -526,29 +527,24 @@ colision_position = Vector2(0, -42)
 [node name="DetectionZone" parent="." instance=ExtResource("11_07v5p")]
 radius_range = 700.0
 
+[node name="EnemyStats" parent="." instance=ExtResource("14_kkjuk")]
+enemy_name = "Skeleton warrior"
+base_health_points = 200.0
+base_num_drops = 5
+base_bleed_chance = 0.1
+base_bleed_duration = 5.0
+base_bleed_damage = 0.2
+base_move_speed = 0.75
+
 [node name="WanderController" parent="." instance=ExtResource("14_1v3lw")]
 wander_range = Vector2(500, 0)
 enemy_type = 1
 
-[node name="EnemyStats" parent="." instance=ExtResource("12_5prew")]
-entity_name = "Skeleton Warrior"
-base_health_points = 200.0
-base_health_points_regen = 1.25
-base_min_damage = 20.0
-base_max_damage = 30.0
-base_crit_rate = 25.0
-base_experience = 75.0
-base_bleed_chance = 5.0
-base_bleed_duration = 5.0
-base_bleed_damage = 0.15
-base_move_speed = 80.0
-
-[node name="EnemyControlUI" parent="." node_paths=PackedStringArray("enemy_stats") instance=ExtResource("13_7rc4i")]
+[node name="EnemyControlUI" parent="." instance=ExtResource("13_7rc4i")]
 offset_top = -116.0
 offset_bottom = -116.0
 grow_horizontal = 1
 grow_vertical = 1
-enemy_stats = NodePath("../EnemyStats")
 
 [node name="FloatDamageControl" parent="." instance=ExtResource("16_7rc4i")]
 offset_top = -144.0
@@ -576,4 +572,4 @@ libraries = {
 [connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_enemy_hurtbox_player_hitbox_entered"]
 [connection signal="trigger_player_entered" from="DetectionZone" to="." method="_on_detection_zone_trigger_player_entered"]
 [connection signal="trigger_player_exited" from="DetectionZone" to="." method="_on_detection_zone_trigger_player_exited"]
-[connection signal="trigged_dead" from="EnemyStats" to="." method="_on_enemy_stats_trigged_dead"]
+[connection signal="animation_finished" from="HitFlashAnimation" to="." method="_on_hit_flash_animation_animation_finished"]

@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EquipmentItem" load_steps=3 format=3 uid="uid://dsnegij42ft4y"]
+
+[ext_resource type="Script" uid="uid://rmxjay0dfaus" path="res://src/gameplay/items/equipments/equipment_item.gd" id="1_lakph"]
+[ext_resource type="Script" uid="uid://pe8gfcul0vjx" path="res://src/gameplay/items/item_attribute/item_attribute.gd" id="2_lakph"]
+
+[resource]
+script = ExtResource("1_lakph")
+equipment_type = 0
+equipment_group = 0
+equipment_set = 0
+set_bonus_attributes = Array[ExtResource("2_lakph")]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 4
+item_subcategory = 7
+item_rarity = 0
+spawn_chance = 1.0
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_price = 0.0
+item_level = 0
+item_usable = false
+metadata/_custom_type_script = "uid://rmxjay0dfaus"

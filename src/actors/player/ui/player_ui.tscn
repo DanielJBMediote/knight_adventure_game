@@ -12,6 +12,6 @@ script = ExtResource("1_7bq4i")
 
 [node name="PlayerStatsUI" parent="." instance=ExtResource("1_b3mhi")]
 
-[node name="PlayerInventory" parent="." instance=ExtResource("2_7bq4i")]
-
 [node name="PlayerQuickSlotbar" parent="." instance=ExtResource("4_s50b6")]
+
+[node name="InventoryUI" parent="." instance=ExtResource("2_7bq4i")]

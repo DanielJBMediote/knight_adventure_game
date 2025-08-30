@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://b2ujopr3l2hql"]
+
+[ext_resource type="Texture2D" uid="uid://6p5gw08f6wjc" path="res://assets/sprites/effects/effects.png" id="1_nyqmv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sd2c7"]
+atlas = ExtResource("1_nyqmv")
+region = Rect2(70, 8, 20, 14)
+
+[sub_resource type="Curve" id="Curve_ihqjp"]
+_data = [Vector2(0, 0.01693), 0.0, 0.0, 0, 0, Vector2(0.260745, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="PoisonEffectParticles" type="CPUParticles2D"]
+amount = 4
+texture = SubResource("AtlasTexture_sd2c7")
+lifetime = 3.0
+speed_scale = 1.25
+emission_shape = 3
+emission_rect_extents = Vector2(32, 0)
+gravity = Vector2(0, -64)
+scale_amount_min = 0.25
+scale_amount_curve = SubResource("Curve_ihqjp")

@@ -1,0 +1,65 @@
+[gd_scene load_steps=10 format=3 uid="uid://3lxtv3ol7qqs"]
+
+[ext_resource type="Script" uid="uid://gd71um7fs47e" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipments_slots_grid_ui.gd" id="1_4geyu"]
+[ext_resource type="PackedScene" uid="uid://m0vqy4aot5xa" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipment_slot.tscn" id="1_t7x3x"]
+[ext_resource type="Texture2D" uid="uid://804xravw1xba" path="res://assets/sprites/items/equipments/helmet/iron.png" id="3_e1gqp"]
+[ext_resource type="Texture2D" uid="uid://dd1e7s2p5euuw" path="res://assets/sprites/items/equipments/amulet/solaris.png" id="4_3vqi1"]
+[ext_resource type="Texture2D" uid="uid://cbwpj24c1rx20" path="res://assets/sprites/items/equipments/ring/bronze.png" id="5_7tb7f"]
+[ext_resource type="Texture2D" uid="uid://bteo5cj72dsl4" path="res://assets/sprites/items/equipments/gloves/_0.png" id="6_85dh3"]
+[ext_resource type="Texture2D" uid="uid://fw8pt13xflfx" path="res://assets/sprites/items/equipments/armor/_1.png" id="7_e1gqp"]
+[ext_resource type="Texture2D" uid="uid://rnq7h5mmxd3m" path="res://assets/sprites/items/equipments/weapon/noble_platinum.png" id="8_lnl12"]
+[ext_resource type="Texture2D" uid="uid://bs1lt3n1isn0q" path="res://assets/sprites/items/equipments/boots/bronze.png" id="9_fsf7x"]
+
+[node name="EquipmentsContentUI" type="GridContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 8
+theme_override_constants/h_separation = 196
+theme_override_constants/v_separation = 16
+script = ExtResource("1_4geyu")
+metadata/_edit_lock_ = true
+
+[node name="Top" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_constants/separation = 49
+metadata/_edit_lock_ = true
+
+[node name="HelmetSlot" parent="Top" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("3_e1gqp")
+
+[node name="AmuletSlot" parent="Top" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("4_3vqi1")
+
+[node name="RingSlot" parent="Top" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("5_7tb7f")
+
+[node name="Mid" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 193
+metadata/_edit_lock_ = true
+
+[node name="GlovesSlot" parent="Mid" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("6_85dh3")
+
+[node name="ArmorSlot" parent="Mid" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("7_e1gqp")
+
+[node name="Bottom" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 193
+metadata/_edit_lock_ = true
+
+[node name="WeaponSlot" parent="Bottom" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("8_lnl12")
+
+[node name="BootsSlot" parent="Bottom" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("9_fsf7x")

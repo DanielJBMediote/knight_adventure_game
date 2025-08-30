@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=3 uid="uid://c0c5fotfyaqcc"]
+
+[ext_resource type="Script" uid="uid://b7lg4ip8hyuys" path="res://src/gameplay/mechanics/inventory/item_details_modal/item_price.gd" id="1_lnxiv"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="2_c3d4s"]
+[ext_resource type="Texture2D" uid="uid://cxte8o0h14rx" path="res://assets/sprites/items/icons/gold_small_coin.png" id="3_7gbp2"]
+[ext_resource type="Texture2D" uid="uid://k4u2ljp5247m" path="res://assets/sprites/items/icons/silver_small_coin.png" id="4_rrbje"]
+[ext_resource type="Texture2D" uid="uid://dmj65266d6e0o" path="res://assets/sprites/items/icons/bronze_small_coin.png" id="5_n6bml"]
+
+[node name="ItemPrice" type="HBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+size_flags_vertical = 10
+theme_override_constants/separation = 0
+script = ExtResource("1_lnxiv")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("2_c3d4s")
+text = "Item Value: "
+
+[node name="Golds" type="Label" parent="."]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.976471, 0.639216, 0.105882, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("2_c3d4s")
+
+[node name="GoldCoin" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+texture = ExtResource("3_7gbp2")
+expand_mode = 3
+stretch_mode = 3
+
+[node name="Silvers" type="Label" parent="."]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.976471, 0.639216, 0.105882, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("2_c3d4s")
+
+[node name="SilverCoin" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+texture = ExtResource("4_rrbje")
+expand_mode = 3
+stretch_mode = 3
+
+[node name="Bronzes" type="Label" parent="."]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.976471, 0.639216, 0.105882, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("2_c3d4s")
+
+[node name="BronzeCoin" type="TextureRect" parent="."]
+visible = false
+layout_mode = 2
+texture = ExtResource("5_n6bml")
+expand_mode = 3
+stretch_mode = 3

@@ -4,7 +4,6 @@ extends FlyingEnemy
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var enemy_hitbox: Area2D = $EnemyHitbox
 @onready var enemy_hurtbox: EnemyHurtbox = $EnemyHurtbox
-@onready var enemy_stats: EnemyStats = $EnemyStats
 @onready var float_damage_control: FloatDamageControl = $FloatDamageControl
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var hit_flash_animation: AnimationPlayer = $HitFlashAnimation
@@ -34,7 +33,6 @@ var wall_retry_count := 0
 
 func _ready() -> void:
 	super._ready()
-	#disable_enemy_hitbox(true)
 	pick_random_state([STATES.SLEEPING])
 	wander_controller.start_position = global_position
 	wander_controller.enemy_type = Enemy.ENEMY_TYPES.FLYING
@@ -49,8 +47,7 @@ func _ready() -> void:
 	enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
 	enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
 	enemy_hurtbox.player_hitbox_entered.connect(_on_player_hurtbox_entered)
-	hit_flash_animation.animation_finished.connect(_on_hit_flash_animation_finished)
-	
+	hit_flash_animation.animation_finished.connect(_on_hit_flash_animation_animation_finished)
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
@@ -283,17 +280,13 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite_2d.animation.begins_with("attack"):
 		finish_attack()
 		if target_in_attack_range:  # Só ataca se ainda estiver no alcance
-			super.hit_player(enemy_stats)
+			super.hit_player()
 			can_attack = true
 		else:
 			# Se o player saiu do alcance, reseta o ataque mas mantém o cooldown
 			can_attack = false
 	if animated_sprite_2d.animation == "dying":
 		enemy_control_ui.hide()
-
-func _on_hit_flash_animation_finished():
-		is_hurting = false
-		is_invulnerable = false
 
 func _on_target_player_entered(body: Node2D) -> void:
 	target_player = body
@@ -325,11 +318,16 @@ func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
 		can_attack = false
 
 func _on_player_hurtbox_entered() -> void:
-	hit_flash_animation.play("hit_flash")
-	if target_player and take_hit_with_knockback():
+	self.hit_flash_animation.play("hit_flash")
+	if self.target_player and take_hit_with_knockback():
 		animated_sprite_2d.play("hurt")
 		take_knockback(target_player.knockback_force, target_player.global_position)
 
 func _on_enemy_stats_trigged_dead(exp_amount: float) -> void:
 	animated_sprite_2d.play("dying")
 	super._on_dead(exp_amount)
+
+
+func _on_hit_flash_animation_animation_finished(_anim_name: StringName) -> void:
+	is_hurting = false
+	is_invulnerable = false

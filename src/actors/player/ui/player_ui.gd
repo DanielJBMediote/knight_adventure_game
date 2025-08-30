@@ -1,11 +1,13 @@
+class_name PlayerUI
 extends CanvasLayer
 
+@onready var inventory_ui: InventoryUI = $InventoryUI
 @onready var player_stats_ui: PlayerStatsUI = $PlayerStatsUI
-@onready var player_inventory: InventoryUI = $PlayerInventory
 @onready var player_quick_slotbar: PlayerQuickSlotbarUI = $PlayerQuickSlotbar
 
 func _ready() -> void:
-	player_inventory.hide()
+	add_to_group("player_ui")
+	inventory_ui.hide()
 	InventoryManager.update_inventory_visible.connect(_on_show_inventory)
 	
 func _on_show_inventory(is_open: bool)-> void:

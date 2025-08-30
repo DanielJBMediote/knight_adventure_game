@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfr6p0yxlpmv0"]
+
+[ext_resource type="Texture2D" uid="uid://6p5gw08f6wjc" path="res://assets/sprites/effects/effects.png" id="1_v862e"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iu7f0"]
+atlas = ExtResource("1_v862e")
+region = Rect2(106, 10, 12, 12)
+
+[node name="BleedEffectParticle" type="CPUParticles2D"]
+amount = 2
+texture = SubResource("AtlasTexture_iu7f0")
+lifetime = 1.5
+emission_shape = 3
+emission_rect_extents = Vector2(32, 1)
+gravity = Vector2(0, 64)
+color = Color(0.75, 0, 0, 1)

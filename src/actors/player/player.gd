@@ -91,8 +91,8 @@ func _ready() -> void:
 	add_to_group("player")
 	
 	if PlayerStats:
-		PlayerStats.set_knockback_resistance(knockback_resistance)
-		PlayerStats.set_knockback_force(knockback_force)
+		PlayerStats.update_knockback_resistance(knockback_resistance)
+		PlayerStats.update_knockback_force(knockback_force)
 	
 	floor_down_raycast.enabled = true
 	floor_up_raycast.enabled = true
@@ -105,11 +105,11 @@ func _ready() -> void:
 	add_child(dash_timer)
 	
 	float_damage_control.trigged_hit.connect(_on_take_damage)
-	PlayerEvents.level_up.connect(_show_level_up_label)
-	PlayerEvents.show_exp.connect(_show_experience)
+	PlayerStats.level_updated.connect(_show_level_up_label)
+	PlayerStats.experiance_added.connect(_show_experience)
 
 func apply_damage_on_player(damage_data: DamageData, enemy_stats: EnemyStats):
-	damage_data = PlayerStats.calculate_damage_taken(damage_data, enemy_stats.entity_level)
+	damage_data = PlayerStats.calculate_damage_taken(damage_data, enemy_stats.level)
 	float_damage_control.set_damage(damage_data)
 	
 	# Processa cada status effect
@@ -177,7 +177,7 @@ func calculate_distance_to_floors() -> void:
 
 func handle_actions() -> void:
 	if Input.is_action_just_pressed("Test"):
-		PlayerEvents.handle_event_add_experience(100)
+		PlayerStats.add_experience(100)
 	if is_on_floor():
 		handle_actions_when_on_floor()
 	else:
@@ -189,8 +189,8 @@ func handle_actions_when_on_floor() -> void:
 	has_played_peak_animation = false
 	air_dash_count = 1
 	
-	if not is_dashing:
-		sprite_2d.modulate.a = 100
+	#if not is_dashing:
+		#sprite_2d.modulate.a = 100
 	
 	# Evitar de se mover ao estar realizando o rolamento
 	if not is_rolling and not is_attacking and not is_hurting:
@@ -209,7 +209,7 @@ func handle_actions_when_on_floor() -> void:
 	var can_crouch = not_roll_and_attack and !is_jumping and distance_to_up_available
 	# Se remover o is_attacking do can_crouch da pra fazer faz um combo infinito kk
 	var can_roll = not_roll_and_attack and !is_crouching and !is_jumping
-	var can_attack = not_roll_and_attack
+	var can_attack = not_roll_and_attack and PlayerStats.has_energy_to_attack()
 	var can_slide = not_roll_and_attack and is_on_floor()
 	
 	# Controle do slide baseado em input e inclinação
@@ -224,9 +224,9 @@ func handle_actions_when_on_floor() -> void:
 	else:
 		is_sliding = false
 	
-	if can_dash and Input.is_action_just_pressed("dash"):
-		is_dashing = true
-		dash()
+	#if can_dash and Input.is_action_just_pressed("dash"):
+		#is_dashing = true
+		#dash()
 	
 	if Input.is_action_just_pressed("jump") and can_jump:
 		velocity.y = -JUMP_FORCE
@@ -241,7 +241,7 @@ func handle_actions_when_on_floor() -> void:
 	if Input.is_action_just_pressed("roll"):
 		if can_roll and PlayerStats.has_energy_to_roll():
 			is_rolling = true
-			PlayerEvents.handle_event_spent_energy(PlayerStats.energy_cost_to_roll)
+			PlayerStats.update_energy(PlayerStats.energy_cost_to_roll * -1)
 		else:
 			if not PlayerStats.has_energy_to_roll():
 				PlayerEvents.energy_warning.emit()
@@ -255,10 +255,10 @@ func handle_actions_when_on_air() -> void:
 		
 	var can_attack = not is_attacking and not is_dashing
 	
-	if can_dash and Input.is_action_just_pressed("dash") and air_dash_count > 0:
-		is_dashing = true
-		air_dash_count -= 1
-		dash()
+	#if can_dash and Input.is_action_just_pressed("dash") and air_dash_count > 0:
+		#is_dashing = true
+		#air_dash_count -= 1
+		#dash()
 	
 	if can_attack:
 		is_attacking = Input.get_action_strength("attack")
@@ -493,6 +493,7 @@ func update_colision_shape_when_crouch() -> void:
 func _on_animation_player_animatioan_finished(anim_name: StringName) -> void:
 	if anim_name.begins_with("Attack") or anim_name.begins_with("CrouchAttack"):
 		is_attacking = false
+		PlayerStats.update_energy(PlayerStats.energy_cost_to_attack * -1)
 	if anim_name.begins_with("Rolling"):
 		is_rolling = false
 	if anim_name.begins_with("CrouchingTransition"):
@@ -510,7 +511,7 @@ func _on_hit_flash_animation_player_animation_finished(anim_name: StringName) ->
 		is_rolling = false
 
 func _on_take_damage(damage: float)-> void:
-	PlayerEvents.handle_event_spent_health(damage)
+	PlayerStats.update_health(damage * -1)
 
 func _show_level_up_label(level: int):
 	var float_label: FloatLabel = preload("res://src/ui/float_label.tscn").instantiate()

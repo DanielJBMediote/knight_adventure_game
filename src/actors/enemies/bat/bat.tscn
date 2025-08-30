@@ -10,10 +10,10 @@
 [ext_resource type="Texture2D" uid="uid://dag6lrk0nf1db" path="res://assets/sprites/entities/enemies/bat/Bat-Attack2.png" id="3_qt1fd"]
 [ext_resource type="Texture2D" uid="uid://ooha02pf2xck" path="res://assets/sprites/entities/enemies/bat/Bat-Die.png" id="4_c5sj0"]
 [ext_resource type="Texture2D" uid="uid://dtqv6aps05w7j" path="res://assets/sprites/entities/enemies/bat/Bat-Sleep.png" id="5_5udcu"]
-[ext_resource type="PackedScene" uid="uid://bivderlem0rfr" path="res://src/actors/enemies/_controllers/enemy_stats.tscn" id="11_c5sj0"]
 [ext_resource type="PackedScene" uid="uid://rtxpfrnud2ta" path="res://src/actors/enemies/_controllers/wander_controller.tscn" id="11_ykyxn"]
 [ext_resource type="PackedScene" uid="uid://crghd6gyb71w5" path="res://src/actors/enemies/_controllers/detection_zone.tscn" id="12_cww7r"]
 [ext_resource type="PackedScene" uid="uid://ciaj2edwf0e0c" path="res://src/actors/enemies/_controllers/enemy_control_ui.tscn" id="12_ykyxn"]
+[ext_resource type="PackedScene" uid="uid://c8and80a8q8yw" path="res://src/actors/enemies/_controllers/enemy_stats.tscn" id="14_55kbc"]
 [ext_resource type="PackedScene" uid="uid://bw7gs5y32rs22" path="res://src/actors/enemies/_controllers/enemy_hurtbox.tscn" id="14_yvpm3"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="15_4siq7"]
 
@@ -613,24 +613,24 @@ _data = {
 &"hit_flash": SubResource("Animation_olv3m")
 }
 
-[node name="Bat" type="CharacterBody2D" groups=["enemies"]]
-z_index = 1
+[node name="Bat" type="CharacterBody2D" node_paths=PackedStringArray("enemy_stats") groups=["enemies"]]
 collision_layer = 16
 collision_mask = 34
 motion_mode = 1
 platform_floor_layers = 4294901762
 script = ExtResource("1_qt1fd")
 min_flight_height = 70.0
+enemy_stats = NodePath("EnemyStats")
 attack_cooldown = 1.0
 attack_names = Array[String](["attack_bite", "attack_slash"])
+loot_categories = Array[int]([2, 0, 1])
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_8os3d")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_c5sj0")
-animation = &"attack_bite"
-frame = 10
-frame_progress = 1.0
+animation = &"moving"
+frame_progress = 0.963409
 flip_h = true
 metadata/_edit_lock_ = true
 
@@ -638,21 +638,11 @@ metadata/_edit_lock_ = true
 shape = SubResource("CircleShape2D_p0hut")
 metadata/_edit_lock_ = true
 
-[node name="EnemyStats" parent="." instance=ExtResource("11_c5sj0")]
-entity_name = "Dark Bat"
-base_min_damage = 10.0
-base_max_damage = 20.0
-base_experience = 50.0
-base_poison_chance = 20.0
-base_poison_duration = 5.0
-base_poison_damage = 0.5
-base_move_speed = 65.0
-
 [node name="WanderController" parent="." instance=ExtResource("11_ykyxn")]
 wander_range = Vector2(300, 50)
 
 [node name="DetectionZone" parent="." instance=ExtResource("12_cww7r")]
-radius_range = 500.0
+radius_range = 300.0
 
 [node name="EnemyHitbox" type="Area2D" parent="."]
 collision_layer = 2048
@@ -667,6 +657,16 @@ debug_color = Color(0.724805, 0, 0.0693719, 0.42)
 [node name="EnemyHurtbox" parent="." instance=ExtResource("14_yvpm3")]
 radius = 25.0
 height = 50.0
+
+[node name="EnemyStats" parent="." instance=ExtResource("14_55kbc")]
+enemy_name = "Bat"
+base_min_damage = 5.0
+base_max_damage = 10.0
+base_experience = 25.0
+base_num_drops = 4
+base_poison_chance = 0.15
+base_poison_duration = 5.0
+base_poison_damage = 0.1
 
 [node name="EnemyControlUI" parent="." node_paths=PackedStringArray("enemy_stats") instance=ExtResource("12_ykyxn")]
 offset_top = -56.0
@@ -696,7 +696,7 @@ libraries = {
 }
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
-[connection signal="trigged_dead" from="EnemyStats" to="." method="_on_enemy_stats_trigged_dead"]
 [connection signal="trigger_player_entered" from="DetectionZone" to="." method="_on_target_player_entered"]
 [connection signal="trigger_player_exited" from="DetectionZone" to="." method="_on_target_player_exited"]
 [connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_player_hitbox_area_entered"]
+[connection signal="animation_finished" from="HitFlashAnimation" to="." method="_on_hit_flash_animation_animation_finished"]

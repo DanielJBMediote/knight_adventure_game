@@ -1,0 +1,183 @@
+[gd_scene load_steps=12 format=3 uid="uid://c6jxprwfuu8e8"]
+
+[ext_resource type="Script" uid="uid://bvspsdvis07m8" path="res://src/gameplay/items/coin/coin_body.gd" id="1_26wga"]
+[ext_resource type="Texture2D" uid="uid://5iorjr58n6di" path="res://assets/sprites/items/icons/coin_effect.png" id="2_s4nfn"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_odcur"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_c7qms"]
+radius = 32.0
+
+[sub_resource type="Animation" id="Animation_wam5a"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CoinEffect:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [7]
+}
+
+[sub_resource type="Animation" id="Animation_72c7j"]
+resource_name = "coin"
+length = 2.0
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CoinEffect:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.500104, 0.6, 0.7, 0.8, 0.9, 1, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [7, 8, 9, 10, 11, 12, 13]
+}
+
+[sub_resource type="Animation" id="Animation_ukose"]
+resource_name = "coin_huge"
+length = 2.0
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CoinEffect:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [14, 15, 16, 17, 18, 19, 20]
+}
+
+[sub_resource type="Animation" id="Animation_26wga"]
+resource_name = "coin_small"
+length = 2.0
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CoinEffect:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_svb4m"]
+_data = {
+&"RESET": SubResource("Animation_wam5a"),
+&"coin": SubResource("Animation_72c7j"),
+&"coin_huge": SubResource("Animation_ukose"),
+&"coin_small": SubResource("Animation_26wga")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oxlrq"]
+radius = 8.0
+
+[sub_resource type="Environment" id="Environment_c7qms"]
+background_mode = 3
+glow_enabled = true
+glow_normalized = true
+glow_intensity = 0.2
+glow_bloom = 0.25
+glow_blend_mode = 0
+
+[node name="CoinBody" type="RigidBody2D" groups=["coins"]]
+z_index = 2
+collision_layer = 64
+collision_mask = 2
+mass = 0.1
+lock_rotation = true
+linear_damp = 0.1
+angular_velocity = 0.0174533
+angular_damp = 0.3
+script = ExtResource("1_26wga")
+bounce_factor = 0.0
+max_spawn_force = 50.0
+lifespan = 180.0
+
+[node name="CoinTexture" type="Sprite2D" parent="."]
+modulate = Color(1.5, 1.5, 1.5, 1)
+scale = Vector2(1.75, 1.75)
+metadata/_edit_lock_ = true
+
+[node name="CoinEffect" type="Sprite2D" parent="."]
+modulate = Color(1.5, 1.5, 1.5, 0.75)
+scale = Vector2(1.75, 1.75)
+texture = ExtResource("2_s4nfn")
+hframes = 7
+vframes = 3
+frame = 7
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_c7qms")
+metadata/_edit_lock_ = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_svb4m")
+}
+
+[node name="CollectZone" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollectZone"]
+shape = SubResource("CircleShape2D_oxlrq")
+debug_color = Color(0.621362, 0.353166, 1, 0.42)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_c7qms")
+
+[node name="InteractLabel" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -38.0
+offset_top = -96.0
+offset_right = 38.0
+offset_bottom = -84.0
+grow_horizontal = 2
+
+[node name="ColorRect" type="ColorRect" parent="InteractLabel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="InteractLabel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_odcur")
+text = "Collect"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[connection signal="body_entered" from="CollectZone" to="." method="_on_collect_zone_body_entered"]
+[connection signal="body_exited" from="CollectZone" to="." method="_on_collect_zone_body_exited"]

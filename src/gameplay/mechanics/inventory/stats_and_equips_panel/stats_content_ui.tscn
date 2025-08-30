@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvg01jmtkcafx"]
+
+[ext_resource type="Theme" uid="uid://cplm3n583p8ad" path="res://src/ui/themes/v_scroll_without_bar.tres" id="1_atm7f"]
+[ext_resource type="Script" uid="uid://bb5oa5whga6j0" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_content_ui.gd" id="1_p1igb"]
+
+[node name="StatsContentUI" type="ScrollContainer"]
+offset_right = 392.0
+offset_bottom = 348.0
+size_flags_vertical = 3
+theme = ExtResource("1_atm7f")
+script = ExtResource("1_p1igb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

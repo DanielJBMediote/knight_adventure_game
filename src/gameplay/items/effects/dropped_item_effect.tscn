@@ -1,31 +1,54 @@
-[gd_scene load_steps=5 format=3 uid="uid://cu3jjchhevkc"]
+[gd_scene load_steps=7 format=3 uid="uid://cu3jjchhevkc"]
 
 [sub_resource type="Gradient" id="Gradient_mia1m"]
-offsets = PackedFloat32Array(0.207921, 0.386139, 0.663366)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.248, 1, 1, 1, 0)
+offsets = PackedFloat32Array(0.0367816, 0.124138, 0.183908, 0.287356)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.428571, 1, 1, 1, 0.193159, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_7pdyw"]
 gradient = SubResource("Gradient_mia1m")
+width = 256
+height = 256
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="Gradient" id="Gradient_af1rt"]
-offsets = PackedFloat32Array(0, 0.149573, 0.282051, 0.751773)
-colors = PackedColorArray(1, 1, 1, 1, 0.982708, 0.982708, 0.982708, 0.509548, 0.975876, 0.975876, 0.975876, 0.315789, 0.964742, 0.964742, 0.964742, 0)
+offsets = PackedFloat32Array(0, 0.176166)
+colors = PackedColorArray(1, 1, 1, 0.25, 0.964742, 0.964742, 0.964742, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_mia1m"]
 gradient = SubResource("Gradient_af1rt")
 fill_from = Vector2(0.555556, 1)
 fill_to = Vector2(0.551282, 0)
 
+[sub_resource type="Gradient" id="Gradient_7pdyw"]
+offsets = PackedFloat32Array(0, 0.401554)
+colors = PackedColorArray(1, 1, 1, 0.372483, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c1na3"]
+gradient = SubResource("Gradient_7pdyw")
+fill_from = Vector2(0, 0.709402)
+
 [node name="DroppedItemEffect" type="Node2D"]
 
 [node name="EffectBottom" type="Sprite2D" parent="."]
-position = Vector2(0, -10)
+scale = Vector2(0.5, 0.5)
 texture = SubResource("GradientTexture2D_7pdyw")
-offset = Vector2(0, 10)
 
 [node name="LineEffect" type="Sprite2D" parent="."]
-scale = Vector2(0.25, 3.75)
+position = Vector2(0, 4)
+scale = Vector2(0.125, 1.5)
 texture = SubResource("GradientTexture2D_mia1m")
 offset = Vector2(0, -32)
+
+[node name="LineEffectRight" type="Sprite2D" parent="."]
+position = Vector2(6, 0)
+scale = Vector2(0.1875, 3.75)
+texture = SubResource("GradientTexture2D_c1na3")
+offset = Vector2(0, -32)
+
+[node name="LineEffectLeft" type="Sprite2D" parent="."]
+position = Vector2(-6, 0)
+scale = Vector2(0.1875, 3.75)
+texture = SubResource("GradientTexture2D_c1na3")
+offset = Vector2(0, -32)
+flip_h = true

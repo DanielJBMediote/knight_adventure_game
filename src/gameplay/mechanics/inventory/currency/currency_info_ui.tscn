@@ -1,0 +1,65 @@
+[gd_scene load_steps=6 format=3 uid="uid://cvbmrrputn3w6"]
+
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="1_oaowg"]
+[ext_resource type="Script" uid="uid://cd71o0y6o16jd" path="res://src/gameplay/mechanics/inventory/currency/currency_info_ui.gd" id="1_u1fj6"]
+[ext_resource type="Texture2D" uid="uid://cxte8o0h14rx" path="res://assets/sprites/items/icons/gold_small_coin.png" id="2_u1fj6"]
+[ext_resource type="Texture2D" uid="uid://k4u2ljp5247m" path="res://assets/sprites/items/icons/silver_small_coin.png" id="3_su513"]
+[ext_resource type="Texture2D" uid="uid://dmj65266d6e0o" path="res://assets/sprites/items/icons/bronze_small_coin.png" id="4_y8ugc"]
+
+[node name="CurrencyInfoUI" type="HBoxContainer"]
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.022
+anchor_right = 0.2
+anchor_bottom = 0.022
+offset_left = -256.0
+offset_top = -15.84
+offset_bottom = 16.16
+size_flags_horizontal = 0
+script = ExtResource("1_u1fj6")
+
+[node name="ValueGold" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 10
+theme = ExtResource("1_oaowg")
+theme_override_colors/font_color = Color(0.976471, 0.639216, 0.105882, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "999"
+horizontal_alignment = 2
+
+[node name="GoldCoin" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("2_u1fj6")
+stretch_mode = 5
+
+[node name="ValueSilver" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("1_oaowg")
+theme_override_colors/font_color = Color(0.545098, 0.576471, 0.686275, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "999"
+
+[node name="SilverCoin" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("3_su513")
+stretch_mode = 5
+
+[node name="ValueBronze" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("1_oaowg")
+theme_override_colors/font_color = Color(0.533333, 0.298039, 0.243137, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 24
+text = "999"
+
+[node name="BronzeCoin" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("4_y8ugc")
+stretch_mode = 5

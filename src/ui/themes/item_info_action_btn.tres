@@ -1,0 +1,40 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://cjghsixcdlswl"]
+
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="1_2fif3"]
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="2_d4t7r"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y3syy"]
+texture = ExtResource("2_d4t7r")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(352, 120, 52, 48)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n44wp"]
+texture = ExtResource("2_d4t7r")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(352, 120, 52, 48)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hdk3s"]
+texture = ExtResource("2_d4t7r")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(237, 120, 52, 48)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_g2s8e"]
+texture = ExtResource("2_d4t7r")
+region_rect = Rect2(237, 120, 52, 48)
+
+[resource]
+Button/font_sizes/font_size = 32
+Button/fonts/font = ExtResource("1_2fif3")
+Button/styles/focus = SubResource("StyleBoxTexture_y3syy")
+Button/styles/hover = SubResource("StyleBoxTexture_n44wp")
+Button/styles/normal = SubResource("StyleBoxTexture_hdk3s")
+Button/styles/pressed = SubResource("StyleBoxTexture_g2s8e")

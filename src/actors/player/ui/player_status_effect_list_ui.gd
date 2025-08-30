@@ -50,7 +50,7 @@ func _ready() -> void:
 func _on_add_status_effect(effect_data: StatusEffectData) -> void:
 	# Verifica se o efeito já está ativo
 	if active_effects.has(effect_data.effect):
-		update_active_status_effect(effect_data)
+		#update_active_status_effect(effect_data)
 		return
 	
 	# Cria a UI apropriada para o tipo de efeito

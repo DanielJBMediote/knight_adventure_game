@@ -16,10 +16,10 @@ noise = SubResource("FastNoiseLite_jsomc")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gga1g"]
 shader = ExtResource("1_jsomc")
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_jewg7")
-shader_parameter/density = 0.1
-shader_parameter/speed = Vector2(0.2, 0.1)
+shader_parameter/density = 0.05
+shader_parameter/speed = Vector2(0.15, 0.1)
 shader_parameter/particle_size = 1.0
-shader_parameter/contrast = 1.5
+shader_parameter/contrast = 3.5
 shader_parameter/brightness = 1.0
 
 [node name="FogEffectScreen" type="ParallaxBackground"]
@@ -27,5 +27,6 @@ layer = 1
 
 [node name="ColorRect" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_gga1g")
+offset_top = -1.0
 offset_right = 1280.0
-offset_bottom = 736.0
+offset_bottom = 735.0
