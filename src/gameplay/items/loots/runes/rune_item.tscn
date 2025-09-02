@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bc4cyyrpk6y30"]
+
+[ext_resource type="Script" uid="uid://d18qm1qx817k1" path="res://src/gameplay/items/loots/runes/rune_item.gd" id="1_bgb2w"]
+
+[node name="RuneItem" type="Node"]
+script = ExtResource("1_bgb2w")

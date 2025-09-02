@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=4 uid="uid://b3iacnu0qyy6c"]
+[gd_scene load_steps=31 format=4 uid="uid://b3iacnu0qyy6c"]
 
 [ext_resource type="Script" uid="uid://dirkxfg16rje0" path="res://src/world/maps/_configs/map_data.gd" id="1_gn1dk"]
 [ext_resource type="PackedScene" uid="uid://doom7rgxnt8p7" path="res://src/actors/player/player.tscn" id="1_v5ogm"]
@@ -13,6 +13,9 @@
 [ext_resource type="Texture2D" uid="uid://f15fd2r0kqq6" path="res://assets/sprites/items/gems/gem_common_green.png" id="10_kmnrt"]
 [ext_resource type="Script" uid="uid://biwu18uemd06n" path="res://src/gameplay/items/loots/gems/gem_item.gd" id="11_6ulwr"]
 [ext_resource type="PackedScene" uid="uid://bmqja38h84vuw" path="res://src/actors/player/ui/player_ui.tscn" id="12_6ulwr"]
+[ext_resource type="Texture2D" uid="uid://ch3hunsu03xej" path="res://assets/sprites/items/gems/gem_common_blue.png" id="12_b4df1"]
+[ext_resource type="Texture2D" uid="uid://cr8jvh2xeuio" path="res://assets/sprites/items/potions/attack_speed_potion_01.png" id="13_mp0vo"]
+[ext_resource type="Texture2D" uid="uid://ovv83758mif5" path="res://assets/sprites/items/equipments/weapon/_0.png" id="14_4bvk3"]
 [ext_resource type="Script" uid="uid://cngmaqnrqpv5" path="res://src/gameplay/items/coin/coin.gd" id="14_68v3f"]
 [ext_resource type="Texture2D" uid="uid://dmj65266d6e0o" path="res://assets/sprites/items/icons/bronze_small_coin.png" id="14_wdvs5"]
 [ext_resource type="Texture2D" uid="uid://bwoe1n556f2jw" path="res://assets/sprites/items/icons/silver_coin.png" id="16_b4df1"]
@@ -32,61 +35,142 @@ item_description = ""
 item_category = 0
 item_subcategory = 0
 item_rarity = 0
-spawn_chance = 1.0
 item_texture = ExtResource("5_dbqjn")
+item_price = 0
+item_level = 0
+item_usable = false
+spawn_chance = 1.0
 stackable = false
 max_stack = 1
 current_stack = 1
 is_unique = false
+item_attributes = Array[ExtResource("9_6ulwr")]([])
+metadata/_custom_type_script = "uid://eufa774v484h"
+
+[sub_resource type="Resource" id="Resource_68v3f"]
+script = ExtResource("11_6ulwr")
+gem_type = 0
+gem_quality = 0
+num_runes_to_upgrade = 0
+price_to_upgrade = 0
+equip_slot_sockets = Array[int]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 2
+item_subcategory = 6
+item_rarity = 2
+item_texture = ExtResource("10_kmnrt")
 item_price = 0
 item_level = 0
 item_usable = false
-metadata/_custom_type_script = "uid://eufa774v484h"
+spawn_chance = 1.0
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_attributes = Array[ExtResource("9_6ulwr")]([])
+metadata/_custom_type_script = "uid://biwu18uemd06n"
+
+[sub_resource type="Resource" id="Resource_mp0vo"]
+script = ExtResource("11_6ulwr")
+gem_type = 0
+gem_quality = 0
+num_runes_to_upgrade = 0
+price_to_upgrade = 0
+equip_slot_sockets = Array[int]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 2
+item_subcategory = 6
+item_rarity = 1
+item_texture = ExtResource("12_b4df1")
+item_price = 0
+item_level = 0
+item_usable = false
+spawn_chance = 1.0
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_attributes = Array[ExtResource("9_6ulwr")]([])
+metadata/_custom_type_script = "uid://biwu18uemd06n"
+
+[sub_resource type="Resource" id="Resource_b4df1"]
+script = ExtResource("8_kmnrt")
+equipment_type = 0
+equipment_group = 0
+equipment_set = 0
+available_sockets = 0
+gems_in_sockets = Array[ExtResource("11_6ulwr")]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 0
+item_subcategory = 0
+item_rarity = 4
+item_texture = ExtResource("13_mp0vo")
+item_price = 0
+item_level = 0
+item_usable = false
+spawn_chance = 1.0
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_attributes = Array[ExtResource("9_6ulwr")]([])
+metadata/_custom_type_script = "uid://rmxjay0dfaus"
+
+[sub_resource type="Resource" id="Resource_0t7li"]
+script = ExtResource("8_kmnrt")
+equipment_type = 0
+equipment_group = 0
+equipment_set = 0
+available_sockets = 0
+gems_in_sockets = Array[ExtResource("11_6ulwr")]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 1
+item_subcategory = 1
+item_rarity = 3
+item_texture = ExtResource("14_4bvk3")
+item_price = 0
+item_level = 0
+item_usable = false
+spawn_chance = 1.0
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_attributes = Array[ExtResource("9_6ulwr")]([])
+metadata/_custom_type_script = "uid://rmxjay0dfaus"
 
 [sub_resource type="Resource" id="Resource_2ba0v"]
 script = ExtResource("8_kmnrt")
 equipment_type = 3
 equipment_group = 0
 equipment_set = 0
-set_bonus_attributes = Array[ExtResource("9_6ulwr")]([])
+available_sockets = 0
+gems_in_sockets = Array[ExtResource("11_6ulwr")]([])
 item_id = ""
 item_name = ""
 item_description = ""
 item_category = 1
 item_subcategory = 2
-item_rarity = 2
-spawn_chance = 1.0
+item_rarity = 5
 item_texture = ExtResource("7_m7utl")
-stackable = false
-max_stack = 1
-current_stack = 1
-is_unique = false
 item_price = 0
 item_level = 0
 item_usable = false
-metadata/_custom_type_script = "uid://rmxjay0dfaus"
-
-[sub_resource type="Resource" id="Resource_68v3f"]
-script = ExtResource("11_6ulwr")
-gem_type = 0
-can_upgrade = false
-gem_quality = 0
-item_id = ""
-item_name = ""
-item_description = ""
-item_category = 2
-item_subcategory = 6
-item_rarity = 3
 spawn_chance = 1.0
-item_texture = ExtResource("10_kmnrt")
 stackable = false
 max_stack = 1
 current_stack = 1
 is_unique = false
-item_price = 0
-item_level = 0
-item_usable = false
-metadata/_custom_type_script = "uid://biwu18uemd06n"
+item_attributes = Array[ExtResource("9_6ulwr")]([])
+metadata/_custom_type_script = "uid://rmxjay0dfaus"
 
 [sub_resource type="Resource" id="Resource_lry1y"]
 script = ExtResource("14_68v3f")
@@ -123,6 +207,7 @@ boss_level = 10
 tile_map_data = PackedByteArray("AAACAAwAAQAEAAQAAAACAAsAAQAEAAQAAAACAAoAAQAEAAQAAAACAAkAAQAEAAQAAAACAAgAAQAEAAQAAAACAAcAAQAEAAQAAAACAAYAAQAEAAQAAAACAAUAAQAEAAQAAAACAAQAAQAEAAQAAAACAAMAAQAEAAQAAAACAAIAAQAEAAQAAAACAAEAAQAEAAQAAAACAAAAAQADAAEAAAABAAwAAQABAAQAAAABAAsAAQACAAQAAAABAAoAAQACAAIAAAABAAkAAQACAAMAAAABAAgAAQADAAQAAAABAAcAAQADAAQAAAABAAYAAQADAAQAAAABAAUAAQACAAUAAAABAAQAAQACAAUAAAABAAMAAQACAAIAAAABAAIAAQACAAIAAAABAAEAAQACAAUAAAABAAAAAQACAAEAAAAAAAwAAQAAAAQAAAAAAAsAAQAAAAQAAAAAAAoAAQAAAAQAAAAAAAkAAQAAAAQAAAAAAAgAAQAAAAQAAAAAAAcAAQAAAAQAAAAAAAYAAQAAAAQAAAAAAAUAAQAAAAQAAAAAAAQAAQAAAAQAAAAAAAMAAQAAAAQAAAAAAAIAAQAAAAQAAAAAAAEAAQAAAAQAAAAAAAAAAQABAAEAAAACABQAAQABAAQAAAACABMAAQACAAMAAAACABIAAQADAAQAAAACABEAAQACAAIAAAACABAAAQACAAMAAAACAA8AAQADAAMAAAACAA4AAQADAAIAAAACAA0AAQAEAAQAAAABABQAAQACAAQAAAABABMAAQACAAQAAAABABIAAQACAAQAAAABABEAAQABAAQAAAABABAAAQACAAMAAAABAA8AAQACAAUAAAABAA4AAQACAAQAAAABAA0AAQACAAMAAAAAABQAAQAAAAQAAAAAABMAAQAAAAQAAAAAABIAAQAAAAQAAAAAABEAAQAAAAQAAAAAABAAAQAAAAQAAAAAAA8AAQAAAAQAAAAAAA4AAQAAAAQAAAAAAA0AAQAAAAQAAAAQABMAAQACAAQAAAAQABIAAQABAAQAAAAQABEAAQADAAMAAAAQABAAAQADAAIAAAAQAA8AAQAEAAQAAAAPABMAAQACAAMAAAAPABIAAQACAAUAAAAPABEAAQACAAQAAAAPABAAAQACAAIAAAAPAA8AAQABAAQAAAAOABMAAQADAAQAAAAOABIAAQACAAMAAAAOABEAAQACAAMAAAAOABAAAQACAAUAAAAOAA8AAQACAAQAAAANABMAAQACAAMAAAANABIAAQABAAQAAAANABEAAQACAAUAAAANABAAAQABAAQAAAANAA8AAQACAAMAAAAMABMAAQACAAMAAAAMABIAAQACAAIAAAAMABEAAQACAAMAAAAMABAAAQACAAUAAAAMAA8AAQABAAMAAAALABMAAQADAAQAAAALABIAAQADAAQAAAALABEAAQABAAQAAAALABAAAQADAAQAAAALAA8AAQACAAEAAAAKABMAAQACAAMAAAAKABIAAQACAAIAAAAKABEAAQACAAUAAAAKABAAAQACAAUAAAAKAA8AAQACAAEAAAAJABMAAQADAAQAAAAJABIAAQABAAQAAAAJABEAAQACAAUAAAAJABAAAQACAAQAAAAJAA8AAQACAAEAAAAIABMAAQACAAIAAAAIABIAAQACAAIAAAAIABEAAQACAAMAAAAIABAAAQACAAUAAAAIAA8AAQACAAEAAAAHABMAAQADAAQAAAAHABIAAQACAAMAAAAHABEAAQADAAQAAAAHABAAAQACAAUAAAAHAA8AAQACAAEAAAAGABMAAQACAAMAAAAGABIAAQACAAUAAAAGABEAAQACAAQAAAAGABAAAQACAAUAAAAGAA8AAQACAAEAAAAFABMAAQACAAMAAAAFABIAAQACAAMAAAAFABEAAQACAAMAAAAFABAAAQACAAQAAAAFAA8AAQACAAEAAAAEABMAAQACAAQAAAAEABIAAQACAAUAAAAEABEAAQACAAMAAAAEABAAAQACAAUAAAAEAA8AAQACAAEAAAADABMAAQACAAMAAAADABIAAQADAAQAAAADABEAAQABAAQAAAADABAAAQABAAQAAAADAA8AAQACAAEAAAAQAA4AAQAEAAQAAAAQAA0AAQAEAAQAAAAQAAwAAQAEAAMAAAAPAA4AAQACAAIAAAAPAA0AAQACAAIAAAAPAAwAAQACAAEAAAAOAA4AAQACAAMAAAAOAA0AAQACAAQAAAAOAAwAAQACAAEAAAANAA4AAQACAAIAAAANAA0AAQACAAUAAAANAAwAAQACAAEAAAAMAA4AAQAAAAQAAAAMAA0AAQAAAAQAAAAMAAwAAQABAAEAAAATABIAAQADAAIAAAATABEAAQADAAEAAAASABIAAQACAAUAAAASABEAAQACAAEAAAARABIAAQACAAUAAAARABEAAQACAAEAAAAcABQAAQADAAQAAAAcABMAAQACAAQAAAAbABQAAQACAAIAAAAbABMAAQABAAMAAAAaABQAAQACAAMAAAAaABMAAQACAAEAAAAZABQAAQACAAUAAAAZABMAAQACAAEAAAAYABQAAQACAAQAAAAYABMAAQACAAEAAAAXABQAAQACAAIAAAAXABMAAQACAAEAAAAWABQAAQACAAQAAAAWABMAAQACAAEAAAAVABQAAQACAAIAAAAVABMAAQACAAEAAAAUABQAAQACAAQAAAAUABMAAQACAAEAAAATABQAAQADAAQAAAATABMAAQADAAMAAAASABQAAQACAAIAAAASABMAAQACAAMAAAARABQAAQACAAUAAAARABMAAQADAAQAAAAQABQAAQACAAMAAAAPABQAAQACAAQAAAAOABQAAQACAAQAAAANABQAAQACAAQAAAAMABQAAQACAAQAAAALABQAAQACAAQAAAAKABQAAQACAAMAAAAJABQAAQACAAIAAAAIABQAAQACAAIAAAAHABQAAQABAAQAAAAGABQAAQACAAUAAAAFABQAAQACAAUAAAAEABQAAQACAAMAAAADABQAAQADAAQAAAAdABYAAQACAAYAAAAdABUAAQACAAMAAAAdABQAAQACAAMAAAAcABYAAQACAAYAAAAcABUAAQACAAIAAAAbABYAAQACAAYAAAAbABUAAQACAAIAAAAaABYAAQACAAYAAAAaABUAAQADAAQAAAAZABYAAQACAAYAAAAZABUAAQADAAQAAAAYABYAAQACAAYAAAAYABUAAQACAAQAAAAXABYAAQACAAYAAAAXABUAAQACAAIAAAAWABYAAQACAAYAAAAWABUAAQADAAQAAAAVABYAAQACAAYAAAAVABUAAQACAAUAAAAUABYAAQACAAYAAAAUABUAAQACAAUAAAATABYAAQACAAYAAAATABUAAQACAAQAAAASABYAAQACAAYAAAASABUAAQACAAIAAAARABYAAQACAAYAAAARABUAAQADAAQAAAAQABYAAQACAAYAAAAQABUAAQACAAIAAAAPABYAAQACAAYAAAAPABUAAQACAAMAAAAOABYAAQACAAYAAAAOABUAAQABAAQAAAANABYAAQACAAYAAAANABUAAQACAAQAAAAMABYAAQACAAYAAAAMABUAAQADAAQAAAALABYAAQACAAYAAAALABUAAQACAAQAAAAKABYAAQACAAYAAAAKABUAAQACAAIAAAAJABYAAQACAAYAAAAJABUAAQACAAQAAAAIABYAAQACAAYAAAAIABUAAQACAAUAAAAHABYAAQACAAYAAAAHABUAAQACAAMAAAAGABYAAQACAAYAAAAGABUAAQACAAIAAAAFABYAAQACAAYAAAAFABUAAQACAAUAAAAEABYAAQACAAYAAAAEABUAAQABAAQAAAADABYAAQACAAYAAAADABUAAQACAAQAAAACABYAAQACAAYAAAACABUAAQACAAQAAAABABYAAQACAAYAAAABABUAAQACAAUAAAAAABYAAQABAAYAAAAAABUAAQAAAAQAAAAfABYAAQACAAYAAAAfABUAAQACAAUAAAAfABQAAQACAAIAAAAfABMAAQACAAQAAAAfABIAAQABAAQAAAAfABEAAQADAAMAAAAfABAAAQADAAIAAAAeABYAAQACAAYAAAAeABUAAQABAAQAAAAeABQAAQABAAQAAAAeABMAAQACAAUAAAAeABIAAQABAAQAAAAeABEAAQABAAQAAAAeABAAAQABAAMAAAAdABMAAQACAAIAAAAdABIAAQACAAIAAAAdABEAAQADAAQAAAAdABAAAQACAAEAAAAcABIAAQABAAQAAAAcABEAAQABAAQAAAAcABAAAQACAAEAAAAbABIAAQABAAIAAAAbABEAAQAAAAQAAAAbABAAAQAAAAMAAAAfAA8AAQAEAAQAAAAfAA4AAQAEAAQAAAAfAA0AAQAEAAQAAAAfAAwAAQAEAAQAAAAfAAsAAQAEAAQAAAAfAAoAAQADAAEAAAAeAA8AAQABAAIAAAAeAA4AAQAAAAQAAAAeAA0AAQAAAAQAAAAeAAwAAQAAAAQAAAAeAAsAAQAAAAQAAAAeAAoAAQABAAEAAAAiABYAAQAEAAUAAAAiABUAAQADAAIAAAAiABQAAQADAAIAAAAiABMAAQADAAIAAAAiABIAAQAEAAQAAAAiABEAAQADAAEAAAAhABYAAQACAAYAAAAhABUAAQACAAUAAAAhABQAAQACAAMAAAAhABMAAQABAAQAAAAhABIAAQACAAMAAAAhABEAAQACAAEAAAAgABYAAQACAAYAAAAgABUAAQACAAUAAAAgABQAAQACAAQAAAAgABMAAQACAAIAAAAgABIAAQACAAIAAAAgABEAAQACAAEAAAADAA4AAQACAAAAAAAEAA4AAQACAAAAAAAFAA4AAQACAAAAAAAGAA4AAQACAAAAAAAHAA4AAQACAAAAAAAIAA4AAQACAAAAAAAJAA4AAQACAAAAAAAKAA4AAQACAAAAAAALAA4AAQACAAAAAAANAAsAAQACAAAAAAAOAAsAAQACAAAAAAAPAAsAAQACAAAAAAASABAAAQACAAAAAAARABAAAQACAAAAAAATABAAAQADAAAAAAAQAAsAAQADAAAAAAAMAAsAAQABAAAAAAAbAA8AAQABAAAAAAAeAAkAAQABAAAAAAAfAAkAAQADAAAAAAAiABAAAQADAAAAAAAhABAAAQACAAAAAAAgABAAAQACAAAAAAAZABIAAQACAAAAAAAYABIAAQACAAAAAAAXABIAAQACAAAAAAAWABIAAQACAAAAAAAVABIAAQACAAAAAAAUABIAAQACAAAAAAAaABIAAQACAAAAAAAcAA8AAQACAAAAAAAdAA8AAQACAAAAAAA=")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+visible = false
 navigation_polygon = SubResource("NavigationPolygon_gn1dk")
 
 [node name="Player" parent="." instance=ExtResource("1_v5ogm")]
@@ -130,35 +215,36 @@ position = Vector2(480, 352)
 metadata/_edit_lock_ = true
 
 [node name="ItemObject" parent="." instance=ExtResource("4_4lvfa")]
-position = Vector2(768, 512)
+position = Vector2(192, 448)
+freeze = true
 item_resource = SubResource("Resource_58eeo")
 
-[node name="ItemObject2" parent="." instance=ExtResource("4_4lvfa")]
-position = Vector2(448, 320)
-item_resource = SubResource("Resource_2ba0v")
-
 [node name="ItemObject3" parent="." instance=ExtResource("4_4lvfa")]
-position = Vector2(192, 384)
-item_resource = SubResource("Resource_68v3f")
-
-[node name="ItemObject4" parent="." instance=ExtResource("4_4lvfa")]
-position = Vector2(224, 384)
+position = Vector2(256, 448)
+freeze = true
 item_resource = SubResource("Resource_68v3f")
 
 [node name="ItemObject5" parent="." instance=ExtResource("4_4lvfa")]
-position = Vector2(256, 384)
-item_resource = SubResource("Resource_68v3f")
+position = Vector2(224, 448)
+freeze = true
+item_resource = SubResource("Resource_mp0vo")
 
 [node name="ItemObject6" parent="." instance=ExtResource("4_4lvfa")]
-position = Vector2(288, 384)
-item_resource = SubResource("Resource_68v3f")
+position = Vector2(320, 448)
+freeze = true
+item_resource = SubResource("Resource_b4df1")
 
 [node name="ItemObject7" parent="." instance=ExtResource("4_4lvfa")]
-position = Vector2(320, 384)
-item_resource = SubResource("Resource_68v3f")
+position = Vector2(288, 448)
+freeze = true
+item_resource = SubResource("Resource_0t7li")
+
+[node name="ItemObject2" parent="." instance=ExtResource("4_4lvfa")]
+position = Vector2(352, 448)
+freeze = true
+item_resource = SubResource("Resource_2ba0v")
 
 [node name="PlayerUI" parent="." instance=ExtResource("12_6ulwr")]
-visible = false
 
 [node name="CoinBody" parent="." instance=ExtResource("4_rfhtd")]
 position = Vector2(672, 352)

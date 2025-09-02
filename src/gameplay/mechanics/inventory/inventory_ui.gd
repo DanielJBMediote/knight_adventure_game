@@ -1,6 +1,8 @@
 class_name InventoryUI
 extends Control
 
+@onready var item_info_modal_scene: PackedScene = preload("res://src/gameplay/mechanics/inventory/item_details_modal/inventory_item_info_ui.tscn")
+
 @onready var stats_and_equips_panel: StatsAndEquipsPanelUI = $MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/StatsAndEquipsPanel
 @onready var inventory_slots_panel: InventorySlotsPanel = $MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsPanel
 
@@ -15,12 +17,17 @@ func _init() -> void:
 func _ready() -> void:
 	inventory_slots_panel._update_inventory()
 	update_inventory_actions_buttons()
-	
+	ItemManager.selected_item_updated.connect(_show_item_detail_modal)
 	InventoryManager.update_inventory_visible.connect(_on_inventory_open_close)
 	close_inventory_button.pressed.connect(_on_close_inventory_button_pressed)
 	prev_button.pressed.connect(_on_prev_page_pressed)
 	next_button.pressed.connect(_on_next_page_pressed)
 
+func _show_item_detail_modal(item: Item) -> void:
+	if item:
+		var item_info_modal = item_info_modal_scene.instantiate() as InventoryItemInfoUI
+		add_child(item_info_modal)
+		item_info_modal.setup(item)
 
 func _on_prev_page_pressed():
 	InventoryManager.change_page(-1)
@@ -45,4 +52,3 @@ func _on_inventory_open_close(is_open: bool) -> void:
 		InventoryManager.inventory_updated.emit()
 	else:
 		self.hide()
-		

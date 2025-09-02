@@ -1,6 +1,6 @@
 extends Node
 
-var equipped_items: Dictionary = {}  # Dicionário por tipo de equipamento
+var equipped_items: Dictionary = {} # Dicionário por tipo de equipamento
 var equipment_slots: Array[EquipmentItem.TYPE] = [
 	EquipmentItem.TYPE.HELMET,
 	EquipmentItem.TYPE.AMULET,
@@ -19,9 +19,9 @@ func _ready() -> void:
 		equipped_items[slot] = null
 
 
-func _update_equipment(equipment: EquipmentItem, is_equipped: bool = false) -> void:
+func _update_equipment(equipment: EquipmentItem, equipped_status: bool = false) -> void:
 	if equipment:
-		if is_equipped:
+		if equipped_status:
 			unequip(equipment)
 		elif can_equip(equipment):
 			equip(equipment)
@@ -30,7 +30,7 @@ func _update_equipment(equipment: EquipmentItem, is_equipped: bool = false) -> v
 func can_equip(equipment: EquipmentItem) -> bool:
 	if not equipment:
 		return false
-	var player_level = PlayerStats.level
+	# var player_level = PlayerStats.level
 	var item_level = equipment.item_level
 	# Verifica nível requerido
 	if not ItemManager.compare_player_level(item_level):
@@ -48,7 +48,6 @@ func can_equip(equipment: EquipmentItem) -> bool:
 func equip(new_equipment: EquipmentItem) -> void:
 	#if not can_equip(new_equipment):
 		#return
-
 	var slot_type = new_equipment.equipment_type
 
 	# Desequipa item atual se houver
@@ -64,7 +63,7 @@ func equip(new_equipment: EquipmentItem) -> void:
 	#print("Equipado: ", new_equipment.item_name, " no slot: ", slot_type)
 
 
-func unequip(equipment: EquipmentItem) -> bool:  # Retornar bool para sucesso
+func unequip(equipment: EquipmentItem) -> bool: # Retornar bool para sucesso
 	var slot_type = equipment.equipment_type
 	if equipped_items[slot_type] == equipment:
 		# Verifica se tem espaço no inventário primeiro
@@ -84,21 +83,26 @@ func apply_equipment_stats(equipment: EquipmentItem) -> void:
 		return
 		
 	if equipment.equipment_type == EquipmentItem.TYPE.WEAPON:
-		PlayerStats.update_min_damage(equipment.damage.value)
-		PlayerStats.update_max_damage(equipment.damage.value)
+		PlayerStats.update_min_damage(equipment.damage.min_value)
+		PlayerStats.update_max_damage(equipment.damage.max_value)
 	else:
 		PlayerStats.update_defense(equipment.defense.value)
-	
+
+	var all_attributes = equipment.get_all_attributes()
+	var bonus_attributes = get_set_bonus_Attributes()
+	for attr in bonus_attributes:
+		print("Bônus de Set Ativo: +", attr.value, " ", attr.attribute_name)
+
 	# Processa todos os atributos de uma vez
-	for attribute in equipment.get_all_attributes():
+	for attribute in all_attributes:
 		match attribute.type:
 			ItemAttribute.TYPE.HEALTH:
 				PlayerStats.update_max_health(attribute.value)
 			ItemAttribute.TYPE.MANA:
 				PlayerStats.update_max_mana(attribute.value)
 			ItemAttribute.TYPE.DAMAGE:
-				PlayerStats.update_min_damage(attribute.min_value)
-				PlayerStats.update_max_damage(attribute.max_value)
+				PlayerStats.update_min_damage(attribute.value)
+				PlayerStats.update_max_damage(attribute.value)
 			ItemAttribute.TYPE.DEFENSE:
 				PlayerStats.update_defense(attribute.value)
 			ItemAttribute.TYPE.CRITICAL_RATE:
@@ -109,7 +113,16 @@ func apply_equipment_stats(equipment: EquipmentItem) -> void:
 				PlayerStats.update_attack_speed(attribute.value)
 			ItemAttribute.TYPE.MOVE_SPEED:
 				PlayerStats.update_move_speed(attribute.value)
-	
+			ItemAttribute.TYPE.ENERGY:
+				PlayerStats.update_max_energy(attribute.value)
+			ItemAttribute.TYPE.ENERGY_REGEN:
+				PlayerStats.update_energy_regen(attribute.value)
+			ItemAttribute.TYPE.HEALTH_REGEN:
+				PlayerStats.update_health_regen(attribute.value)
+			ItemAttribute.TYPE.MANA_REGEN:
+				PlayerStats.update_mana_regen(attribute.value)
+
+			
 	# Atualiza a UI com um único evento
 	PlayerStats.emit_attributes_changed()
 
@@ -143,9 +156,35 @@ func remove_equipment_stats(equipment: EquipmentItem) -> void:
 				PlayerStats.update_attack_speed(-attribute.value)
 			ItemAttribute.TYPE.MOVE_SPEED:
 				PlayerStats.update_move_speed(-attribute.value)
+			ItemAttribute.TYPE.ENERGY:
+				PlayerStats.update_max_energy(-attribute.value)
+			ItemAttribute.TYPE.ENERGY_REGEN:
+				PlayerStats.update_energy_regen(-attribute.value)
+			ItemAttribute.TYPE.HEALTH_REGEN:
+				PlayerStats.update_health_regen(-attribute.value)
+			ItemAttribute.TYPE.MANA_REGEN:
+				PlayerStats.update_mana_regen(-attribute.value)
 	
 	PlayerStats.emit_attributes_changed()
 
+
+func get_set_bonus_Attributes() -> Array[ItemAttribute]:
+	var set_counts: Dictionary = {}
+	var all_bonuses: Array[ItemAttribute] = []
+	
+	# Conta peças de cada set
+	for slot in equipped_items:
+		var item = equipped_items[slot]
+		if item is EquipmentItem and item.equipment_set in EquipmentConsts.UNIQUES_SETS:
+			set_counts[item.equipment_set] = set_counts.get(item.equipment_set, 0) + 1
+	
+	# Calcula bônus ativos
+	for set_type in set_counts:
+		var equipped_count = set_counts[set_type]
+		var bonuses = SetBonus.get_active_set_bonuses(set_type, equipped_count)
+		all_bonuses.append_array(bonuses)
+	
+	return all_bonuses
 
 func get_equipped_item_type(slot_type: EquipmentItem.TYPE) -> EquipmentItem:
 	return equipped_items.get(slot_type, null)
@@ -166,6 +205,15 @@ func get_all_equipped_items() -> Array[EquipmentItem]:
 		if equipped_items[slot]:
 			items.append(equipped_items[slot])
 	return items
+
+func get_all_unique_sets_equipped_items() -> Dictionary[EquipmentItem.SETS, EquipmentItem]:
+	var unique_sets = {}
+	for item in get_all_equipped_items():
+		if item.equipment_set in EquipmentConsts.UNIQUES_SETS:
+			unique_sets[item.equipment_set] = item
+	if unique_sets.size() > 0:
+		return {}
+	return unique_sets
 
 
 func get_total_equipment_bonuses() -> Dictionary:

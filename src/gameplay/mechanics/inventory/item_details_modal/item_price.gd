@@ -12,45 +12,50 @@ extends HBoxContainer
 @onready var bronze_label: Label = $Bronzes
 @onready var bronze_coin: TextureRect = $BronzeCoin
 
+@export var label_text_key: String = "item_value":
+	get: return label_text_key
+	set(value): label_text_key = value
+@export var golds: int:
+	get: return golds
+	set(value): golds = value
+@export var silvers: int:
+	get: return silvers
+	set(value): silvers = value
+@export var bronzes: int:
+	get: return bronzes
+	set(value): bronzes = value
 
 func _ready() -> void:
-	label.text = LocalizationManager.get_ui_text("item_value") + ": "
+	label.text = LocalizationManager.get_ui_text(label_text_key) + ": "
+	update_golds(golds)
+	update_silvers(silvers, golds != 0)
+	update_bronzes(bronzes, silvers != 0)
 
 
-func update_item_price(value: int) -> void:
-	var coins = CurrencyManager.convert_value_to_coins(value)
-
-	set_gold(coins)
-	set_silver(coins)
-	set_bronze(coins)
-
-
-func set_gold(coins: Array) -> void:
-	var gold_coins = coins[0]
+func update_golds(coins: int) -> void:
+	var gold_coins = coins
 	gold_label.visible = gold_coins != 0
 	gold_coin.visible = gold_coins != 0
 	gold_label.text = StringUtils.format_currency(gold_coins)
 
 
-func set_silver(coins: Array) -> void:
-	var silver_coins = coins[1]
+func update_silvers(coins: int, show_zeros: bool = false) -> void:
 	var formatted = ""
-	if coins[0] >= 1:
-		formatted = StringUtils.format_currency(silver_coins).lpad(3, "0")
+	if show_zeros:
+		formatted = StringUtils.format_currency(coins).lpad(3, "0")
 	else:
-		formatted = StringUtils.format_currency(silver_coins)
-	silver_label.visible = silver_coins != 0
-	silver_coin.visible = silver_coins != 0
+		formatted = StringUtils.format_currency(coins)
+	silver_label.visible = coins != 0
+	silver_coin.visible = coins != 0
 	silver_label.text = formatted
 
 
-func set_bronze(coins: Array) -> void:
-	var bronze_coins = coins[2]
+func update_bronzes(coins: int, show_zeros: bool = false) -> void:
 	var formatted = ""
-	if coins[1] >= 1:
-		formatted = StringUtils.format_currency(bronze_coins).lpad(3, "0")
+	if show_zeros:
+		formatted = StringUtils.format_currency(coins).lpad(3, "0")
 	else:
-		formatted = StringUtils.format_currency(bronze_coins)
-	bronze_label.visible = bronze_coins != 0
-	bronze_coin.visible = bronze_coins != 0
+		formatted = StringUtils.format_currency(coins)
+	bronze_label.visible = coins != 0
+	bronze_coin.visible = coins != 0
 	bronze_label.text = formatted

@@ -1,0 +1,256 @@
+[gd_scene load_steps=31 format=4 uid="uid://b3iacnu0qyy6c"]
+
+[ext_resource type="Script" uid="uid://dirkxfg16rje0" path="res://src/world/maps/_configs/map_data.gd" id="1_gn1dk"]
+[ext_resource type="PackedScene" uid="uid://doom7rgxnt8p7" path="res://src/actors/player/player.tscn" id="1_v5ogm"]
+[ext_resource type="PackedScene" uid="uid://fujugraamx3i" path="res://src/world/tilesets/plataform.tscn" id="2_m7utl"]
+[ext_resource type="PackedScene" uid="uid://bfnin3q7ivbx3" path="res://src/gameplay/items/item_body.tscn" id="4_4lvfa"]
+[ext_resource type="PackedScene" uid="uid://c6jxprwfuu8e8" path="res://src/gameplay/items/coin/coin_body.tscn" id="4_rfhtd"]
+[ext_resource type="Texture2D" uid="uid://dcvcn1mdmcq12" path="res://assets/sprites/items/potions/attack_speed_potion_03.png" id="5_dbqjn"]
+[ext_resource type="Script" uid="uid://eufa774v484h" path="res://src/gameplay/items/consumables/potions/potion_item.gd" id="5_i41ks"]
+[ext_resource type="Texture2D" uid="uid://dmyrkkr5iy2sb" path="res://assets/sprites/items/equipments/gloves/_1.png" id="7_m7utl"]
+[ext_resource type="Script" uid="uid://rmxjay0dfaus" path="res://src/gameplay/items/equipments/equipment_item.gd" id="8_kmnrt"]
+[ext_resource type="Script" uid="uid://pe8gfcul0vjx" path="res://src/gameplay/items/item_attribute/item_attribute.gd" id="9_6ulwr"]
+[ext_resource type="Texture2D" uid="uid://f15fd2r0kqq6" path="res://assets/sprites/items/gems/gem_common_green.png" id="10_kmnrt"]
+[ext_resource type="Script" uid="uid://biwu18uemd06n" path="res://src/gameplay/items/loots/gems/gem_item.gd" id="11_6ulwr"]
+[ext_resource type="PackedScene" uid="uid://bmqja38h84vuw" path="res://src/actors/player/ui/player_ui.tscn" id="12_6ulwr"]
+[ext_resource type="Texture2D" uid="uid://ch3hunsu03xej" path="res://assets/sprites/items/gems/gem_common_blue.png" id="12_b4df1"]
+[ext_resource type="Texture2D" uid="uid://cr8jvh2xeuio" path="res://assets/sprites/items/potions/attack_speed_potion_01.png" id="13_mp0vo"]
+[ext_resource type="Texture2D" uid="uid://ovv83758mif5" path="res://assets/sprites/items/equipments/weapon/_0.png" id="14_4bvk3"]
+[ext_resource type="Script" uid="uid://cngmaqnrqpv5" path="res://src/gameplay/items/coin/coin.gd" id="14_68v3f"]
+[ext_resource type="Texture2D" uid="uid://dmj65266d6e0o" path="res://assets/sprites/items/icons/bronze_small_coin.png" id="14_wdvs5"]
+[ext_resource type="Texture2D" uid="uid://bwoe1n556f2jw" path="res://assets/sprites/items/icons/silver_coin.png" id="16_b4df1"]
+[ext_resource type="Texture2D" uid="uid://bo6ddys3fo5g7" path="res://assets/sprites/items/icons/gold_huge_coin.png" id="17_mp0vo"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_gn1dk"]
+vertices = PackedVector2Array(1117.28, 534, 1034, 534, 1034, 310, 1661.28, 214, 950, 310, 950, 502, 854, 502, 554, 374, 854, 598, 650, 598, 650, 534, 554, 534, 374, 374, 374, 470, 106, 470, 106, 10, 2582, 10, 1794.77, 214, 2332.86, 437.453, 2115.39, 406.383, 2582, 219.453)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 5, 6, 7), PackedInt32Array(6, 8, 9, 10), PackedInt32Array(10, 11, 7, 6), PackedInt32Array(12, 13, 14, 15), PackedInt32Array(7, 12, 15, 16, 4), PackedInt32Array(2, 4, 16, 3), PackedInt32Array(17, 3, 16), PackedInt32Array(18, 19, 17, 16, 20)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(96, 480, 384, 480, 384, 384, 544, 384, 544, 544, 640, 544, 640, 608, 864, 608, 864, 512, 960, 512, 960, 320, 1024, 320, 1024, 544, 1120, 544, 1664, 224, 1792, 224, 2112, 416, 2336, 448, 2592, 224, 2592, 0, 96, 0)])
+
+[sub_resource type="Resource" id="Resource_58eeo"]
+script = ExtResource("5_i41ks")
+potion_type = 0
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 0
+item_subcategory = 0
+item_rarity = 0
+spawn_chance = 1.0
+item_texture = ExtResource("5_dbqjn")
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_price = 0
+item_level = 0
+item_usable = false
+metadata/_custom_type_script = "uid://eufa774v484h"
+
+[sub_resource type="Resource" id="Resource_68v3f"]
+script = ExtResource("11_6ulwr")
+gem_type = 0
+gem_quality = 0
+num_runes_to_upgrade = 0
+price_to_upgrade = 0
+equip_slot_sockets = Array[int]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 2
+item_subcategory = 6
+item_rarity = 2
+spawn_chance = 1.0
+item_texture = ExtResource("10_kmnrt")
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_price = 0
+item_level = 0
+item_usable = false
+metadata/_custom_type_script = "uid://biwu18uemd06n"
+
+[sub_resource type="Resource" id="Resource_mp0vo"]
+script = ExtResource("11_6ulwr")
+gem_type = 0
+gem_quality = 0
+num_runes_to_upgrade = 0
+price_to_upgrade = 0
+equip_slot_sockets = Array[int]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 2
+item_subcategory = 6
+item_rarity = 1
+spawn_chance = 1.0
+item_texture = ExtResource("12_b4df1")
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_price = 0
+item_level = 0
+item_usable = false
+metadata/_custom_type_script = "uid://biwu18uemd06n"
+
+[sub_resource type="Resource" id="Resource_b4df1"]
+script = ExtResource("8_kmnrt")
+equipment_type = 0
+equipment_group = 0
+equipment_set = 0
+set_bonus_attributes = Array[ExtResource("9_6ulwr")]([])
+available_sockets = 0
+gems_in_sockets = Array[ExtResource("11_6ulwr")]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 0
+item_subcategory = 0
+item_rarity = 4
+spawn_chance = 1.0
+item_texture = ExtResource("13_mp0vo")
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_price = 0
+item_level = 0
+item_usable = false
+metadata/_custom_type_script = "uid://rmxjay0dfaus"
+
+[sub_resource type="Resource" id="Resource_0t7li"]
+script = ExtResource("8_kmnrt")
+equipment_type = 0
+equipment_group = 0
+equipment_set = 0
+set_bonus_attributes = Array[ExtResource("9_6ulwr")]([])
+available_sockets = 0
+gems_in_sockets = Array[ExtResource("11_6ulwr")]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 1
+item_subcategory = 1
+item_rarity = 3
+spawn_chance = 1.0
+item_texture = ExtResource("14_4bvk3")
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_price = 0
+item_level = 0
+item_usable = false
+metadata/_custom_type_script = "uid://rmxjay0dfaus"
+
+[sub_resource type="Resource" id="Resource_2ba0v"]
+script = ExtResource("8_kmnrt")
+equipment_type = 3
+equipment_group = 0
+equipment_set = 0
+set_bonus_attributes = Array[ExtResource("9_6ulwr")]([])
+available_sockets = 0
+gems_in_sockets = Array[ExtResource("11_6ulwr")]([])
+item_id = ""
+item_name = ""
+item_description = ""
+item_category = 1
+item_subcategory = 2
+item_rarity = 5
+spawn_chance = 1.0
+item_texture = ExtResource("7_m7utl")
+stackable = false
+max_stack = 1
+current_stack = 1
+is_unique = false
+item_price = 0
+item_level = 0
+item_usable = false
+metadata/_custom_type_script = "uid://rmxjay0dfaus"
+
+[sub_resource type="Resource" id="Resource_lry1y"]
+script = ExtResource("14_68v3f")
+coin_value = 0
+coin_type = 0
+coin_size = 0
+coin_texture = ExtResource("14_wdvs5")
+metadata/_custom_type_script = "uid://cngmaqnrqpv5"
+
+[sub_resource type="Resource" id="Resource_ovvkt"]
+script = ExtResource("14_68v3f")
+coin_value = 0
+coin_type = 1
+coin_size = 1
+coin_texture = ExtResource("16_b4df1")
+metadata/_custom_type_script = "uid://cngmaqnrqpv5"
+
+[sub_resource type="Resource" id="Resource_wdvs5"]
+script = ExtResource("14_68v3f")
+coin_value = 0
+coin_type = 2
+coin_size = 2
+coin_texture = ExtResource("17_mp0vo")
+metadata/_custom_type_script = "uid://cngmaqnrqpv5"
+
+[node name="MapTest" type="Node2D"]
+script = ExtResource("1_gn1dk")
+map_name = "Test Map"
+level_mob_min = 1
+level_mob_max = 5
+boss_level = 10
+
+[node name="plataform" parent="." instance=ExtResource("2_m7utl")]
+tile_map_data = PackedByteArray("AAACAAwAAQAEAAQAAAACAAsAAQAEAAQAAAACAAoAAQAEAAQAAAACAAkAAQAEAAQAAAACAAgAAQAEAAQAAAACAAcAAQAEAAQAAAACAAYAAQAEAAQAAAACAAUAAQAEAAQAAAACAAQAAQAEAAQAAAACAAMAAQAEAAQAAAACAAIAAQAEAAQAAAACAAEAAQAEAAQAAAACAAAAAQADAAEAAAABAAwAAQABAAQAAAABAAsAAQACAAQAAAABAAoAAQACAAIAAAABAAkAAQACAAMAAAABAAgAAQADAAQAAAABAAcAAQADAAQAAAABAAYAAQADAAQAAAABAAUAAQACAAUAAAABAAQAAQACAAUAAAABAAMAAQACAAIAAAABAAIAAQACAAIAAAABAAEAAQACAAUAAAABAAAAAQACAAEAAAAAAAwAAQAAAAQAAAAAAAsAAQAAAAQAAAAAAAoAAQAAAAQAAAAAAAkAAQAAAAQAAAAAAAgAAQAAAAQAAAAAAAcAAQAAAAQAAAAAAAYAAQAAAAQAAAAAAAUAAQAAAAQAAAAAAAQAAQAAAAQAAAAAAAMAAQAAAAQAAAAAAAIAAQAAAAQAAAAAAAEAAQAAAAQAAAAAAAAAAQABAAEAAAACABQAAQABAAQAAAACABMAAQACAAMAAAACABIAAQADAAQAAAACABEAAQACAAIAAAACABAAAQACAAMAAAACAA8AAQADAAMAAAACAA4AAQADAAIAAAACAA0AAQAEAAQAAAABABQAAQACAAQAAAABABMAAQACAAQAAAABABIAAQACAAQAAAABABEAAQABAAQAAAABABAAAQACAAMAAAABAA8AAQACAAUAAAABAA4AAQACAAQAAAABAA0AAQACAAMAAAAAABQAAQAAAAQAAAAAABMAAQAAAAQAAAAAABIAAQAAAAQAAAAAABEAAQAAAAQAAAAAABAAAQAAAAQAAAAAAA8AAQAAAAQAAAAAAA4AAQAAAAQAAAAAAA0AAQAAAAQAAAAQABMAAQACAAQAAAAQABIAAQABAAQAAAAQABEAAQADAAMAAAAQABAAAQADAAIAAAAQAA8AAQAEAAQAAAAPABMAAQACAAMAAAAPABIAAQACAAUAAAAPABEAAQACAAQAAAAPABAAAQACAAIAAAAPAA8AAQABAAQAAAAOABMAAQADAAQAAAAOABIAAQACAAMAAAAOABEAAQACAAMAAAAOABAAAQACAAUAAAAOAA8AAQACAAQAAAANABMAAQACAAMAAAANABIAAQABAAQAAAANABEAAQACAAUAAAANABAAAQABAAQAAAANAA8AAQACAAMAAAAMABMAAQACAAMAAAAMABIAAQACAAIAAAAMABEAAQACAAMAAAAMABAAAQACAAUAAAAMAA8AAQABAAMAAAALABMAAQADAAQAAAALABIAAQADAAQAAAALABEAAQABAAQAAAALABAAAQADAAQAAAALAA8AAQACAAEAAAAKABMAAQACAAMAAAAKABIAAQACAAIAAAAKABEAAQACAAUAAAAKABAAAQACAAUAAAAKAA8AAQACAAEAAAAJABMAAQADAAQAAAAJABIAAQABAAQAAAAJABEAAQACAAUAAAAJABAAAQACAAQAAAAJAA8AAQACAAEAAAAIABMAAQACAAIAAAAIABIAAQACAAIAAAAIABEAAQACAAMAAAAIABAAAQACAAUAAAAIAA8AAQACAAEAAAAHABMAAQADAAQAAAAHABIAAQACAAMAAAAHABEAAQADAAQAAAAHABAAAQACAAUAAAAHAA8AAQACAAEAAAAGABMAAQACAAMAAAAGABIAAQACAAUAAAAGABEAAQACAAQAAAAGABAAAQACAAUAAAAGAA8AAQACAAEAAAAFABMAAQACAAMAAAAFABIAAQACAAMAAAAFABEAAQACAAMAAAAFABAAAQACAAQAAAAFAA8AAQACAAEAAAAEABMAAQACAAQAAAAEABIAAQACAAUAAAAEABEAAQACAAMAAAAEABAAAQACAAUAAAAEAA8AAQACAAEAAAADABMAAQACAAMAAAADABIAAQADAAQAAAADABEAAQABAAQAAAADABAAAQABAAQAAAADAA8AAQACAAEAAAAQAA4AAQAEAAQAAAAQAA0AAQAEAAQAAAAQAAwAAQAEAAMAAAAPAA4AAQACAAIAAAAPAA0AAQACAAIAAAAPAAwAAQACAAEAAAAOAA4AAQACAAMAAAAOAA0AAQACAAQAAAAOAAwAAQACAAEAAAANAA4AAQACAAIAAAANAA0AAQACAAUAAAANAAwAAQACAAEAAAAMAA4AAQAAAAQAAAAMAA0AAQAAAAQAAAAMAAwAAQABAAEAAAATABIAAQADAAIAAAATABEAAQADAAEAAAASABIAAQACAAUAAAASABEAAQACAAEAAAARABIAAQACAAUAAAARABEAAQACAAEAAAAcABQAAQADAAQAAAAcABMAAQACAAQAAAAbABQAAQACAAIAAAAbABMAAQABAAMAAAAaABQAAQACAAMAAAAaABMAAQACAAEAAAAZABQAAQACAAUAAAAZABMAAQACAAEAAAAYABQAAQACAAQAAAAYABMAAQACAAEAAAAXABQAAQACAAIAAAAXABMAAQACAAEAAAAWABQAAQACAAQAAAAWABMAAQACAAEAAAAVABQAAQACAAIAAAAVABMAAQACAAEAAAAUABQAAQACAAQAAAAUABMAAQACAAEAAAATABQAAQADAAQAAAATABMAAQADAAMAAAASABQAAQACAAIAAAASABMAAQACAAMAAAARABQAAQACAAUAAAARABMAAQADAAQAAAAQABQAAQACAAMAAAAPABQAAQACAAQAAAAOABQAAQACAAQAAAANABQAAQACAAQAAAAMABQAAQACAAQAAAALABQAAQACAAQAAAAKABQAAQACAAMAAAAJABQAAQACAAIAAAAIABQAAQACAAIAAAAHABQAAQABAAQAAAAGABQAAQACAAUAAAAFABQAAQACAAUAAAAEABQAAQACAAMAAAADABQAAQADAAQAAAAdABYAAQACAAYAAAAdABUAAQACAAMAAAAdABQAAQACAAMAAAAcABYAAQACAAYAAAAcABUAAQACAAIAAAAbABYAAQACAAYAAAAbABUAAQACAAIAAAAaABYAAQACAAYAAAAaABUAAQADAAQAAAAZABYAAQACAAYAAAAZABUAAQADAAQAAAAYABYAAQACAAYAAAAYABUAAQACAAQAAAAXABYAAQACAAYAAAAXABUAAQACAAIAAAAWABYAAQACAAYAAAAWABUAAQADAAQAAAAVABYAAQACAAYAAAAVABUAAQACAAUAAAAUABYAAQACAAYAAAAUABUAAQACAAUAAAATABYAAQACAAYAAAATABUAAQACAAQAAAASABYAAQACAAYAAAASABUAAQACAAIAAAARABYAAQACAAYAAAARABUAAQADAAQAAAAQABYAAQACAAYAAAAQABUAAQACAAIAAAAPABYAAQACAAYAAAAPABUAAQACAAMAAAAOABYAAQACAAYAAAAOABUAAQABAAQAAAANABYAAQACAAYAAAANABUAAQACAAQAAAAMABYAAQACAAYAAAAMABUAAQADAAQAAAALABYAAQACAAYAAAALABUAAQACAAQAAAAKABYAAQACAAYAAAAKABUAAQACAAIAAAAJABYAAQACAAYAAAAJABUAAQACAAQAAAAIABYAAQACAAYAAAAIABUAAQACAAUAAAAHABYAAQACAAYAAAAHABUAAQACAAMAAAAGABYAAQACAAYAAAAGABUAAQACAAIAAAAFABYAAQACAAYAAAAFABUAAQACAAUAAAAEABYAAQACAAYAAAAEABUAAQABAAQAAAADABYAAQACAAYAAAADABUAAQACAAQAAAACABYAAQACAAYAAAACABUAAQACAAQAAAABABYAAQACAAYAAAABABUAAQACAAUAAAAAABYAAQABAAYAAAAAABUAAQAAAAQAAAAfABYAAQACAAYAAAAfABUAAQACAAUAAAAfABQAAQACAAIAAAAfABMAAQACAAQAAAAfABIAAQABAAQAAAAfABEAAQADAAMAAAAfABAAAQADAAIAAAAeABYAAQACAAYAAAAeABUAAQABAAQAAAAeABQAAQABAAQAAAAeABMAAQACAAUAAAAeABIAAQABAAQAAAAeABEAAQABAAQAAAAeABAAAQABAAMAAAAdABMAAQACAAIAAAAdABIAAQACAAIAAAAdABEAAQADAAQAAAAdABAAAQACAAEAAAAcABIAAQABAAQAAAAcABEAAQABAAQAAAAcABAAAQACAAEAAAAbABIAAQABAAIAAAAbABEAAQAAAAQAAAAbABAAAQAAAAMAAAAfAA8AAQAEAAQAAAAfAA4AAQAEAAQAAAAfAA0AAQAEAAQAAAAfAAwAAQAEAAQAAAAfAAsAAQAEAAQAAAAfAAoAAQADAAEAAAAeAA8AAQABAAIAAAAeAA4AAQAAAAQAAAAeAA0AAQAAAAQAAAAeAAwAAQAAAAQAAAAeAAsAAQAAAAQAAAAeAAoAAQABAAEAAAAiABYAAQAEAAUAAAAiABUAAQADAAIAAAAiABQAAQADAAIAAAAiABMAAQADAAIAAAAiABIAAQAEAAQAAAAiABEAAQADAAEAAAAhABYAAQACAAYAAAAhABUAAQACAAUAAAAhABQAAQACAAMAAAAhABMAAQABAAQAAAAhABIAAQACAAMAAAAhABEAAQACAAEAAAAgABYAAQACAAYAAAAgABUAAQACAAUAAAAgABQAAQACAAQAAAAgABMAAQACAAIAAAAgABIAAQACAAIAAAAgABEAAQACAAEAAAADAA4AAQACAAAAAAAEAA4AAQACAAAAAAAFAA4AAQACAAAAAAAGAA4AAQACAAAAAAAHAA4AAQACAAAAAAAIAA4AAQACAAAAAAAJAA4AAQACAAAAAAAKAA4AAQACAAAAAAALAA4AAQACAAAAAAANAAsAAQACAAAAAAAOAAsAAQACAAAAAAAPAAsAAQACAAAAAAASABAAAQACAAAAAAARABAAAQACAAAAAAATABAAAQADAAAAAAAQAAsAAQADAAAAAAAMAAsAAQABAAAAAAAbAA8AAQABAAAAAAAeAAkAAQABAAAAAAAfAAkAAQADAAAAAAAiABAAAQADAAAAAAAhABAAAQACAAAAAAAgABAAAQACAAAAAAAZABIAAQACAAAAAAAYABIAAQACAAAAAAAXABIAAQACAAAAAAAWABIAAQACAAAAAAAVABIAAQACAAAAAAAUABIAAQACAAAAAAAaABIAAQACAAAAAAAcAA8AAQACAAAAAAAdAA8AAQACAAAAAAA=")
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+visible = false
+navigation_polygon = SubResource("NavigationPolygon_gn1dk")
+
+[node name="Player" parent="." instance=ExtResource("1_v5ogm")]
+position = Vector2(480, 352)
+metadata/_edit_lock_ = true
+
+[node name="ItemObject" parent="." instance=ExtResource("4_4lvfa")]
+position = Vector2(192, 448)
+freeze = true
+item_resource = SubResource("Resource_58eeo")
+
+[node name="ItemObject3" parent="." instance=ExtResource("4_4lvfa")]
+position = Vector2(256, 448)
+freeze = true
+item_resource = SubResource("Resource_68v3f")
+
+[node name="ItemObject5" parent="." instance=ExtResource("4_4lvfa")]
+position = Vector2(224, 448)
+freeze = true
+item_resource = SubResource("Resource_mp0vo")
+
+[node name="ItemObject6" parent="." instance=ExtResource("4_4lvfa")]
+position = Vector2(320, 448)
+freeze = true
+item_resource = SubResource("Resource_b4df1")
+
+[node name="ItemObject7" parent="." instance=ExtResource("4_4lvfa")]
+position = Vector2(288, 448)
+freeze = true
+item_resource = SubResource("Resource_0t7li")
+
+[node name="ItemObject2" parent="." instance=ExtResource("4_4lvfa")]
+position = Vector2(352, 448)
+freeze = true
+item_resource = SubResource("Resource_2ba0v")
+
+[node name="PlayerUI" parent="." instance=ExtResource("12_6ulwr")]
+
+[node name="CoinBody" parent="." instance=ExtResource("4_rfhtd")]
+position = Vector2(672, 352)
+coin = SubResource("Resource_lry1y")
+
+[node name="CoinBody2" parent="." instance=ExtResource("4_rfhtd")]
+position = Vector2(736, 352)
+coin = SubResource("Resource_ovvkt")
+
+[node name="CoinBody3" parent="." instance=ExtResource("4_rfhtd")]
+position = Vector2(800, 352)
+coin = SubResource("Resource_wdvs5")

@@ -26,3 +26,4 @@ debug_color = Color(0.776607, 0.358479, 1, 0.0666667)
 scale = Vector2(2, 2)
 animation = &"spawn_1"
 frame = 15
+frame_progress = 0.0

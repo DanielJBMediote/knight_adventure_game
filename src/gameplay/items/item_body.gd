@@ -22,11 +22,11 @@ var player: Player
 
 const COLORS_EFFECT := {
 	Item.RARITY.COMMON: Color.DIM_GRAY,
-	Item.RARITY.UNCOMMON: Color.GREEN,
-	Item.RARITY.RARE: Color.BLUE,
-	Item.RARITY.EPIC: Color.PURPLE,
-	Item.RARITY.LEGENDARY: Color.ORANGE,
-	Item.RARITY.MYTHICAL: Color.RED,
+	Item.RARITY.UNCOMMON: Color.SEA_GREEN,
+	Item.RARITY.RARE: Color.DODGER_BLUE,
+	Item.RARITY.EPIC: Color.REBECCA_PURPLE,
+	Item.RARITY.LEGENDARY: Color.DARK_ORANGE,
+	Item.RARITY.MYTHICAL: Color.ORANGE_RED,
 }
 
 
@@ -92,7 +92,7 @@ func setup_rarity_bright() -> void:
 	if item_resource.item_texture:
 		item_texture_sprite.texture = item_resource.item_texture
 
-	dropped_item_effect.scale += Vector2(rarity * 0.1, rarity * 0.1)
+	dropped_item_effect.scale += Vector2(rarity * 0.15, rarity * 0.15)
 	dropped_item_effect.modulate = COLORS_EFFECT[rarity]
 
 

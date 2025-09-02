@@ -3,17 +3,15 @@ extends Node
 signal page_changed
 
 signal inventory_updated
-signal inventory_saved
-signal inventory_loaded
+# signal inventory_saved
+# signal inventory_loaded
 
 signal update_inventory_visible(is_open: bool)
 
-signal update_item_information(item: Item)
-
-static var items: Array[Item] = []
-static var slots: Array[Item] = []
-static var current_page: int = 0
-static var unlocked_slots: int = 18
+var items: Array[Item] = []
+var slots: Array[Item] = []
+var current_page: int = 0
+var unlocked_slots: int = 54
 
 const MAX_SLOTS := 54
 const SLOTS_PER_PAGE := 18
@@ -24,36 +22,32 @@ var current_select_item: Item
 
 func _ready():
 	# Inicializa slots vazios
-	for i in range(MAX_SLOTS):  # Número de slots
+	for i in range(MAX_SLOTS): # Número de slots
 		slots.append(null)
 	
-	#create_ramdon_items()
+	create_ramdon_items()
 
 
 func create_ramdon_items() -> void:
 	var enemy_stats = EnemyStats.new()
-	var total_itens = 0
-	for i in 100:
-		enemy_stats.level = randi_range(1, 45)
+	# var total_itens = 0
+	for i in 40:
+		enemy_stats.level = randi_range(60, 90)
+		# if i % 2 == 0:
+		var rune = RuneItem.new()
+		rune.setup(enemy_stats)
+		add_item(rune)
+		# if is_addded:
+		# 	total_itens += 1
 		var gem = GemItem.new()
 		gem.setup(enemy_stats)
-		var is_addded = add_item(gem)
-		if is_addded:
-			total_itens += 1
-		#print("Gem Added: ", is_addded)
-		#if randf() * 1.0 <= gem.spawn_chance:
-		#var item = Item.new()
-		#item.item_texture = Coin.GOLD_COIN
-		#add_item(item)
-		#var potion = PotionItem.new()
-		#potion.setup(enemy_stats)
-		#add_item(potion)
-		#var equip = EquipmentItem.new()
-		#equip.setup(enemy_stats)
-		#var is_addded = add_item(equip)
-		#if is_addded:
-			#total_itens += 1
-	print("Total itens added: ", total_itens)
+		add_item(gem)
+		# if is_addded:
+		# 	total_itens += 1
+		# var equip = EquipmentItem.new()
+		# equip.setup(enemy_stats)
+		# add_item(equip)
+	# print("Total itens added: ", total_itens)
 
 
 func handle_inventory_visibility() -> void:
@@ -91,10 +85,9 @@ func add_item(item: Item) -> bool:
 func add_single_item(item: Item) -> bool:
 	# Procura por um slot vazio para item único
 	for i in range(slots.size()):
-		var slot = slots[i]
 		if slots[i] == null and is_slot_unlocked(i):
 			var item_copy = item.clone()
-			item_copy.current_stack = 1  # Garante que itens únicos tenham stack 1
+			item_copy.current_stack = 1 # Garante que itens únicos tenham stack 1
 			slots[i] = item_copy
 			items.append(item_copy)
 			inventory_updated.emit()
@@ -104,7 +97,7 @@ func add_single_item(item: Item) -> bool:
 
 func try_add_to_existing_stacks(item: Item, remaining_stack: int) -> int:
 	for i in range(slots.size()):
-		if is_slot_unlocked(i) == false: 
+		if is_slot_unlocked(i) == false:
 			continue
 		if slots[i] == null:
 			continue
@@ -145,15 +138,54 @@ func add_to_empty_slots(item: Item, remaining_stack: int) -> int:
 	return remaining_stack
 
 
-func remove_item(item: Item):
-	var slot_index = slots.find(item)
-	if slot_index != -1:
-		var item_index = items.find(item)
-		if item_index != -1:
-			items.remove_at(item_index)
-		slots[slot_index] = null
-		inventory_updated.emit()
+func remove_item(item: Item, amount: int = 1) -> bool:
+	# If we need to remove more than what's available in this stack, return false
+	if item.current_stack < amount:
+		return false
+	
+	# Remove from this stack
+	item.current_stack -= amount
+	
+	# If the stack is depleted, remove the item completely
+	if item.current_stack <= 0:
+		var slot_index = slots.find(item)
+		if slot_index != -1:
+			slots[slot_index] = null
+			var item_index = items.find(item)
+			if item_index != -1:
+				items.remove_at(item_index)
+	
+	inventory_updated.emit()
+	return true
 
+
+func remove_items(items_to_remove: Array[Item], total_amount: int) -> bool:
+	var remaining_amount = total_amount
+	
+	# First, try to remove from the provided items array
+	for item in items_to_remove:
+		if remaining_amount <= 0:
+			break
+		
+		if item != null and item.current_stack > 0:
+			var amount_to_remove = min(remaining_amount, item.current_stack)
+			if remove_item(item, amount_to_remove):
+				remaining_amount -= amount_to_remove
+	
+	# If we still need more items, search the entire inventory
+	if remaining_amount > 0:
+		var all_items_of_type = find_many_items_by_id(items_to_remove[0].item_id if items_to_remove.size() > 0 else "")
+		for item in all_items_of_type:
+			if remaining_amount <= 0:
+				break
+			
+			# Skip items that were already processed in the first loop
+			if not items_to_remove.has(item) and item.current_stack > 0:
+				var amount_to_remove = min(remaining_amount, item.current_stack)
+				if remove_item(item, amount_to_remove):
+					remaining_amount -= amount_to_remove
+	
+	return remaining_amount <= 0
 
 func sort_inventory(mode: String = "ASC"):
 	var unlocked_items: Array[Item] = []
@@ -164,7 +196,7 @@ func sort_inventory(mode: String = "ASC"):
 			unlocked_items.append(slots[i])
 			unlocked_indices.append(i)
 		elif is_slot_unlocked(i):
-			unlocked_indices.append(i)  # Mantém registro dos slots vazios desbloqueados
+			unlocked_indices.append(i) # Mantém registro dos slots vazios desbloqueados
 	
 	# Ordena os itens
 	unlocked_items.sort_custom(_sort_items.bind(mode))
@@ -185,45 +217,31 @@ func sort_inventory(mode: String = "ASC"):
 	
 	inventory_updated.emit()
 	
-	## Filtra apenas slots com itens (remove nulls)
-	#var non_null_slots: Array[Item] = []
-	#var null_count = 0
-#
-	#for slot in slots:
-		#if slot != null:
-			#non_null_slots.append(slot)
-		#else:
-			#null_count += 1
-#
-	## Ordena os itens não nulos
-	#non_null_slots.sort_custom(_sort_items.bind(mode))
-#
-	## Reconstrói o array de slots com itens ordenados + slots vazios no final
-	#slots.clear()
-	#slots.append_array(non_null_slots)
-#
-	## Adiciona os slots vazios no final
-	#for i in range(null_count):
-		#slots.append(null)
-#
-	## Atualiza o array items para refletir a ordenação (cria novas referências)
-	#items.clear()
-	#for slot in non_null_slots:
-		#items.append(slot)
-#
-	## Emite sinal de atualização
-	#inventory_updated.emit()
-
 
 # Função de comparação personalizada para ordenação
 func _sort_items(a: Item, b: Item, mode: String) -> bool:
+	# 3. Se SubCategory igual, ordena por Rarity
+	if a.item_rarity != b.item_rarity:
+		if mode == "ASC":
+			return a.item_rarity < b.item_rarity
+		else:
+			return a.item_rarity > b.item_rarity
+
 	# 1. Ordena por Category
 	if a.item_category != b.item_category:
 		if mode == "ASC":
 			return a.item_category < b.item_category
 		else:
 			return a.item_category > b.item_category
-
+	
+	
+	if a.item_subcategory != b.item_subcategory:
+		if mode == "ASC":
+			return a.item_subcategory < b.item_subcategory
+		else:
+			return a.item_subcategory > b.item_subcategory
+	
+	
 	if a.item_category == b.item_category:
 		var a_sort_value = a.get_sort_value()
 		var b_sort_value = b.get_sort_value()
@@ -233,20 +251,23 @@ func _sort_items(a: Item, b: Item, mode: String) -> bool:
 				return a_sort_value < b_sort_value
 			else:
 				return a_sort_value > b_sort_value
-
-	# 2. Se Category igual, ordena por SubCategory
-	if a.item_subcategory != b.item_subcategory:
+	
+	if a.is_unique != b.is_unique:
 		if mode == "ASC":
-			return a.item_subcategory < b.item_subcategory
+			return a.is_unique < b.is_unique
 		else:
-			return a.item_subcategory > b.item_subcategory
+			return a.is_unique > b.is_unique
 
-	# 3. Se SubCategory igual, ordena por Rarity
-	if a.item_rarity != b.item_rarity:
-		if mode == "ASC":
-			return a.item_rarity < b.item_rarity
-		else:
-			return a.item_rarity > b.item_rarity
+
+	# if a.item_subcategory == b.item_subcategory:
+	# 	var a_sort_value = a.get_sort_value()
+	# 	var b_sort_value = b.get_sort_value()
+
+	# 	if a_sort_value != b_sort_value:
+	# 		if mode == "ASC":
+	# 			return a_sort_value < b_sort_value
+	# 		else:
+	# 			return a_sort_value > b_sort_value
 
 	# 4. Se o nível é igual, ordena por Nível
 	if a.item_level != b.item_level:
@@ -263,6 +284,31 @@ func _sort_items(a: Item, b: Item, mode: String) -> bool:
 
 	# Fallback. Se tudo igual, mantém ordem original (estável)
 	return false
+
+
+func find_item_by_id(item_id: String) -> Item:
+	for item in items:
+		if item != null and item.item_id == item_id:
+			return item
+	return null
+
+func find_many_items_by_id(_item_id: String) -> Array[Item]:
+	var found_items: Array[Item] = []
+	for item in items:
+		if item != null and item.item_id == _item_id:
+			found_items.append(item)
+	return found_items
+
+func find_many_stackable_items_by_id(_item_id: String) -> Item:
+	var _item: Item = null
+	for item in items:
+		if item != null and item.item_id == _item_id and item.stackable:
+			if _item == null:
+				_item = item
+			elif item.current_stack > _item.current_stack:
+				_item.current_stack += item.current_stack
+
+	return _item
 
 
 # Função auxiliar para conectar os botões corretamente

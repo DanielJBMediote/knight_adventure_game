@@ -34,6 +34,7 @@ window/size/viewport_height=720
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
+mouse_cursor/custom_image="uid://cc36nnyhkk7jw"
 
 [dotnet]
 
@@ -179,5 +180,4 @@ avoidance/layer_1="FloatingPlataform"
 [rendering]
 
 textures/canvas_textures/default_texture_filter=3
-viewport/hdr_2d=true
-environment/defaults/default_clear_color=Color(0.129558, 0.129559, 0.129558, 1)
+environment/defaults/default_clear_color=Color(0.158472, 0.158472, 0.158472, 1)

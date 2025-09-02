@@ -4,15 +4,6 @@ extends Panel
 const ITEM_SLOT_STYLEBOX_HOVER = preload("res://src/ui/themes/item_slot_stylebox_hover.tres")
 const ITEM_SLOT_STYLEBOX_NORMAL = preload("res://src/ui/themes/item_slot_stylebox_normal.tres")
 
-#const UNIQUE_BORDER = preload("res://src/ui/themes/items_themes/unique_border.tres")
-
-const BG_GRADIENT_ITEM_COMMOM = preload("res://src/ui/themes/items_themes/bg_gradient_item_common.tres")
-const BG_GRADIENT_ITEM_UNCOMMON = preload("res://src/ui/themes/items_themes/bg_gradient_item_uncommon.tres")
-const BG_GRADIENT_ITEM_RARE = preload("res://src/ui/themes/items_themes/bg_gradient_item_rare.tres")
-const BG_GRADIENT_ITEM_EPIC = preload("res://src/ui/themes/items_themes/bg_gradient_item_epic.tres")
-const BG_GRADIENT_ITEM_LEGENDARY = preload("res://src/ui/themes/items_themes/bg_gradient_item_legendary.tres")
-const BG_GRADIENT_ITEM_MITICAL = preload("res://src/ui/themes/items_themes/bg_gradient_item_mitical.tres")
-
 @onready var rarity_texture: TextureRect = $MarginContainer/RarityTexture
 @onready var item_texture: TextureRect = $MarginContainer/ItemTexture
 @onready var stacks: Label = $MarginContainer/Stacks
@@ -65,27 +56,27 @@ func set_item_rarity_texture(rarity: Item.RARITY) -> void:
 	match rarity:
 		Item.RARITY.COMMON:
 			# Azul para itens Normais
-			rarity_texture.texture = BG_GRADIENT_ITEM_COMMOM
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_COMMOM
 		
 		Item.RARITY.UNCOMMON:
 			# Azul para itens Bons
-			rarity_texture.texture = BG_GRADIENT_ITEM_UNCOMMON
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_UNCOMMON
 		
 		Item.RARITY.RARE:
 			# Azul para itens Mágicos
-			rarity_texture.texture = BG_GRADIENT_ITEM_RARE
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_RARE
 		
 		Item.RARITY.EPIC:
 			# Roxo para itens Épicos
-			rarity_texture.texture = BG_GRADIENT_ITEM_EPIC
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_EPIC
 		
 		Item.RARITY.LEGENDARY:
 			# Laranja para itens lendários
-			rarity_texture.texture = BG_GRADIENT_ITEM_LEGENDARY
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_LEGENDARY
 		
 		Item.RARITY.MYTHICAL:
 			# Dourado para itens Míticos
-			rarity_texture.texture = BG_GRADIENT_ITEM_MITICAL
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_MITICAL
 		
 		_:
 			rarity_texture.texture = null
@@ -95,9 +86,9 @@ func update_border_style(is_unique: bool = false):
 
 func _input(event: InputEvent) -> void:
 	# Não permite interação com slots bloqueados
-	if target_mouse_entered and item and not is_locked: 
+	if target_mouse_entered and item and not is_locked:
 		if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
-			InventoryManager.update_item_information.emit(item)
+			ItemManager.update_selected_item(item)
 
 func _on_mouse_entered() -> void:
 	target_mouse_entered = true

@@ -89,36 +89,41 @@ func get_gem_name_text(attribute: String) -> String:
 func get_gem_base_description_text(attribute: String) -> String:
 	return get_translation("items.gems.base_descriptions." + attribute)
 
+func get_gem_alert_text(attribute_key: String) -> String:
+	return get_translation("items.gems.alert_messages." + attribute_key)
+
 func get_gem_unique_description_text(attribute: String) -> String:
 	return get_translation("items.gems.unique_descriptions." + attribute)
 
 func get_gem_quality_text(quality: GemItem.QUALITY) -> String:
-	return get_translation("items.gems.quality." + GemItem.GEM_QUALITY_KEY[quality])
+	return get_translation("items.gems.quality." + GemConsts.GEM_QUALITY_KEY[quality])
 
-#func get_equipment_amulet_name_text(attribute: String) -> String:
-	#return get_translation("items.equipments.amulets." + attribute)
-#
-#func get_equipment_ring_name_text(attribute: String) -> String:
-	#return get_translation("items.equipments.rings." + attribute)
-#
-#func get_equipment_weapon_name_text(attribute: String) -> String:
-	#return get_translation("items.equipments.weapons." + attribute)
+func get_rune_name_text(attribute: String) -> String:
+	return get_translation("items.runes.names." + attribute)
+
+func get_rune_description_text(attribute: String) -> String:
+	return get_translation("items.runes.base_descriptions." + attribute)
 
 func get_equipment_common_item(set_key: EquipmentItem.SETS, equip_type: EquipmentItem.TYPE) -> String:
-	var set_name = EquipmentConsts.EQUIPMENTS_SET_KEYS[set_key]
+	var _set_name = EquipmentConsts.EQUIPMENTS_SET_KEYS[set_key]
 	var type_name = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equip_type]
-	var path = "items.equipments.commons.%s.%s" % [set_name, type_name]
+	var path = "items.equipments.commons.%s.%s" % [_set_name, type_name]
 	return get_translation(path)
 	
 func get_equipment_unique_item(set_key: EquipmentItem.SETS, equip_type: EquipmentItem.TYPE) -> String:
-	var set_name = EquipmentConsts.EQUIPMENTS_SET_KEYS[set_key]
+	var _set_name = EquipmentConsts.EQUIPMENTS_SET_KEYS[set_key]
 	var type_name = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equip_type]
-	var path = "items.equipments.uniques.%s.%s" % [set_name, type_name]
+	var path = "items.equipments.uniques.%s.%s" % [_set_name, type_name]
 	return get_translation(path)
 
 
 func get_equipment_text(attribute: String) -> String:
 	return get_translation("items.equipments." + attribute)
+
+func get_equipment_type_name(equip_type: EquipmentItem.TYPE) -> String:
+	var type_key = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equip_type]
+	return get_translation("items.equipments.types." + type_key)
+
 
 func get_ui_text(ui_key: String) -> String:
 	return get_translation("ui." + ui_key)

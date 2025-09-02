@@ -260,67 +260,69 @@ const ALLOWED_ATTRIBUTES_PER_TYPE: Dictionary[EquipmentItem.TYPE, Array] = {
 	[
 		ItemAttribute.TYPE.DAMAGE,
 		ItemAttribute.TYPE.HEALTH,
-		ItemAttribute.TYPE.HEALTH,
+		ItemAttribute.TYPE.HEALTH_REGEN,
 		ItemAttribute.TYPE.DEFENSE,
-		ItemAttribute.TYPE.DEFENSE
 	],
 	EquipmentItem.TYPE.HELMET:
 	[
 		ItemAttribute.TYPE.DEFENSE,
 		ItemAttribute.TYPE.HEALTH,
-		ItemAttribute.TYPE.CRITICAL_RATE,
 		ItemAttribute.TYPE.CRITICAL_DAMAGE
 	],
 	EquipmentItem.TYPE.BOOTS:
 	[
 		ItemAttribute.TYPE.HEALTH,
-		ItemAttribute.TYPE.MOVE_SPEED,
 		ItemAttribute.TYPE.DEFENSE,
-		ItemAttribute.TYPE.CRITICAL_DAMAGE
+		ItemAttribute.TYPE.MOVE_SPEED
 	],
 	EquipmentItem.TYPE.GLOVES:
 	[
 		ItemAttribute.TYPE.DAMAGE,
 		ItemAttribute.TYPE.CRITICAL_RATE,
 		ItemAttribute.TYPE.ATTACK_SPEED,
-		ItemAttribute.TYPE.CRITICAL_RATE
 	],
 	EquipmentItem.TYPE.RING:
 	[
 		ItemAttribute.TYPE.DAMAGE,
+		ItemAttribute.TYPE.ENERGY,
+		ItemAttribute.TYPE.ENERGY_REGEN,
 		ItemAttribute.TYPE.CRITICAL_RATE,
 		ItemAttribute.TYPE.CRITICAL_DAMAGE,
-		ItemAttribute.TYPE.ATTACK_SPEED
 	],
 	EquipmentItem.TYPE.AMULET:
 	[
 		ItemAttribute.TYPE.DAMAGE,
+		ItemAttribute.TYPE.MANA,
+		ItemAttribute.TYPE.MANA_REGEN,
 		ItemAttribute.TYPE.CRITICAL_RATE,
 		ItemAttribute.TYPE.CRITICAL_DAMAGE,
-		ItemAttribute.TYPE.ATTACK_SPEED
+		ItemAttribute.TYPE.EXP_BUFF,
 	]
 }
 
 const EQUIPMENT_BASE_PRICES = {
-	EquipmentItem.TYPE.HELMET: 900,
-	EquipmentItem.TYPE.ARMOR: 1500,
-	EquipmentItem.TYPE.BOOTS: 800,
-	EquipmentItem.TYPE.GLOVES: 500,
-	EquipmentItem.TYPE.WEAPON: 2000,
-	EquipmentItem.TYPE.RING: 1800,
-	EquipmentItem.TYPE.AMULET: 1700
+	EquipmentItem.TYPE.HELMET: 9000,
+	EquipmentItem.TYPE.ARMOR: 15000,
+	EquipmentItem.TYPE.BOOTS: 8000,
+	EquipmentItem.TYPE.GLOVES: 5000,
+	EquipmentItem.TYPE.WEAPON: 20000,
+	EquipmentItem.TYPE.RING: 18000,
+	EquipmentItem.TYPE.AMULET: 17000
 }
 
 const EQUIPMENTS_STATS_BASE_VALUES = {
-	ItemAttribute.TYPE.DAMAGE: {"base_value": 20.0, "factor": 0.5},
-	ItemAttribute.TYPE.DEFENSE: {"base_value": 20.0, "factor": 0.85},
-	ItemAttribute.TYPE.HEALTH: {"base_value": 100.0, "factor": 4.0},
+	ItemAttribute.TYPE.DAMAGE: {"base_value": 40.0, "factor": 0.05},
+	ItemAttribute.TYPE.DEFENSE: {"base_value": 50.0, "factor": 0.1},
+	ItemAttribute.TYPE.HEALTH: {"base_value": 75.0, "factor": 0.5},
 	ItemAttribute.TYPE.MANA: {"base_value": 4.0, "factor": 0.05},
 	ItemAttribute.TYPE.ENERGY: {"base_value": 2.0, "factor": 0.05},
-	ItemAttribute.TYPE.CRITICAL_RATE: {"base_value": 1.0, "factor": 0.02},
-	ItemAttribute.TYPE.CRITICAL_DAMAGE: {"base_value": 1.0, "factor": 0.025},
-	ItemAttribute.TYPE.ATTACK_SPEED: {"base_value": 1.0, "factor": 0.01},
-	ItemAttribute.TYPE.MOVE_SPEED: {"base_value": 1.0, "factor": 0.01},
-	ItemAttribute.TYPE.POISON_HIT_RATE: {"base_value": 1.0, "factor": 0.015},
-	ItemAttribute.TYPE.BLEED_HIT_RATE: {"base_value": 1.0, "factor": 0.015},
+	ItemAttribute.TYPE.CRITICAL_RATE: {"base_value": 25.0, "factor": 0.15},
+	ItemAttribute.TYPE.CRITICAL_DAMAGE: {"base_value": 3.0, "factor": 0.05},
+	ItemAttribute.TYPE.ATTACK_SPEED: {"base_value": 3.0, "factor": 0.01},
+	ItemAttribute.TYPE.MOVE_SPEED: {"base_value": 3.0, "factor": 0.01},
+	ItemAttribute.TYPE.POISON_HIT_RATE: {"base_value": 3.0, "factor": 0.01},
+	ItemAttribute.TYPE.BLEED_HIT_RATE: {"base_value": 3.0, "factor": 0.01},
+	# ItemAttribute.TYPE.HEALTH_REGEN: {"base_value": 3.0, "factor": 0.01},
+	# ItemAttribute.TYPE.MANA_REGEN: {"base_value": 3.0, "factor": 0.01},
+	# ItemAttribute.TYPE.ENERGY_REGEN: {"base_value": 3.0, "factor": 0.01},
 }

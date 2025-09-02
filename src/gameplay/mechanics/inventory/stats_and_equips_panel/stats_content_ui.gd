@@ -1,14 +1,14 @@
 class_name StatsContentUI
 extends ScrollContainer
 
-enum GROUP { OFFENSIVE, DEFENSIVE, OTHERS }
+enum GROUP {OFFENSIVE, DEFENSIVE, MISCELLANEOUS}
 
 @onready var stats_info_scene: PackedScene = preload("res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_info.tscn")
 @onready var container: VBoxContainer = $VBoxContainer
 
-const GROUP_KEYS = {GROUP.OFFENSIVE: "offensive", GROUP.DEFENSIVE: "defensive", GROUP.OTHERS: "others"}
+const GROUP_KEYS = {GROUP.OFFENSIVE: "offensive", GROUP.DEFENSIVE: "defensive", GROUP.MISCELLANEOUS: "miscellaneous"}
 
-var stats_groups: Dictionary[GROUP, Array] = {GROUP.OFFENSIVE: [], GROUP.DEFENSIVE: [], GROUP.OTHERS: []}
+var stats_groups: Dictionary[GROUP, Array] = {GROUP.OFFENSIVE: [], GROUP.DEFENSIVE: [], GROUP.MISCELLANEOUS: []}
 var player_attributes: Dictionary[String, Variant] = {}
 
 
@@ -25,17 +25,18 @@ func create_list() -> void:
 
 	stats_groups[GROUP.OFFENSIVE].clear()
 	stats_groups[GROUP.DEFENSIVE].clear()
-	stats_groups[GROUP.OTHERS].clear()
+	stats_groups[GROUP.MISCELLANEOUS].clear()
 
 	# Cria UI para cada atributo nas abas apropriadas
 	for attribute_key in player_attributes:
 		var attribute_data: Dictionary = player_attributes[attribute_key]
 		var stat_info: StatsInfoUI = stats_info_scene.instantiate()
-		var stat_category = attribute_data.get("stats_category", GROUP.OTHERS)  # Usa valor padrão
+		var stat_category = attribute_data.get("stats_category", GROUP.MISCELLANEOUS) # Usa valor padrão
 
 		# Configura nome e valor
 		stat_info.stats_name = attribute_data.get("name", "MISSING_NAME")
 		stat_info.stats_value = str(attribute_data.get("value", "MISSING_VALUE"))
+		stat_info.attribute_key = attribute_key
 
 		# Adiciona ao grupo correto
 		stats_groups[stat_category].append(stat_info)
@@ -44,7 +45,7 @@ func create_list() -> void:
 	for group in stats_groups:
 		var title_label: StatsInfoUI = stats_info_scene.instantiate()
 		var separator = " ---- "
-		title_label.stats_name =  separator + LocalizationManager.get_ui_text(GROUP_KEYS[group]) + separator
+		title_label.stats_name = separator + LocalizationManager.get_ui_text(GROUP_KEYS[group]) + separator
 		container.add_child(title_label)
 		title_label.label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		title_label.label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -62,13 +63,13 @@ func create_list() -> void:
 
 func _update_stats_ui() -> void:
 	player_attributes = get_player_attributes_formated(PlayerStats.get_attributes())
-
-	# Atualiza todos os stats baseado no player_attributes atualizado
+	
+	# Atualiza todos os stats usando a chave original armazenada
 	for group in stats_groups:
 		for stat_info in stats_groups[group]:
-			var attribute_name = stat_info.stats_name  # Usa o nome original do stat
-			var attribute_data = _find_attribute_data_by_name(attribute_name)
-			if attribute_data:
+			var attribute_key = stat_info.attribute_key
+			if attribute_key != "" and attribute_key in player_attributes:
+				var attribute_data = player_attributes[attribute_key]
 				stat_info.stats_value = str(attribute_data.get("value", "MISSING_VALUE"))
 
 
@@ -95,7 +96,12 @@ func get_player_attributes_formated(new_attributes: Dictionary) -> Dictionary[St
 		"critical_rate":
 		{
 			"name": LocalizationManager.get_ui_text("critical_rate"),
-			"value": str(snapped(new_attributes.critical_rate * 100, 0.01), "%"),
+			"value": str(roundi(new_attributes.critical_points), " (", snapped(new_attributes.critical_rate * 100, 0.01), "%)"),
+			"stats_category": GROUP.OFFENSIVE
+		},
+		"max_criticl_points": {
+			"name": "Critical to Max %",
+			"value": str(snapped(new_attributes.max_critical_points, 0.01)),
 			"stats_category": GROUP.OFFENSIVE
 		},
 		"critical_damage":
@@ -163,8 +169,15 @@ func get_player_attributes_formated(new_attributes: Dictionary) -> Dictionary[St
 			"name": LocalizationManager.get_ui_text("defense"),
 			"value":
 			str(
-				snapped(new_attributes.defense_points, 0.01), " (", snapped(new_attributes.defense_percent, 0.01), "%)"
+				snapped(new_attributes.defense_points, 0.01), " (", snapped(new_attributes.defense_rate, 0.01), "%)"
 			),
+			"stats_category": GROUP.DEFENSIVE
+		},
+		"max_defense_points":
+		{
+			"name": "Defense to Max %",
+			"value":
+			str(snapped(new_attributes.max_defense_points, 0.01)),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"move_speed":
@@ -183,19 +196,19 @@ func get_player_attributes_formated(new_attributes: Dictionary) -> Dictionary[St
 		{
 			"name": LocalizationManager.get_ui_text("level"),
 			"value": str(new_attributes.level),
-			"stats_category": GROUP.OTHERS
+			"stats_category": GROUP.MISCELLANEOUS
 		},
 		"experience":
 		{
 			"name": LocalizationManager.get_ui_text("experience"),
 			"value": format_resources(new_attributes.current_exp, new_attributes.exp_to_next_level),
-			"stats_category": GROUP.OTHERS
+			"stats_category": GROUP.MISCELLANEOUS
 		},
 		"exp_buff":
 		{
 			"name": LocalizationManager.get_ui_text("exp_buff"),
 			"value": str(new_attributes.exp_buff * 100, "%"),
-			"stats_category": GROUP.OTHERS
+			"stats_category": GROUP.MISCELLANEOUS
 		},
 	}
 

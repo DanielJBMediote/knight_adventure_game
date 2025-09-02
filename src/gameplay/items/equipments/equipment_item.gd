@@ -1,8 +1,8 @@
 class_name EquipmentItem
 extends Item
 
-enum TYPE { HELMET, ARMOR, BOOTS, GLOVES, RING, AMULET, WEAPON }
-enum GROUPS { COMMON, UNIQUES }
+enum TYPE {HELMET, ARMOR, BOOTS, GLOVES, RING, AMULET, WEAPON}
+enum GROUPS {COMMON, UNIQUES}
 
 enum SETS {
 	TRAVELER,
@@ -77,13 +77,11 @@ const ATTRIBUTES_PER_RARITY = {
 	RARITY.COMMON: 0, RARITY.UNCOMMON: 1, RARITY.RARE: 2, RARITY.EPIC: 3, RARITY.LEGENDARY: 4, RARITY.MYTHICAL: 5
 }
 
-const UNIQUE_EQUIPMENTS_SET_BONUS_TRIGGER = {}
-
 @export var equipment_type: TYPE
 @export var equipment_group: GROUPS
 @export var equipment_set: SETS
-@export var set_bonus_attributes: Array[ItemAttribute] = []
-
+@export var available_sockets: int = 0
+@export var gems_in_sockets: Array[GemItem] = []
 @export var damage: ItemAttribute
 @export var defense: ItemAttribute
 
@@ -101,9 +99,6 @@ func clone() -> EquipmentItem:
 	copy.damage = self.damage
 	copy.defense = self.defense
 
-	if self.set_bonus_attributes:
-		copy.set_bonus_attributes = self.set_bonus_attributes
-
 	return copy
 
 
@@ -116,12 +111,11 @@ func setup(enemy_stats: EnemyStats) -> void:
 	self.item_level = enemy_stats.level
 	self.spawn_chance = calculate_spawn_chance()
 	self.item_category = Item.CATEGORY.EQUIPMENTS
-
 	self.equipment_group = determine_equipment_group()
 	self.is_unique = (equipment_group == GROUPS.UNIQUES)
 	self.equipment_set = determine_equipment_set(enemy_stats.level)
-	#self.item_rarity = Item.RARITY.MYTHICAL
 	self.item_rarity = calculate_item_rarity(enemy_stats)
+	self.available_sockets = clampi(item_rarity, 0, 4) # Itens mais raros podem ter mais slots de gemas
 	self.equipment_type = determine_equipment_type()
 	self.item_subcategory = determine_equipment_subcategory()
 
@@ -130,8 +124,6 @@ func setup(enemy_stats: EnemyStats) -> void:
 
 	# DEPOIS GERA OS ATRIBUTOS ADICIONAIS
 	self.item_attributes.append_array(generate_attributes())
-	self.set_bonus_attributes = generate_set_bonus_attributes()
-
 	self.item_name = generate_name()
 	self.item_description = generate_description()
 	self.item_id = generate_equipment_id()
@@ -140,7 +132,7 @@ func setup(enemy_stats: EnemyStats) -> void:
 
 
 func calculate_spawn_chance() -> float:
-	var base_chance = 1.0  # 30% base chance
+	var base_chance = 1.0 # 30% base chance
 
 	# Aplica peso do tipo de equipamento
 	var type_weight = EQUIPMENT_SPAWN_WEIGHTS[equipment_type] / 100.0
@@ -154,8 +146,8 @@ func calculate_spawn_chance() -> float:
 
 	# Modificador de nível (itens de nível mais alto são mais raros)
 	var level_modifier = 1.0 - (item_level * 0.005)
-	var spawn_chance = base_chance * type_weight * rarity_modifier * level_modifier * difficulty_modifier
-	return clamp(spawn_chance, 0.001, 1.0)
+	var calculated_spawn_chance = base_chance * type_weight * rarity_modifier * level_modifier * difficulty_modifier
+	return clamp(calculated_spawn_chance, 0.001, 1.0)
 
 
 func determine_equipment_type() -> TYPE:
@@ -184,7 +176,7 @@ func determine_equipment_type() -> TYPE:
 		if random_value < cumulative_weight:
 			return type
 
-	return TYPE.HELMET  # Fallback
+	return TYPE.HELMET # Fallback
 
 
 func determine_equipment_subcategory() -> Item.SUBCATEGORY:
@@ -199,28 +191,26 @@ func determine_equipment_subcategory() -> Item.SUBCATEGORY:
 
 ## Determina se vai ser do grupo Communs ou Únicos
 func determine_equipment_group() -> GROUPS:
-	var total_weight = 0
+	return GROUPS.UNIQUES
+	# var total_weight = 0
 
-	for weight in EQUIPMENT_SET_SPAWN_WEIGHTS.values():
-		total_weight += weight
+	# for weight in EQUIPMENT_SET_SPAWN_WEIGHTS.values():
+	# 	total_weight += weight
 
-	var random_value = randi() % total_weight
-	var cumulative_weight = 0
+	# var random_value = randi() % total_weight
+	# var cumulative_weight = 0
 
-	for _set_type in EQUIPMENT_SET_SPAWN_WEIGHTS:
-		cumulative_weight += EQUIPMENT_SET_SPAWN_WEIGHTS[_set_type]
-		if random_value < cumulative_weight:
-			return _set_type
+	# for _set_type in EQUIPMENT_SET_SPAWN_WEIGHTS:
+	# 	cumulative_weight += EQUIPMENT_SET_SPAWN_WEIGHTS[_set_type]
+	# 	if random_value < cumulative_weight:
+	# 		return _set_type
 
-	return GROUPS.COMMON
+	# return GROUPS.COMMON
 
 
 func determine_equipment_set(enemy_level: int) -> SETS:
-	# Filtra as configurações pelo equipment_group atual
 	var configs_for_group = level_configs.filter(filter_equipments_sets_config)
 
-	# Para conjuntos únicos, queremos o conjunto com o nível mínimo mais alto que seja <= enemy_level
-	# Para conjuntos comuns, queremos o intervalo que contenha o enemy_level
 	for config in configs_for_group:
 		if is_level_in_level_range(enemy_level, config.level_range):
 			return config.equipment_set
@@ -241,10 +231,9 @@ func is_level_in_level_range(level: int, level_range: Array[int]) -> bool:
 		return level >= level_range[0] and level <= level_range[1]
 	else:
 		return level >= level_range[0]
-	return false
 
 
-func calculate_item_rarity(enemy_stats: EnemyStats) -> Item.RARITY:
+func calculate_item_rarity(_enemy_stats: EnemyStats) -> Item.RARITY:
 	if self.equipment_group == GROUPS.UNIQUES:
 		return EquipmentConsts.UNIQUE_SETS_RARITY[equipment_set]
 	else:
@@ -270,8 +259,8 @@ func generate_attributes() -> Array[ItemAttribute]:
 
 	# Garante que não gere mais atributos do que os permitidos
 	#num_attributes = min(num_attributes, allowed_attributes.size())
-	var rarity_multiplier = 1.0 + (item_rarity * 0.005)
 
+	var rarity_multiplier = 1.0 + (item_rarity * 0.001)
 	for i in range(num_attributes):
 		# Escolhe um atributo aleatório da lista de permitidos
 		var random_index = randi() % allowed_attributes.size()
@@ -279,10 +268,8 @@ func generate_attributes() -> Array[ItemAttribute]:
 
 		# Remove o atributo escolhido para não repetir
 		#allowed_attributes.remove_at(random_index)
-
-		var attribute = ItemAttribute.new()
-		attribute.type = random_type
-		attribute.base_value = calculate_attribute_value(random_type)
+		var base_value = calculate_attribute_value(random_type)
+		var attribute = ItemAttribute.new(random_type, base_value)
 		var min_value = attribute.get_min_value_range()
 		var max_value = attribute.get_max_value_range()
 		attribute.min_value = min_value
@@ -295,56 +282,35 @@ func generate_attributes() -> Array[ItemAttribute]:
 
 
 func get_allowed_attributes_for_type() -> Array:
-	return EquipmentConsts.ALLOWED_ATTRIBUTES_PER_TYPE.get(self.equipment_type, [])
+	var allowed_attributes: Array = EquipmentConsts.ALLOWED_ATTRIBUTES_PER_TYPE.get(self.equipment_type, [])
+	var excluded_attributes: Array = [ItemAttribute.TYPE.HEALTH_REGEN, ItemAttribute.TYPE.MANA_REGEN, ItemAttribute.TYPE.ENERGY_REGEN, ItemAttribute.TYPE.EXP_BUFF]
+	
+	var attributes = []
+	for attrib in allowed_attributes:
+		if attrib not in excluded_attributes:
+			attributes.append(attrib)
 
+	return attributes
 
+ 
 func calculate_attribute_value(attribute_type: ItemAttribute.TYPE) -> float:
 	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["base_value"]
-	var level_multiplier = 1.0 + (min(item_level, 100) * 0.01)
-	var rarity_multiplier = 1.0 + (item_rarity * 0.3)
 	var factor = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["factor"]
-
-	base_value += (item_level * factor)
+	var level_multiplier = 1.0 + (min(item_level, 100.0) * factor)
+	#var rarity_multiplier = 1.0 + (item_rarity * 0.1)
 
 	# Converte para porcentagem se necessário
 	if attribute_type in ItemAttribute.PERCENTAGE_TYPES:
 		base_value *= 0.01
-	var final_value = base_value * level_multiplier * rarity_multiplier
-	return final_value
-
-
-func generate_set_bonus_attributes() -> Array[ItemAttribute]:
-	var bonuses: Array[ItemAttribute] = []
-
-	# Bônus de conjunto apenas para itens do conjunto de unicos
-	if equipment_group != GROUPS.UNIQUES:
-		return bonuses
-
-	# Adiciona bônus baseado no conjunto
-	match equipment_set:
-		SETS.SERPENT_EMBRACE:
-			var sepent_embrace_attributes = generate_sepernt_embrace_attributes(item_level)
-			bonuses.append_array(sepent_embrace_attributes)
-
-		SETS.FROSTBEAR_WRATH:
-			var health_bonus = ItemAttribute.new()
-			health_bonus.type = ItemAttribute.TYPE.HEALTH
-			health_bonus.value = 3.0 + (item_level * 0.1)
-			bonuses.append(health_bonus)
-
-		SETS.SOLARIS:
-			var damage_bonus = ItemAttribute.new()
-			damage_bonus.type = ItemAttribute.TYPE.DEFENSE
-			damage_bonus.value = 10.0 + (item_level * 0.5)
-			bonuses.append(damage_bonus)
-
-	return bonuses
+	#var final_value = base_value * rarity_multiplier * level_multiplier
+	#var final_value = base_value * level_multiplier 
+	return base_value * level_multiplier
 
 
 func generate_name() -> String:
 	var base_name = ""
-	var set_name_key = EquipmentConsts.EQUIPMENTS_SET_KEYS[equipment_set]
-	var equip_type_key = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equipment_type]
+	# var set_name_key = EquipmentConsts.EQUIPMENTS_SET_KEYS[equipment_set]
+	# var equip_type_key = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equipment_type]
 
 	match equipment_group:
 		GROUPS.COMMON:
@@ -365,7 +331,7 @@ func generate_description() -> String:
 	var description = ""
 
 	var set_name_key = EquipmentConsts.EQUIPMENTS_SET_KEYS[equipment_set]
-	var equip_type_key = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equipment_type]
+	# var equip_type_key = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equipment_type]
 
 	description += LocalizationManager.get_equipment_text("base_set_description")
 
@@ -395,33 +361,30 @@ func setup_base_values() -> void:
 
 func generate_damage_stats() -> void:
 	var base_damage = calculate_base_damage()
-
-	self.damage = ItemAttribute.new()
-	self.damage.type = ItemAttribute.TYPE.DAMAGE
-	self.damage.base_value = base_damage
-
+	var rarity_multiplier = 1.0 + (item_rarity * 0.001)
+	
+	self.damage = ItemAttribute.new(ItemAttribute.TYPE.DAMAGE, base_damage)
 	var min_value = self.damage.get_min_value_range()
 	var max_value = self.damage.get_max_value_range()
-	self.damage.value = randf_range(min_value, max_value)
+	self.damage.value = clamp(randf_range(min_value, max_value) * rarity_multiplier, min_value, max_value)
 
 
 func generate_defense_stats() -> void:
 	var base_defense = calculate_base_defense()
-
-	self.defense = ItemAttribute.new()
-	self.defense.type = ItemAttribute.TYPE.DEFENSE
-	self.defense.base_value = base_defense
-	self.defense.value = randf_range(self.defense.min_value, self.defense.max_value)
+	var rarity_multiplier = 1.0 + (item_rarity * 0.001)
+	
+	self.defense = ItemAttribute.new(ItemAttribute.TYPE.DEFENSE, base_defense)
+	var min_value = self.defense.get_min_value_range()
+	var max_value = self.defense.get_max_value_range()
+	self.defense.value = clamp(randf_range(min_value, max_value) * rarity_multiplier, min_value, max_value)
 
 
 func calculate_base_damage() -> float:
-	var att_type = ItemAttribute.TYPE.DAMAGE
-	var data = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[att_type]
-	var base_value = data["base_value"]
-	var factor = data["factor"]
-	var level_multiplier = 1.0 + (min(item_level, 100) * 0.01)
-	var rarity_multiplier = 1.0 + (item_rarity * 0.3)
-	base_value += (item_level * factor * level_multiplier * rarity_multiplier)
+	var attribute_type = ItemAttribute.TYPE.DAMAGE
+	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["base_value"]
+	var factor = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["factor"]
+	var level_multiplier = 1.0 + (min(item_level, 100.0) * factor)
+	base_value += base_value * (item_level * 0.03) * level_multiplier
 
 	# Bônus para itens únicos
 	if is_unique:
@@ -431,18 +394,16 @@ func calculate_base_damage() -> float:
 
 
 func calculate_base_defense() -> float:
-	var att_type = ItemAttribute.TYPE.DEFENSE
-	var data = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[att_type]
-	var base_value = data["base_value"]
-	var factor = data["factor"]
-	var level_multiplier = 1.0 + (min(item_level, 100) * 0.01)
-	var rarity_multiplier = 1.0 + (item_rarity * 0.3)
-	base_value += (item_level * factor * level_multiplier * rarity_multiplier)
+	var attribute_type = ItemAttribute.TYPE.DEFENSE
+	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["base_value"]
+	var factor = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["factor"]
+	var level_multiplier = 1.0 + (min(item_level, 100.0) * factor)
+	base_value += base_value * (item_level * 0.015) * level_multiplier
 
 	# Diferentes tipos de armadura têm defesa diferente
 	match equipment_type:
 		TYPE.ARMOR:
-			base_value *= 1.5  # Peito tem mais defesa
+			base_value *= 1.5
 		TYPE.HELMET:
 			base_value *= 1.2
 		TYPE.BOOTS:
@@ -450,7 +411,7 @@ func calculate_base_defense() -> float:
 		TYPE.GLOVES:
 			base_value *= 0.7
 		TYPE.RING, TYPE.AMULET:
-			base_value *= 0.5  # Acessórios têm menos defesa
+			base_value *= 0.5
 
 	# Bônus para itens únicos
 	if is_unique:
@@ -476,9 +437,28 @@ func generate_equipment_id() -> String:
 
 func get_all_attributes() -> Array[ItemAttribute]:
 	var all_attributes = item_attributes.duplicate()
-	#all_attributes.append_array(self.set_bonus_attributes)
 	return all_attributes
 
+
+func add_gem_on_sockets(gem: GemItem) -> bool:
+	if available_sockets > gems_in_sockets.size():
+		gems_in_sockets.append(gem)
+		# Adiciona os atributos da gemas aos atributos do equipamento
+		# for attr in gem.item_attributes:
+		# 	item_attributes.append(attr)
+		return true
+	return false
+
+
+func remove_gem_from_sockets(gem: GemItem) -> bool:
+	if gems_in_sockets.has(gem):
+		gems_in_sockets.erase(gem)
+		# Remove os atributos da gemas dos atributos do equipamento
+		# for attr in gem.item_attributes:
+		# 	if item_attributes.has(attr):
+		# 		item_attributes.erase(attr)
+		return true
+	return false
 
 func setup_texture() -> void:
 	var equip_type_key = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equipment_type]
@@ -487,15 +467,3 @@ func setup_texture() -> void:
 	var file_path = "res://assets/sprites/items/equipments/%s/%s.png" % [equip_type_key, equip_name_key]
 	var texture = load_texture_with_fallback(file_path, "", str(" ", equip_type_key, "/", equip_name_key))
 	self.item_texture = texture
-
-
-static func generate_sepernt_embrace_attributes(_item_level: int) -> Array[ItemAttribute]:
-	var poison_bonus = ItemAttribute.new()
-	poison_bonus.type = ItemAttribute.TYPE.POISON_HIT_RATE
-	poison_bonus.value = 5.0 + (_item_level * 0.2)
-
-	var damage_bonus = ItemAttribute.new()
-	damage_bonus.type = ItemAttribute.TYPE.DAMAGE
-	damage_bonus.value = 10.0 + (_item_level * 0.2)
-
-	return [poison_bonus, damage_bonus]

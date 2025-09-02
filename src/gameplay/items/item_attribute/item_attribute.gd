@@ -23,7 +23,7 @@ enum TYPE {
 # Mapeamento de tipos que devem ser convertidos para porcentagem
 const PERCENTAGE_TYPES := [
 	#TYPE.DEFENSE,
-	TYPE.CRITICAL_RATE,
+	#TYPE.CRITICAL_RATE,
 	TYPE.CRITICAL_DAMAGE,
 	TYPE.ATTACK_SPEED,
 	TYPE.MOVE_SPEED,
@@ -71,11 +71,11 @@ const ATTRIBUTE_KEYS := {
 	TYPE.FREEZE_HIT_RATE: "Freeze_hit_rate",
 }
 
-const COLOR_MINIMAL = Color.WHITE  # ⚪ Abaixo do normal
-const COLOR_NORMAL = Color.WEB_GREEN  # 🟢 Normal (95%-105%)
-const COLOR_GOOD = Color.GOLDENROD  # 🟡 Bom (105%-115%)
+const COLOR_MINIMAL = Color.WHITE # ⚪ Abaixo do normal
+const COLOR_NORMAL = Color.WEB_GREEN # 🟢 Normal (95%-105%)
+const COLOR_GOOD = Color.GOLDENROD # 🟡 Bom (105%-115%)
 #const COLOR_EXCELLENT = Color.DEEP_SKY_BLUE  # 🔵 Excelente (115%-125%)
-const COLOR_PERFECT = Color.FUCHSIA  # 🟣 Perfeito (125%+)
+const COLOR_PERFECT = Color.FUCHSIA # 🟣 Perfeito (125%+)
 
 @export var type: TYPE
 @export var base_value: float = 0.0
@@ -91,6 +91,15 @@ const COLOR_PERFECT = Color.FUCHSIA  # 🟣 Perfeito (125%+)
 	set(value):
 		max_value = value
 
+var attribute_name: String:
+	get:
+		return ATTRIBUTE_NAMES.get(type, "Unknown")
+
+func _init(_type: TYPE, _value: float) -> void:
+	type = _type
+	value = _value
+	attribute_name = ATTRIBUTE_NAMES.get(type, "Unknown")
+	base_value = _value
 
 func get_max_value_range() -> float:
 	return max_value
@@ -115,12 +124,19 @@ static func get_attribute_value_color(_attribute: ItemAttribute) -> Color:
 	var percentage = _attribute.value / _attribute.base_value
 
 	if percentage < 0.95:
-		return COLOR_MINIMAL  # ⚪ Abaixo de 95%
+		return COLOR_MINIMAL # ⚪ Abaixo de 95%
 	elif percentage < 1.15:
-		return COLOR_NORMAL  # 🟢 95% - 115%
+		return COLOR_NORMAL # 🟢 95% - 115%
 	elif percentage < 1.25:
-		return COLOR_GOOD  # 🟡 115% - 125%
+		return COLOR_GOOD # 🟡 115% - 125%
 	#elif percentage < 1.25:
 		#return COLOR_EXCELLENT  # 🔵 115% - 125%
 	else:
-		return COLOR_PERFECT  # 🟣 125%+ (Perfeito)
+		return COLOR_PERFECT # 🟣 125%+ (Perfeito)
+
+
+static func format_value(_attribute_type: TYPE, _value: float) -> String:
+	if _attribute_type in PERCENTAGE_TYPES:
+		return "%.1f%%" % (_value * 100)
+	else:
+		return str(roundi(_value))

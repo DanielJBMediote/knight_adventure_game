@@ -1,13 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://bfnin3q7ivbx3"]
+[gd_scene load_steps=11 format=3 uid="uid://bfnin3q7ivbx3"]
 
 [ext_resource type="Script" uid="uid://f5qlmoend4np" path="res://src/gameplay/items/item_body.gd" id="1_u8rix"]
 [ext_resource type="PackedScene" uid="uid://cu3jjchhevkc" path="res://src/gameplay/items/effects/dropped_item_effect.tscn" id="2_6iaba"]
+[ext_resource type="Texture2D" uid="uid://c4vvvkat7omi6" path="res://assets/sprites/items/equipments/amulet/death_reaper.png" id="3_x4biv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6iaba"]
 radius = 12.1655
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ma1fd"]
-radius = 48.0
+radius = 32.0
 
 [sub_resource type="Animation" id="Animation_ma1fd"]
 length = 0.001
@@ -143,12 +144,13 @@ script = ExtResource("1_u8rix")
 
 [node name="DroppedItemEffect" parent="." instance=ExtResource("2_6iaba")]
 position = Vector2(0, -20)
-scale = Vector2(1.25, 1.25)
+scale = Vector2(1.5, 1.5)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 3
 position = Vector2(0, -20)
 rotation = 0.261799
+texture = ExtResource("3_x4biv")
 
 [node name="Area2D" type="Area2D" parent="."]
 collision_layer = 4
@@ -157,10 +159,10 @@ collision_mask = 8
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(0, 2)
 shape = SubResource("CircleShape2D_6iaba")
+debug_color = Color(0, 0.6, 0.7, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_ma1fd")
-metadata/_edit_lock_ = true
 
 [node name="ItemAnimation" type="AnimationPlayer" parent="."]
 libraries = {

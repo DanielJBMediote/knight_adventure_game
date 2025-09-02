@@ -13,16 +13,12 @@ var show_equipment: bool = true
 func _ready() -> void:
 	toggle_stats_equips_button.pressed.connect(_toggle_content)
 	update_showing_content()
+	update_title_label()
 
 
 func _toggle_content():
 	show_equipment = !show_equipment
-
-	if show_equipment:
-		equip_and_stats_label.text = LocalizationManager.get_ui_text("equipments")
-	else:
-		equip_and_stats_label.text = LocalizationManager.get_ui_text("stats")
-
+	update_title_label()
 	update_showing_content()
 	update_toggle_button()
 
@@ -30,6 +26,12 @@ func _toggle_content():
 func update_showing_content():
 	equipments_slots_ui.visible = show_equipment
 	stats_content_ui.visible = !show_equipment
+
+func update_title_label() -> void:
+	if show_equipment:
+		equip_and_stats_label.text = LocalizationManager.get_ui_text("equipments")
+	else:
+		equip_and_stats_label.text = LocalizationManager.get_ui_text("stats")
 
 
 func update_toggle_button():

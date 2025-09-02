@@ -35,9 +35,9 @@ func setup_equipment(new_equipment: EquipmentItem) -> void:
 	if new_equipment:
 		equipment = new_equipment
 		equipment_texture.texture = new_equipment.item_texture
-		equipment_level.visible = true
 		background_item.visible = false
-		equipment_level.text = str(new_equipment.item_level)
+		equipment_level.visible = true
+		update_equipment_level(new_equipment.item_level)
 		setup_equipment_rarity_texture(new_equipment.item_rarity)
 		update_border_style(new_equipment.is_unique)
 	else:
@@ -48,6 +48,24 @@ func setup_equipment(new_equipment: EquipmentItem) -> void:
 		equipment_level.visible = false
 		rarity_texture.texture = null
 		update_border_style()
+
+func update_equipment_level(level: int) -> void:
+	equipment_level.text = str(level)
+
+	var player_level = PlayerStats.level
+	var difference = player_level - level
+	# Equipamentos com nível muito abaixo do jogador são vermelhos (ultrapassados)
+	if difference >= 20:
+		equipment_level.add_theme_color_override("font_color", Color.RED)
+	# Equipamentos com nível um pouco abaixo do jogador são amarelos (atrasados)
+	elif difference >= 5:
+		equipment_level.add_theme_color_override("font_color", Color.YELLOW)
+	# Equipamentos com níveis acima do jogador são verdes (avançados)
+	elif difference == 0:
+		equipment_level.add_theme_color_override("font_color", Color.GREEN)
+	# Equipamentos com nível igual ao jogador são brancos (normal)
+	else:
+		equipment_level.add_theme_color_override("font_color", Color.WHITE)
 
 func setup_equipment_rarity_texture(rarity: Item.RARITY) -> void:
 	match rarity:
@@ -83,8 +101,8 @@ func update_border_style(is_unique: bool = false):
 
 func _input(event: InputEvent) -> void:
 	if target_mouse_entered and equipment:
-		if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT :
-			InventoryManager.update_item_information.emit(equipment)
+		if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+			ItemManager.update_selected_item(equipment)
 
 func _on_mouse_entered() -> void:
 	target_mouse_entered = true

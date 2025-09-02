@@ -22,7 +22,7 @@ const FRICTION = 4000.0 # Atrito do jogador com relação ao solo
 const GRAVITY = 2800.0 # Força da gravidade
 const JUMP_FORCE = 1000.0 # Força do pulo
 const CROUCH_TRANSITION_DURATION := 0.3 # Delay da transição igual ao tempo de animação
-const MIN_SLIDE_ANGLE := 10.0  # Ângulo mínimo para considerar deslize em rampa
+const MIN_SLIDE_ANGLE := 10.0 # Ângulo mínimo para considerar deslize em rampa
 const ROTATION_SPEED: float = 10.0
 const MAX_ATTACK_COUNT: int = 2
 const MIN_DISTANCE_TO_FLOOR_UP_TO_CROUCH: float = 65.0
@@ -37,7 +37,7 @@ var has_played_peak_animation := false # Valor true quando o pulo atinge o a alt
 
 
 # Distância entre o jogador e a plataforma
-var distance_to_floor_down: float = 0.0 
+var distance_to_floor_down: float = 0.0
 var distance_to_floor_up: float = 0.0
 
 # Váriaveis responsável por calcular o terreno/angula e rampas
@@ -54,7 +54,7 @@ const DASH_COOLDOWN := 0.5
 @export var dash_node: PackedScene
 var dash_timer: Timer
 var can_dash := true
-var air_dash_count := 1  # Quantidade de dash no ar permitido
+var air_dash_count := 1 # Quantidade de dash no ar permitido
 
 # Váriaveis responsável pela transição do crouch
 var is_crouch_transition_complete = false # Valor que manipula a transição de Crouch
@@ -74,7 +74,7 @@ var is_crouch_transition_complete = false # Valor que manipula a transição de 
 var is_invulnerable: bool = false
 
 # Váriaveis responsável pelos ataques/combos
-var attack_count: int = 0 
+var attack_count: int = 0
 
 var is_idle := false
 var is_moving := false
@@ -162,7 +162,7 @@ func update_slopes_values() -> void:
 		slope_direction = sign(normal.x)
 
 func calculate_distance_to_floors() -> void:
-	floor_down_raycast.force_raycast_update()  # Atualiza o raycast manualmente
+	floor_down_raycast.force_raycast_update() # Atualiza o raycast manualmente
 	
 	if floor_down_raycast.is_colliding():
 		distance_to_floor_down = floor_down_raycast.global_position.distance_to(floor_down_raycast.get_collision_point())
@@ -177,7 +177,11 @@ func calculate_distance_to_floors() -> void:
 
 func handle_actions() -> void:
 	if Input.is_action_just_pressed("Test"):
-		PlayerStats.add_experience(100)
+		#PlayerStats.add_experience(100)
+		if GameEvents.current_map.difficulty < 3:
+			GameEvents.current_map.difficulty += 1
+		#PlayerStats.update_defense(-15000)
+		#GameEvents.current_map.difficulty += 1
 	if is_on_floor():
 		handle_actions_when_on_floor()
 	else:
@@ -215,12 +219,12 @@ func handle_actions_when_on_floor() -> void:
 	# Controle do slide baseado em input e inclinação
 	if can_slide and Input.is_action_pressed("ui_down"):
 		# Se estiver em rampa
-		if abs(floor_angle) > MIN_SLIDE_ANGLE: 
+		if abs(floor_angle) > MIN_SLIDE_ANGLE:
 			# Verifica se é rampa descendente (inclinação na mesma direção que o jogador está olhando)
 			is_downhill = (face_direction > 0 and floor_angle < 0) or (face_direction < 0 and floor_angle > 0)
 			is_sliding = is_downhill
-		else:  # Se estiver no chão plano
-			is_sliding = is_moving  # Só desliza se estiver em movimento
+		else: # Se estiver no chão plano
+			is_sliding = is_moving # Só desliza se estiver em movimento
 	else:
 		is_sliding = false
 	
@@ -229,7 +233,7 @@ func handle_actions_when_on_floor() -> void:
 		#dash()
 	
 	if Input.is_action_just_pressed("jump") and can_jump:
-		velocity.y = -JUMP_FORCE
+		velocity.y = - JUMP_FORCE
 		is_jumping = true
 		has_started_jump = true
 	
@@ -320,7 +324,7 @@ func apply_gravity(delta):
 		velocity.y = min(velocity.y, 0)
 func apply_movement(delta):
 	# Atualiza face_direction apenas quando há input significativo
-	if abs(input_direction) > 0.1:  # Threshold para joystick
+	if abs(input_direction) > 0.1: # Threshold para joystick
 		face_direction = sign(input_direction)
 		
 	if is_dashing:
@@ -329,13 +333,13 @@ func apply_movement(delta):
 		
 	# Verifica se deve deslizar apenas em rampas descendentes
 	if is_sliding and not is_crouching:
-		if is_downhill:  # Deslize em rampa
-			var slide_power = MAX_SPEED * 1.5  # Mais rápido em rampas
+		if is_downhill: # Deslize em rampa
+			var slide_power = MAX_SPEED * 1.5 # Mais rápido em rampas
 			var slide_direction = slope_direction
 			if not is_moving:
 				slide_power = 0
 			velocity.x = move_toward(velocity.x, slide_direction * slide_power, ACCELERATION * delta)
-		else:  # Deslize no chão plano
+		else: # Deslize no chão plano
 			var slide_friction = FRICTION / 8
 			velocity.x = move_toward(velocity.x, 0, slide_friction * delta)
 		return
@@ -348,7 +352,7 @@ func apply_movement(delta):
 	# Se estiver em Movimento e Agachado
 	if is_moving and is_crouching:
 		#face_direction = input_direction
-		velocity.x = move_toward(velocity.x, face_direction * (MAX_SPEED/4), ACCELERATION * delta)
+		velocity.x = move_toward(velocity.x, face_direction * (MAX_SPEED / 4), ACCELERATION * delta)
 		return
 
 	# Se estiver apenas Agachado
@@ -373,10 +377,9 @@ func apply_movement(delta):
 	velocity.x = move_toward(velocity.x, input_direction * (MAX_SPEED), FRICTION * delta)
 
 func take_knockback(knock_force: float, attacker_position: Vector2):
-	
 	# Pequena pausa dramática (0.1 segundos)
 	Engine.time_scale = 0.1
-	await get_tree().create_timer(0.02, true).timeout  # Timer real, não afetado pelo time_scale
+	await get_tree().create_timer(0.02, true).timeout # Timer real, não afetado pelo time_scale
 	Engine.time_scale = 1.0
 	
 	if is_invulnerable:
@@ -387,7 +390,7 @@ func take_knockback(knock_force: float, attacker_position: Vector2):
 	
 	# 1. Calcula a direção do knockback (afastando do inimigo)
 	var knockback_direction = (global_position - attacker_position).normalized()
-	knockback_direction.y = -0.5  # Adiciona um pouco para cima
+	knockback_direction.y = -0.5 # Adiciona um pouco para cima
 	
 	# 2. Atualiza a face_direction para olhar para o inimigo
 	face_direction = -1 if attacker_position.x < global_position.x else 1
@@ -464,7 +467,7 @@ func handle_ground_animations(anim_direction: String):
 func handle_sliding_animation(anim_direction: String):
 	animation_player.play("Sliding" + anim_direction)
 	if is_downhill:
-		var target_rotation = -floor_angle * 0.5
+		var target_rotation = - floor_angle * 0.5
 		current_rotation = lerp(current_rotation, target_rotation, ROTATION_SPEED * get_physics_process_delta_time())
 		sprite_2d.rotation_degrees = current_rotation + (15 * slope_direction)
 		collision_shape.rotation_degrees = current_rotation + (20 * slope_direction)
@@ -510,7 +513,7 @@ func _on_hit_flash_animation_player_animation_finished(anim_name: StringName) ->
 		is_invulnerable = false
 		is_rolling = false
 
-func _on_take_damage(damage: float)-> void:
+func _on_take_damage(damage: float) -> void:
 	PlayerStats.update_health(damage * -1)
 
 func _show_level_up_label(level: int):

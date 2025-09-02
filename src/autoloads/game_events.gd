@@ -3,25 +3,25 @@ extends Node
 
 signal game_paused(paused: bool)
 
-enum DIFFICULTY { NORMAL, PAINFUL, FATAL, INFERNAL }  # 100% dos stats  # 120% dos stats dos inimigos  # 150% dos stats dos inimigos  # 200% dos stats dos inimigos
+enum DIFFICULTY {NORMAL, PAINFUL, FATAL, INFERNAL} # 100% dos stats  # 120% dos stats dos inimigos  # 150% dos stats dos inimigos  # 200% dos stats dos inimigos
 
 const DROP_DIFFICULT_MODIFICATOR = {
-	DIFFICULTY.NORMAL: 0.8,  # 80% da chance base
-	DIFFICULTY.PAINFUL: 1.0,  # 100% da chance base
-	DIFFICULTY.FATAL: 1.2,  # 120% da chance base
-	DIFFICULTY.INFERNAL: 1.5,  # 150% da chance base
+	DIFFICULTY.NORMAL: 0.8, # 80% da chance base
+	DIFFICULTY.PAINFUL: 1.0, # 100% da chance base
+	DIFFICULTY.FATAL: 1.2, # 120% da chance base
+	DIFFICULTY.INFERNAL: 1.5, # 150% da chance base
 }
 const STATS_DIFFICULT_MODIFICATOR = {
-	DIFFICULTY.NORMAL: 1.0,  # 100% da chance base
-	DIFFICULTY.PAINFUL: 1.5,  # 150% da chance base
-	DIFFICULTY.FATAL: 2.0,  # 200% da chance base
-	DIFFICULTY.INFERNAL: 2.5,  # 250% da chance base
+	DIFFICULTY.NORMAL: 1.0, # 100% da chance base
+	DIFFICULTY.PAINFUL: 1.5, # 150% da chance base
+	DIFFICULTY.FATAL: 2.0, # 200% da chance base
+	DIFFICULTY.INFERNAL: 2.5, # 250% da chance base
 }
 const ENEMY_LEVEL_INCREMENT = {
-	DIFFICULTY.NORMAL: 0,  # +0 Levels
-	DIFFICULTY.PAINFUL: 5,  # +5 Levels
-	DIFFICULTY.FATAL: 10,  # +10 Levels
-	DIFFICULTY.INFERNAL: 15,  # +15 Levels
+	DIFFICULTY.NORMAL: 0, # +0 Levels
+	DIFFICULTY.PAINFUL: 5, # +5 Levels
+	DIFFICULTY.FATAL: 10, # +10 Levels
+	DIFFICULTY.INFERNAL: 15, # +15 Levels
 }
 
 var current_map: MapData
@@ -80,15 +80,19 @@ func get_game_difficult() -> DIFFICULTY:
 		return current_map.difficulty
 	return DIFFICULTY.NORMAL
 
+func show_instant_message(message: String, type: InstantMessage.TYPE = InstantMessage.TYPE.SUCCESS, duration: float = 3.0) -> void:
+	var player_ui = get_tree().get_nodes_in_group("player_ui")[0]
+	InstantMessage.show_instant_message(player_ui, message, type, duration)
+
 ## Returns the modificator factor of drop rate by difficulty.
 ## More difficulty, more factor
-static func get_drop_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
+func get_drop_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
 	return DROP_DIFFICULT_MODIFICATOR.get(_difficult, 0.8)
 
 
-static func get_stats_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
+func get_stats_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
 	return STATS_DIFFICULT_MODIFICATOR.get(_difficult, 1.0)
 
 
-static func get_additional_levels_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
+func get_additional_levels_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
 	return ENEMY_LEVEL_INCREMENT.get(_difficult, 0)

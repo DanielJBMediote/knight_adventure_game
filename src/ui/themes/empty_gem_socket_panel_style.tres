@@ -1,0 +1,8 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://qf35fhykrru5"]
+
+[ext_resource type="Texture2D" uid="uid://ccxdaroha5a7w" path="res://assets/sprites/items/gems/gem_refined_blue.png" id="1_4r1v4"]
+
+[resource]
+texture = ExtResource("1_4r1v4")
+region_rect = Rect2(0, 0, 40, 40)
+modulate_color = Color(0, 0, 0, 1)

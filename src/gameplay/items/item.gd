@@ -1,7 +1,7 @@
 class_name Item
 extends Resource
 
-enum RARITY { COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHICAL }
+enum RARITY {COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHICAL}
 const RARITY_KEYS = {
 	RARITY.COMMON: "common",
 	RARITY.UNCOMMON: "uncommon",
@@ -11,16 +11,16 @@ const RARITY_KEYS = {
 	RARITY.MYTHICAL: "mythical",
 }
 
-enum CATEGORY { CONSUMABLES, EQUIPMENTS, LOOTS, QUEST, OTHERS }
+enum CATEGORY {CONSUMABLES, EQUIPMENTS, LOOTS, QUEST, MISCELLANEOUS}
 const CATEGORY_KEYS = {
 	CATEGORY.CONSUMABLES: "consumables",
 	CATEGORY.EQUIPMENTS: "equipments",
 	CATEGORY.LOOTS: "loots",
 	CATEGORY.QUEST: "quest",
-	CATEGORY.OTHERS: "others",
+	CATEGORY.MISCELLANEOUS: "miscellaneous",
 }
 
-enum SUBCATEGORY { POTION, WEAPON, ARMOR, ACCESSORY, FOOD, EQUIPMENTS, GEM, RESOURCE }
+enum SUBCATEGORY {POTION, WEAPON, ARMOR, ACCESSORY, FOOD, EQUIPMENTS, GEM, RESOURCE}
 const SUBCATEGORY_KEYS = {
 	SUBCATEGORY.POTION: "potion",
 	SUBCATEGORY.FOOD: "food",
@@ -34,28 +34,29 @@ const SUBCATEGORY_KEYS = {
 @export var item_id: String
 @export var item_name: String
 @export var item_description: String
-@export var item_category: CATEGORY = CATEGORY.OTHERS
+@export var item_category: CATEGORY = CATEGORY.MISCELLANEOUS
 @export var item_subcategory: SUBCATEGORY = SUBCATEGORY.RESOURCE
 @export var item_rarity: RARITY = RARITY.COMMON
-@export var spawn_chance: float = 1.0  # 0-1 (0% a 100%)
 @export var item_texture: Texture2D
+@export var item_price: int = 0
+@export var item_level: int = 0
+@export var item_usable: bool = false
+
+@export var spawn_chance: float = 1.0
 @export var stackable: bool = false
 @export var max_stack: int = 1
 @export var current_stack: int = 1
 @export var is_unique: bool = false
-@export var item_price: int= 0
-@export var item_level: int = 0
-@export var item_usable: bool = false
 
 var _item_action: ItemAction
-var item_action: ItemAction:
+@export var item_action: ItemAction:
 	get():
 		return _item_action
 	set(value):
 		_item_action = value
 
 var _item_attributes: Array[ItemAttribute] = []
-var item_attributes: Array[ItemAttribute]:
+@export var item_attributes: Array[ItemAttribute]:
 	get():
 		return _item_attributes
 	set(value):
@@ -67,15 +68,15 @@ func setup(enemy_stats: EnemyStats) -> void:
 
 
 func clone() -> Item:
-	var clone = self.duplicate()
+	var copy = self.duplicate()
 
 	if self.item_attributes:
-		clone.item_attributes = self.item_attributes
+		copy.item_attributes = self.item_attributes
 
 	if self.item_action:
-		clone.item_action = self.item_action.duplicate()
+		copy.item_action = self.item_action.duplicate()
 
-	return clone
+	return copy
 
 
 func get_sort_value() -> int:
@@ -83,7 +84,8 @@ func get_sort_value() -> int:
 
 
 static func generate_item_id(strings: Array[String]) -> String:
-	return ("ITEM_ID_" + "".join(strings)).to_upper()
+	var joined_strings = "_".join(strings)
+	return ("ITEM_ID_" + joined_strings).to_upper()
 
 
 func calculate_item_price(base_value: int = 1) -> int:
@@ -163,18 +165,18 @@ static func get_quality_level_modifier(player_level: int, map_level: int) -> flo
 	var level_difference = player_level - map_level
 
 	# Jogador em mapa fácil: maior chance de itens de qualidade
-	if level_difference > 10:  # +10 níveis acima do mapa
-		return 1.5  # +50% de chance de raridade melhor
+	if level_difference > 10: # +10 níveis acima do mapa
+		return 1.5 # +50% de chance de raridade melhor
 
-	elif level_difference > 5:  # +5 níveis acima
-		return 1.25  # +25%
+	elif level_difference > 5: # +5 níveis acima
+		return 1.25 # +25%
 
 	# Jogador em mapa difícil: menor chance de itens de qualidade
-	elif level_difference < -10:  # -10 níveis abaixo
-		return 0.6  # -40%
+	elif level_difference < -10: # -10 níveis abaixo
+		return 0.6 # -40%
 
-	elif level_difference < -5:  # -5 níveis abaixo
-		return 0.8  # -20%
+	elif level_difference < -5: # -5 níveis abaixo
+		return 0.8 # -20%
 
 	# Níveis similares: neutro
 	return 1.0
@@ -200,9 +202,9 @@ static func get_item_rarity_by_difficult_and_player_level(player_level: int, map
 	for i in range(base_thresholds[difficulty].size()):
 		var base_chance = base_thresholds[difficulty][i]
 
-		if i == 0:  # Common - reduz com bônus de qualidade
+		if i == 0: # Common - reduz com bônus de qualidade
 			adjusted_thresholds.append(base_chance / quality_modifier)
-		else:  # Raridades melhores - aumenta com bônus de qualidade
+		else: # Raridades melhores - aumenta com bônus de qualidade
 			adjusted_thresholds.append(base_chance * quality_modifier)
 
 	# Normaliza para garantir que a soma seja 1.0
@@ -234,31 +236,22 @@ func get_item_attributes(_item: Item = self) -> Array[ItemAttribute]:
 	return _item.item_attributes
 
 
-## Returns the Category name of Item
-static func get_category_text(_category_key: CATEGORY) -> String:
-	var category_key = CATEGORY_KEYS[_category_key]
-	return LocalizationManager.get_item_category_name_text(category_key)
-
-
-static func get_subcategory_text(_subcategory_key: SUBCATEGORY) -> String:
-	var subcategory_key = SUBCATEGORY_KEYS[_subcategory_key]
-	return LocalizationManager.get_item_subcategory_name_text(subcategory_key)
-
-
-## Returns de Rarity name of Item
-static func get_rarity_text(_rarity: RARITY) -> String:
-	var rarity_key = RARITY_KEYS[_rarity]
-	return LocalizationManager.get_item_rarity_name_text(rarity_key)
-
-
-static func get_rarity_prefix_text(_rarity: RARITY) -> String:
-	var rarity_key = RARITY_KEYS[_rarity]
-	return LocalizationManager.get_item_rarity_prefix_text(rarity_key)
-
-
-static func get_rarity_sufix_text(_rarity: RARITY) -> String:
-	var rarity_key = RARITY_KEYS[_rarity]
-	return LocalizationManager.get_item_rarity_sufix_text(rarity_key)
+func get_item_rarity_text_color() -> Color:
+	match item_rarity:
+		RARITY.COMMON:
+			return Color.WHITE_SMOKE
+		RARITY.UNCOMMON:
+			return Color.WEB_GREEN
+		RARITY.RARE:
+			return Color(0.5, 1.0, 1.0, 1.0) # Cyan claro
+		RARITY.EPIC:
+			return Color(0.5, 0.0, 0.85, 1.0) # Roxo
+		RARITY.LEGENDARY:
+			return Color.ORANGE_RED
+		RARITY.MYTHICAL:
+			return Color.RED
+		_:
+			return Color.WHITE_SMOKE
 
 
 func load_texture_with_fallback(file_path: String, fallback_path: String, attribute_key: String) -> Texture2D:
@@ -297,6 +290,33 @@ func create_error_texture() -> Texture2D:
 
 	var texture = ImageTexture.create_from_image(image)
 	return texture
+
+
+## Returns the Category name of Item
+static func get_category_text(_category_key: CATEGORY) -> String:
+	var category_key = CATEGORY_KEYS[_category_key]
+	return LocalizationManager.get_item_category_name_text(category_key)
+
+
+static func get_subcategory_text(_subcategory_key: SUBCATEGORY) -> String:
+	var subcategory_key = SUBCATEGORY_KEYS[_subcategory_key]
+	return LocalizationManager.get_item_subcategory_name_text(subcategory_key)
+
+
+## Returns de Rarity name of Item
+static func get_rarity_text(_rarity: RARITY) -> String:
+	var rarity_key = RARITY_KEYS[_rarity]
+	return LocalizationManager.get_item_rarity_name_text(rarity_key)
+
+
+static func get_rarity_prefix_text(_rarity: RARITY) -> String:
+	var rarity_key = RARITY_KEYS[_rarity]
+	return LocalizationManager.get_item_rarity_prefix_text(rarity_key)
+
+
+static func get_rarity_sufix_text(_rarity: RARITY) -> String:
+	var rarity_key = RARITY_KEYS[_rarity]
+	return LocalizationManager.get_item_rarity_sufix_text(rarity_key)
 
 
 static func get_random_rarity() -> RARITY:

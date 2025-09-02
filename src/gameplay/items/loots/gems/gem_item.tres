@@ -5,8 +5,10 @@
 [resource]
 script = ExtResource("1_cqqmo")
 gem_type = 0
-can_upgrade = false
 gem_quality = 0
+num_runes_to_upgrade = 0
+price_to_upgrade = 0
+equip_slot_sockets = Array[int]([])
 item_id = ""
 item_name = ""
 item_description = ""

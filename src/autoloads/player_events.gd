@@ -28,8 +28,7 @@ func _on_use_equipment(item: EquipmentItem) -> void:
 		var is_equipped = PlayerEquipments.is_equipped(item)
 		update_equipment.emit(item, is_equipped)
 	else:
-		var node = get_tree().get_nodes_in_group("player_ui")[0]
 		var part_1 = LocalizationManager.get_ui_text("insufficient_level")
 		var part_2 = LocalizationManager.get_ui_text("level_required")
-		var text = str(part_1, "! ", part_2, ": ", item.item_level, ".")
-		InstantMessage.show_instant_message(node, text, InstantMessage.TYPE.DANGER)
+		var message = str(part_1, "! ", part_2, ": ", item.item_level, ".")
+		GameEvents.show_instant_message(message, InstantMessage.TYPE.DANGER)

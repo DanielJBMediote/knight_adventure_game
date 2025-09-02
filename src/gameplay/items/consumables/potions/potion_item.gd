@@ -5,15 +5,15 @@ const POTION_RESOURCE_NAMES := ItemAttribute.ATTRIBUTE_NAMES
 const POTION_ATTRIBUTE_KEYS := ItemAttribute.ATTRIBUTE_KEYS
 
 const POTION_WEIGHTS := {
-	ItemAttribute.TYPE.HEALTH: 60,  # 60% de chance
-	ItemAttribute.TYPE.MANA: 15,  # 15% de chance
-	ItemAttribute.TYPE.ENERGY: 9,  # 9% de chance
-	ItemAttribute.TYPE.DEFENSE: 5,  # 5% de chance
-	ItemAttribute.TYPE.DAMAGE: 5,  # 5% de chance
-	ItemAttribute.TYPE.CRITICAL_RATE: 2.5,  # 2,5% de chance
-	ItemAttribute.TYPE.CRITICAL_DAMAGE: 2.5,  # 2,5% de chance
-	ItemAttribute.TYPE.ATTACK_SPEED: 0.5,  # 0.5% de chance
-	ItemAttribute.TYPE.MOVE_SPEED: 0.5,  # 0.5% de chance
+	ItemAttribute.TYPE.HEALTH: 60, # 60% de chance
+	ItemAttribute.TYPE.MANA: 15, # 15% de chance
+	ItemAttribute.TYPE.ENERGY: 9, # 9% de chance
+	ItemAttribute.TYPE.DEFENSE: 5, # 5% de chance
+	ItemAttribute.TYPE.DAMAGE: 5, # 5% de chance
+	ItemAttribute.TYPE.CRITICAL_RATE: 2.5, # 2,5% de chance
+	ItemAttribute.TYPE.CRITICAL_DAMAGE: 2.5, # 2,5% de chance
+	ItemAttribute.TYPE.ATTACK_SPEED: 0.5, # 0.5% de chance
+	ItemAttribute.TYPE.MOVE_SPEED: 0.5, # 0.5% de chance
 }
 
 # nível 1  # nível 10  # nível 20  # nível 30  # nível 40  # nível 50  # nível 60  # nível 70  # nível 80  # nível 90  # nível 100
@@ -21,7 +21,7 @@ const BONUS_TABLE = {1: 0, 10: 5, 20: 15, 30: 25, 40: 30, 50: 35, 60: 40, 70: 45
 
 const MAX_STACK = 99
 const LEVEL_INTERVAL = 10
-const BASE_POTION_VALUE := 100.0
+const BASE_POTION_VALUE = 100
 
 @export var potion_type: ItemAttribute.TYPE
 
@@ -61,7 +61,7 @@ func calculate_potion_rarity() -> Item.RARITY:
 
 
 func calculate_potion_spawn_chance() -> float:
-	var base_chance = 1.0  # 30% de chance base
+	var base_chance = 1.0 # 30% de chance base
 
 	# Multiplicador baseado na raridade
 	var rarity_multiplier = {
@@ -74,10 +74,10 @@ func calculate_potion_spawn_chance() -> float:
 	}
 
 	# Multiplicador baseado no nível do item
-	var level_multiplier = 1.0 - (item_level / 100)
+	var level_multiplier = 1.0 - (item_level / 100.0)
 
 	# Multiplicador baseado na diferença do nível do jogador
-	var player_level = PlayerStats.level  # Assumindo que você tem acesso ao nível do jogador
+	var player_level = PlayerStats.level # Assumindo que você tem acesso ao nível do jogador
 	var map_level = GameEvents.current_map.level_mob_min
 	var player_level_modifier = Item.get_player_level_modifier(player_level, map_level)
 
@@ -93,10 +93,10 @@ func calculate_potion_spawn_chance() -> float:
 
 
 func generate_potion_id() -> String:
-	var resource_name = str(POTION_RESOURCE_NAMES.get(potion_type, "UNKNOWN")).to_upper()
+	var potion_resource_name = str(POTION_RESOURCE_NAMES.get(potion_type, "UNKNOWN")).to_upper()
 	var rarity_name = Item.get_rarity_text(self.item_rarity)
 	var level_str = str("L", self.item_level)
-	return generate_item_id(["POTION", resource_name, rarity_name, level_str])
+	return generate_item_id(["POTION", potion_resource_name, rarity_name, level_str])
 
 
 func get_random_potion_type() -> ItemAttribute.TYPE:
@@ -121,8 +121,7 @@ func set_potion_name() -> String:
 	var base_name = LocalizationManager.get_potion_name_text(potion_key)
 	var rarity_prefix = Item.get_rarity_prefix_text(item_rarity)
 	var rarity_sufix = Item.get_rarity_sufix_text(item_rarity)
-
-	return rarity_prefix + " " + base_name
+	return "%s %s %s" % [rarity_prefix, base_name, rarity_sufix]
 
 
 func setup_potion_description() -> String:
@@ -192,7 +191,7 @@ func calculate_buff_level_bonus() -> float:
 	if BONUS_TABLE.has(level_index):
 		return min(100.0, BONUS_TABLE[level_index])
 	else:
-		return min(100.0, 60.0)  # Fallback
+		return min(100.0, 60.0) # Fallback
 
 
 func calculate_buff_duration() -> float:
@@ -213,8 +212,8 @@ func calculate_potion_level(enemy_level: int) -> int:
 
 func setup_potion_action() -> ItemAction:
 	var action = ItemAction.new()
-	var attribute = ItemAttribute.new()
-	attribute.type = POTION_ATTRIBUTE_KEYS.get(self.potion_type, "")
+	var attribute_type = POTION_ATTRIBUTE_KEYS.get(self.potion_type, "")
+	var attribute = ItemAttribute.new(attribute_type, 0)
 
 	# Define se é instantâneo ou buff
 	if potion_type in [ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.MANA, ItemAttribute.TYPE.ENERGY]:

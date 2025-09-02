@@ -1,0 +1,73 @@
+[gd_scene load_steps=7 format=3 uid="uid://byuwt37p8ped1"]
+
+[ext_resource type="Script" uid="uid://bvkjbemn6vnjp" path="res://src/gameplay/mechanics/inventory/gem_upgrade_ui/requeriment_content_ui.gd" id="1_kveu2"]
+[ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_ldod4"]
+[ext_resource type="Texture2D" uid="uid://dg7mxrcy2mddj" path="res://assets/sprites/items/runes/essence.png" id="2_kveu2"]
+[ext_resource type="Texture2D" uid="uid://dajjgcqhf3bdg" path="res://src/ui/themes/items_themes/bg_gradient_item_rare.tres" id="3_jx6lx"]
+[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="4_ovot0"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="5_ekvsl"]
+
+[node name="RequerimentContentUI" type="HBoxContainer"]
+theme_override_constants/separation = 8
+script = ExtResource("1_kveu2")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("1_ldod4")
+
+[node name="Icon" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_kveu2")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Rarity" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_jx6lx")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="QuatityLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.958
+anchor_top = 0.802
+anchor_right = 0.958
+anchor_bottom = 0.802
+offset_left = -18.984
+offset_top = -8.496
+offset_right = 0.0159988
+offset_bottom = 8.504
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("4_ovot0")
+theme_override_font_sizes/font_size = 12
+text = "1/4"
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(144, 48)
+layout_mode = 2
+theme = ExtResource("5_ekvsl")
+theme_override_font_sizes/font_size = 16
+text = "Mythical Switness Rune"
+vertical_alignment = 1
+autowrap_mode = 3

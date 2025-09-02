@@ -1,0 +1,198 @@
+[gd_scene load_steps=16 format=3 uid="uid://dv340mqsiwsbq"]
+
+[ext_resource type="Theme" uid="uid://dc8nwn3fsn3ag" path="res://src/ui/themes/base_panel.tres" id="1_egdp5"]
+[ext_resource type="Script" uid="uid://xfitexxn2yy7" path="res://src/gameplay/mechanics/inventory/gem_upgrade_ui/gem_upgrade_ui.gd" id="1_ubiow"]
+[ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="2_uf7pc"]
+[ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="3_lrqre"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="4_1u48s"]
+[ext_resource type="Texture2D" uid="uid://clukmo1ygr08m" path="res://src/ui/themes/items_themes/bg_gradient_item_epic.tres" id="4_awsif"]
+[ext_resource type="PackedScene" uid="uid://nalymlb6egj5" path="res://src/gameplay/mechanics/inventory/gem_upgrade_ui/upgrade_gem_panel.tscn" id="4_w7lj5"]
+[ext_resource type="Theme" uid="uid://cjghsixcdlswl" path="res://src/ui/themes/item_info_action_btn.tres" id="11_1bxpn"]
+[ext_resource type="PackedScene" uid="uid://c0c5fotfyaqcc" path="res://src/gameplay/mechanics/inventory/item_details_modal/item_price.tscn" id="11_awsif"]
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="11_ubiow"]
+
+[sub_resource type="Gradient" id="Gradient_6kplo"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_1bxpn"]
+gradient = SubResource("Gradient_6kplo")
+use_hdr = true
+fill_from = Vector2(0.5, 1)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1bxpn"]
+atlas = ExtResource("3_lrqre")
+region = Rect2(123, 20, 13, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mrwis"]
+atlas = ExtResource("3_lrqre")
+region = Rect2(216, 24, 17, 16)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_w7lj5"]
+texture = ExtResource("11_ubiow")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+region_rect = Rect2(576, 240, 128, 128)
+
+[node name="GemUpgradeUI" type="Control"]
+custom_minimum_size = Vector2(420, 520)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ubiow")
+metadata/_edit_use_anchors_ = true
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+
+[node name="Panel" type="Panel" parent="."]
+clip_children = 2
+custom_minimum_size = Vector2(520, 520)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -260.0
+offset_right = 210.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_egdp5")
+
+[node name="RarityTexturePrev" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_1bxpn")
+
+[node name="RarityTextureNext" type="TextureRect" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_awsif")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+metadata/_edit_lock_ = true
+
+[node name="Content" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Panel/MarginContainer/Content"]
+layout_mode = 2
+theme = ExtResource("4_1u48s")
+theme_override_font_sizes/font_size = 24
+text = "Upgrade Gem"
+
+[node name="Subtitle" type="Label" parent="Panel/MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+theme = ExtResource("4_1u48s")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+text = "Upgrading Common Mana Gem to Refined Mana Gem Upgrading Common Mana Gem to Refined Mana Gem"
+autowrap_mode = 3
+
+[node name="GemTextures" type="HBoxContainer" parent="Panel/MarginContainer/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="PrevGemPreview" parent="Panel/MarginContainer/Content/GemTextures" instance=ExtResource("4_w7lj5")]
+layout_mode = 2
+size_flags_horizontal = 6
+
+[node name="TextureRect" type="TextureRect" parent="Panel/MarginContainer/Content/GemTextures"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_1bxpn")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="NextGemPreview" parent="Panel/MarginContainer/Content/GemTextures" instance=ExtResource("4_w7lj5")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RequerimentContainer" type="VBoxContainer" parent="Panel/MarginContainer/Content"]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_constants/separation = 8
+
+[node name="RequerimentLabel" type="Label" parent="Panel/MarginContainer/Content/RequerimentContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme = ExtResource("4_1u48s")
+theme_override_font_sizes/font_size = 18
+text = "Requeriments:"
+
+[node name="RequerimentItems" type="GridContainer" parent="Panel/MarginContainer/Content/RequerimentContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 8
+columns = 2
+
+[node name="ItemPrice" parent="Panel/MarginContainer/Content" instance=ExtResource("11_awsif")]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+label_text_key = "price_required"
+
+[node name="UpgradeButton" type="Button" parent="Panel/MarginContainer/Content"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_vertical = 8
+theme = ExtResource("11_1bxpn")
+text = "Upgrade"
+
+[node name="Close" type="Button" parent="Panel/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+focus_mode = 0
+theme = ExtResource("2_uf7pc")
+icon = SubResource("AtlasTexture_mrwis")
+
+[node name="Border" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_w7lj5")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
