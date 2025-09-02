@@ -13,8 +13,8 @@ var slots: Array[Item] = []
 var current_page: int = 0
 var unlocked_slots: int = 54
 
-const MAX_SLOTS := 54
-const SLOTS_PER_PAGE := 18
+const MAX_SLOTS: int = 54
+const SLOTS_PER_PAGE: int = 18
 
 var is_open: bool = false
 var current_select_item: Item
@@ -318,7 +318,8 @@ func connect_sort_buttons(asc_button: Button, desc_button: Button) -> void:
 
 
 func change_page(direction: int) -> void:
-	current_page = wrapi(current_page + direction, 0, MAX_SLOTS / SLOTS_PER_PAGE)
+	var max_page := ceili(float(MAX_SLOTS) / SLOTS_PER_PAGE)
+	current_page = wrapi(current_page + direction, 0, max_page)
 	inventory_updated.emit()
 	page_changed.emit()
 

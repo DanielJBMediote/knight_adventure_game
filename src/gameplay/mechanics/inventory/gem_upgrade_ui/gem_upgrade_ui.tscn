@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dv340mqsiwsbq"]
+[gd_scene load_steps=20 format=3 uid="uid://dv340mqsiwsbq"]
 
 [ext_resource type="Theme" uid="uid://dc8nwn3fsn3ag" path="res://src/ui/themes/base_panel.tres" id="1_egdp5"]
 [ext_resource type="Script" uid="uid://xfitexxn2yy7" path="res://src/gameplay/mechanics/inventory/gem_upgrade_ui/gem_upgrade_ui.gd" id="1_ubiow"]
@@ -7,6 +7,8 @@
 [ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="4_1u48s"]
 [ext_resource type="Texture2D" uid="uid://clukmo1ygr08m" path="res://src/ui/themes/items_themes/bg_gradient_item_epic.tres" id="4_awsif"]
 [ext_resource type="PackedScene" uid="uid://nalymlb6egj5" path="res://src/gameplay/mechanics/inventory/gem_upgrade_ui/upgrade_gem_panel.tscn" id="4_w7lj5"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="8_awsif"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/gameplay/mechanics/inventory/item_details_modal/attribute_label.tscn" id="10_ubiow"]
 [ext_resource type="Theme" uid="uid://cjghsixcdlswl" path="res://src/ui/themes/item_info_action_btn.tres" id="11_1bxpn"]
 [ext_resource type="PackedScene" uid="uid://c0c5fotfyaqcc" path="res://src/gameplay/mechanics/inventory/item_details_modal/item_price.tscn" id="11_awsif"]
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="11_ubiow"]
@@ -23,6 +25,14 @@ fill_to = Vector2(0.5, 0)
 [sub_resource type="AtlasTexture" id="AtlasTexture_1bxpn"]
 atlas = ExtResource("3_lrqre")
 region = Rect2(123, 20, 13, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6kplo"]
+atlas = ExtResource("3_lrqre")
+region = Rect2(180, 29, 25, 6)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_awsif"]
+atlas = ExtResource("3_lrqre")
+region = Rect2(148, 20, 25, 25)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mrwis"]
 atlas = ExtResource("3_lrqre")
@@ -170,9 +180,34 @@ custom_minimum_size = Vector2(0, 24)
 layout_mode = 2
 label_text_key = "price_required"
 
+[node name="QuantityContainer" type="HBoxContainer" parent="Panel/MarginContainer/Content"]
+layout_mode = 2
+
+[node name="QuantityLabel" type="Label" parent="Panel/MarginContainer/Content/QuantityContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("8_awsif")
+text = "Quantity:"
+
+[node name="RemoveButton" type="Button" parent="Panel/MarginContainer/Content/QuantityContainer"]
+layout_mode = 2
+theme = ExtResource("2_uf7pc")
+icon = SubResource("AtlasTexture_6kplo")
+
+[node name="Quantity" parent="Panel/MarginContainer/Content/QuantityContainer" instance=ExtResource("10_ubiow")]
+layout_mode = 2
+text = "99"
+
+[node name="AddButton" type="Button" parent="Panel/MarginContainer/Content/QuantityContainer"]
+layout_mode = 2
+theme = ExtResource("2_uf7pc")
+icon = SubResource("AtlasTexture_awsif")
+
 [node name="UpgradeButton" type="Button" parent="Panel/MarginContainer/Content"]
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 8
 theme = ExtResource("11_1bxpn")
 text = "Upgrade"

@@ -146,7 +146,7 @@ func get_preview_next_gem() -> GemItem:
 	next_gem.gem_quality = get_next_quality()
 	next_gem.item_level = get_level_for_quality(next_gem.gem_quality)
 	next_gem.item_rarity = next_gem.get_gem_rarity()
-	next_gem.is_unique = next_gem.setup_gem_unique()
+	# next_gem.is_unique = next_gem.setup_gem_unique()
 	next_gem.item_attributes = next_gem.setup_gem_attributes()
 	next_gem.item_name = next_gem.generate_gem_name()
 	next_gem.item_description = next_gem.generate_gem_description()
@@ -220,8 +220,8 @@ static func get_next_gem_quality_by_required_rune(rune_rarity: Item.RARITY) -> Q
 
 
 func upgrade_gem(runes: Array[Item], gems: Array[Item], quanity: int = 1) -> bool:
-	var amount_gems_in_inventory = gems.reduce(func(acc, _gem): return acc + _gem.current_stack, -1)
-	var amount_runes_in_inventory = runes.reduce(func(acc, _rune): return acc + _rune.current_stack, 0)
+	var amount_gems_in_inventory = gems.reduce(func(acc, _gem): return acc + _gem.current_stack, -1) * quanity
+	var amount_runes_in_inventory = runes.reduce(func(acc, _rune): return acc + _rune.current_stack, 0) * quanity
 	
 	if amount_gems_in_inventory == 0:
 		# var message = LocalizationManager.get_gem_alert_text("gem_upgrade_max_gem")
@@ -277,7 +277,7 @@ func upgrade_gem(runes: Array[Item], gems: Array[Item], quanity: int = 1) -> boo
 		CurrencyManager.remove_coins(price_to_upgrade)
 
 		InventoryManager.remove_items(runes, quanity * num_runes_to_upgrade)
-		InventoryManager.remove_items(gems, quanity * 1)
+		InventoryManager.remove_items(gems, quanity * 2)
 		
 		InventoryManager.add_item(new_gem)
 

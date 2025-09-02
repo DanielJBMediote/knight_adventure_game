@@ -64,19 +64,6 @@ var level_configs: Array[SetLevelConfig] = [
 	SetLevelConfig.new(GROUPS.UNIQUES, SETS.ELEMENTALS_POWERFULL, [111, 115])
 ]
 
-const EQUIPMENT_SPAWN_WEIGHTS = {
-	TYPE.HELMET: 20, TYPE.ARMOR: 20, TYPE.BOOTS: 15, TYPE.GLOVES: 15, TYPE.RING: 10, TYPE.AMULET: 10, TYPE.WEAPON: 10
-}
-
-const EQUIPMENT_SET_SPAWN_WEIGHTS = {
-	GROUPS.COMMON: 90,
-	GROUPS.UNIQUES: 10,
-}
-
-const ATTRIBUTES_PER_RARITY = {
-	RARITY.COMMON: 0, RARITY.UNCOMMON: 1, RARITY.RARE: 2, RARITY.EPIC: 3, RARITY.LEGENDARY: 4, RARITY.MYTHICAL: 5
-}
-
 @export var equipment_type: TYPE
 @export var equipment_group: GROUPS
 @export var equipment_set: SETS
@@ -135,7 +122,7 @@ func calculate_spawn_chance() -> float:
 	var base_chance = 1.0 # 30% base chance
 
 	# Aplica peso do tipo de equipamento
-	var type_weight = EQUIPMENT_SPAWN_WEIGHTS[equipment_type] / 100.0
+	var type_weight = EquipmentConsts.EQUIPMENT_SPAWN_WEIGHTS[equipment_type] / 100.0
 
 	# Modificador de raridade (itens mais raros são mais raros)
 	var rarity_modifier = 1.0 - (item_rarity * 0.1)
@@ -165,14 +152,14 @@ func determine_equipment_type() -> TYPE:
 
 	# Fallback: usa o sistema original de pesos (para conjuntos não definidos)
 	var total_weight = 0
-	for weight in EQUIPMENT_SPAWN_WEIGHTS.values():
+	for weight in EquipmentConsts.EQUIPMENT_SPAWN_WEIGHTS.values():
 		total_weight += weight
 
 	var random_value = randi() % total_weight
 	var cumulative_weight = 0
 
-	for type in EQUIPMENT_SPAWN_WEIGHTS:
-		cumulative_weight += EQUIPMENT_SPAWN_WEIGHTS[type]
+	for type in EquipmentConsts.EQUIPMENT_SPAWN_WEIGHTS:
+		cumulative_weight += EquipmentConsts.EQUIPMENT_SPAWN_WEIGHTS[type]
 		if random_value < cumulative_weight:
 			return type
 
@@ -245,7 +232,7 @@ func calculate_item_rarity(_enemy_stats: EnemyStats) -> Item.RARITY:
 
 func generate_attributes() -> Array[ItemAttribute]:
 	var attributes: Array[ItemAttribute] = []
-	var num_attributes = ATTRIBUTES_PER_RARITY[item_rarity]
+	var num_attributes = EquipmentConsts.ATTRIBUTES_PER_RARITY[item_rarity]
 
 	if num_attributes <= 0:
 		return attributes

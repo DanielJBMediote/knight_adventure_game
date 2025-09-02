@@ -1,5 +1,30 @@
 class_name EquipmentConsts
 
+
+const EQUIPMENT_SPAWN_WEIGHTS = {
+	EquipmentItem.TYPE.HELMET: 20,
+	EquipmentItem.TYPE.ARMOR: 20,
+	EquipmentItem.TYPE.BOOTS: 15,
+	EquipmentItem.TYPE.GLOVES: 15,
+	EquipmentItem.TYPE.RING: 10,
+	EquipmentItem.TYPE.AMULET: 10,
+	EquipmentItem.TYPE.WEAPON: 10
+}
+
+const EQUIPMENT_SET_SPAWN_WEIGHTS = {
+	EquipmentItem.GROUPS.COMMON: 90,
+	EquipmentItem.GROUPS.UNIQUES: 10,
+}
+
+const ATTRIBUTES_PER_RARITY = {
+	Item.RARITY.COMMON: 0,
+	Item.RARITY.UNCOMMON: 1,
+	Item.RARITY.RARE: 2,
+	Item.RARITY.EPIC: 3,
+	Item.RARITY.LEGENDARY: 4,
+	Item.RARITY.MYTHICAL: 5
+}
+
 const EQUIPMENT_TYPE_KEYS: Dictionary[EquipmentItem.TYPE, String] = {
 	EquipmentItem.TYPE.HELMET: "helmet",
 	EquipmentItem.TYPE.ARMOR: "armor",
