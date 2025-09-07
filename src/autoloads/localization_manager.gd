@@ -35,7 +35,12 @@ func get_translation(key: String, default: String = "") -> String:
 		if value.has(k):
 			value = value[k]
 		else:
-			return default if default else "MISSING_TRANSLATION:" + key
+			if default:
+				return default
+			else:
+				printerr("MISSING_TRANSLATION:" + key)
+				return "MISSING_TRANSLATION:" + key
+			
 	
 	return str(value)
 
@@ -116,7 +121,6 @@ func get_equipment_unique_item(set_key: EquipmentItem.SETS, equip_type: Equipmen
 	var path = "items.equipments.uniques.%s.%s" % [_set_name, type_name]
 	return get_translation(path)
 
-
 func get_equipment_text(attribute: String) -> String:
 	return get_translation("items.equipments." + attribute)
 
@@ -125,5 +129,17 @@ func get_equipment_type_name(equip_type: EquipmentItem.TYPE) -> String:
 	return get_translation("items.equipments.types." + type_key)
 
 
+func get_npc_data(npc_key: String) -> Dictionary:
+	var npc_data: Dictionary = {}
+	var npcs = translations.get("npcs")
+	if npcs:
+		npc_data = npcs.get(npc_key)
+		if !npc_data:
+			printerr("No data fround for key %s " % npc_key)
+	return npc_data
+
 func get_ui_text(ui_key: String) -> String:
 	return get_translation("ui." + ui_key)
+
+func get_ui_alerts_text(ui_key: String) -> String:
+	return get_translation("ui.alerts." + ui_key)

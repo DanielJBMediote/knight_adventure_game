@@ -80,12 +80,12 @@ func _find_attribute_data_by_name(stat_name: String) -> Dictionary:
 	return {}
 
 
-func _on_attributes_changed(new_attributes: Dictionary) -> void:
+func _on_attributes_changed(new_attributes: PlayerAttributes) -> void:
 	player_attributes = get_player_attributes_formated(new_attributes)
 	_update_stats_ui()
 
 
-func get_player_attributes_formated(new_attributes: Dictionary) -> Dictionary[String, Variant]:
+func get_player_attributes_formated(new_attributes: PlayerAttributes) -> Dictionary[String, Variant]:
 	return {
 		"damage":
 		{
@@ -168,9 +168,7 @@ func get_player_attributes_formated(new_attributes: Dictionary) -> Dictionary[St
 		{
 			"name": LocalizationManager.get_ui_text("defense"),
 			"value":
-			str(
-				snapped(new_attributes.defense_points, 0.01), " (", snapped(new_attributes.defense_rate, 0.01), "%)"
-			),
+			str(snapped(new_attributes.defense_points, 0.01), " (", snapped(new_attributes.defense_rate, 0.01), "%)"),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"max_defense_points":

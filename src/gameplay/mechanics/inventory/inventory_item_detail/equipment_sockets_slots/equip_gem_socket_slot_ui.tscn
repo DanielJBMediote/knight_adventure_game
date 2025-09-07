@@ -1,0 +1,59 @@
+[gd_scene load_steps=5 format=3 uid="uid://bqygscghcrfql"]
+
+[ext_resource type="Script" uid="uid://cvgr82r8tmr3o" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/equipment_sockets_slots/equip_gem_socket_slot_ui.gd" id="1_pgx8a"]
+[ext_resource type="Texture2D" uid="uid://dlso2c8kqgjnn" path="res://assets/sprites/items/gems/gem_common_silver.png" id="2_pgx8a"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/attribute_label.tscn" id="3_u5gwb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0rsjk"]
+
+[node name="EquipGemSocketSlotUI" type="HBoxContainer"]
+custom_minimum_size = Vector2(260, 0)
+script = ExtResource("1_pgx8a")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_0rsjk")
+
+[node name="GemTexture" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("2_pgx8a")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AttributeLabel" parent="VBoxContainer" instance=ExtResource("3_u5gwb")]
+custom_minimum_size = Vector2(188, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 10
+text = "+ Attribute"
+horizontal_alignment = 0
+vertical_alignment = 0
+autowrap_mode = 3
+
+[node name="GemNameLabel" parent="VBoxContainer" instance=ExtResource("3_u5gwb")]
+custom_minimum_size = Vector2(188, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "Mythical Pristine Health Gem"
+horizontal_alignment = 0
+vertical_alignment = 0
+autowrap_mode = 3

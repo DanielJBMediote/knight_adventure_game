@@ -13,53 +13,55 @@
 [node name="EquipmentsContentUI" type="GridContainer"]
 size_flags_horizontal = 3
 size_flags_vertical = 8
-theme_override_constants/h_separation = 196
-theme_override_constants/v_separation = 16
+theme_override_constants/h_separation = 16
+columns = 3
 script = ExtResource("1_4geyu")
 metadata/_edit_lock_ = true
 
-[node name="Top" type="HBoxContainer" parent="."]
+[node name="Left" type="VBoxContainer" parent="."]
 layout_mode = 2
-size_flags_horizontal = 6
-theme_override_constants/separation = 49
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 16
 metadata/_edit_lock_ = true
 
-[node name="HelmetSlot" parent="Top" instance=ExtResource("1_t7x3x")]
-layout_mode = 2
-default_texture = ExtResource("3_e1gqp")
-
-[node name="AmuletSlot" parent="Top" instance=ExtResource("1_t7x3x")]
+[node name="AmuletSlot" parent="Left" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("4_3vqi1")
 
-[node name="RingSlot" parent="Top" instance=ExtResource("1_t7x3x")]
-layout_mode = 2
-default_texture = ExtResource("5_7tb7f")
-
-[node name="Mid" type="HBoxContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 193
-metadata/_edit_lock_ = true
-
-[node name="GlovesSlot" parent="Mid" instance=ExtResource("1_t7x3x")]
+[node name="GlovesSlot" parent="Left" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("6_85dh3")
 
-[node name="ArmorSlot" parent="Mid" instance=ExtResource("1_t7x3x")]
+[node name="Center" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 16
+metadata/_edit_lock_ = true
+
+[node name="HelmetSlot" parent="Center" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("3_e1gqp")
+
+[node name="ArmorSlot" parent="Center" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("7_e1gqp")
 
-[node name="Bottom" type="HBoxContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 193
-metadata/_edit_lock_ = true
-
-[node name="WeaponSlot" parent="Bottom" instance=ExtResource("1_t7x3x")]
-layout_mode = 2
-default_texture = ExtResource("8_lnl12")
-
-[node name="BootsSlot" parent="Bottom" instance=ExtResource("1_t7x3x")]
+[node name="BootsSlot" parent="Center" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("9_fsf7x")
+
+[node name="Right" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 16
+metadata/_edit_lock_ = true
+
+[node name="RingSlot" parent="Right" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("5_7tb7f")
+
+[node name="WeaponSlot" parent="Right" instance=ExtResource("1_t7x3x")]
+layout_mode = 2
+default_texture = ExtResource("8_lnl12")

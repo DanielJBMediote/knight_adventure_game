@@ -27,9 +27,6 @@ var gold_coins: int = 0
 var silver_coins: int = 0
 var bronze_coins: int = 0
 
-func _ready() -> void:
-	add_coins(int(pow(9, 11)))
-
 # Função para adicionar moedas (em bronze)
 func add_coins(amount: int) -> void:
 	var total_bronze = get_total_coins() + amount

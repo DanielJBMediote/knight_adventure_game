@@ -26,7 +26,7 @@ func show_map_name_animation() -> void:
 
 func _on_timeout(label: Label, texture_rect: TextureRect) -> void:
 	# Criar tweens
-	var tween = create_tween().set_parallel(false) # Sequencial
+	var tween: Tween = create_tween().set_parallel(false) # Sequencial
 	
 	# Fade in da textura
 	tween.tween_property(texture_rect, "modulate:a", 1.0, 1.0)
@@ -45,6 +45,8 @@ func _on_timeout(label: Label, texture_rect: TextureRect) -> void:
 	tween.tween_property(texture_rect, "modulate:a", 0.0, 0.5)
 	tween.tween_property(label, "modulate:a", 0.0, 0.5)
 	tween.tween_callback(label.set.bind("visible_characters", -1)) # Resetar visible_characters
+	
+	tween.finished.connect(queue_free)
 
 func set_map_name(new_name: String) -> void:
 	var label = map_name.get_node("Label")

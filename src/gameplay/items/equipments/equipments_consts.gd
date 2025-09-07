@@ -205,7 +205,12 @@ const SETS_AVAILABLE_PARTS = {
 		EquipmentItem.TYPE.GLOVES,
 		EquipmentItem.TYPE.WEAPON,
 	],
-	EquipmentItem.SETS.SACRED_CRUSADER: [EquipmentItem.TYPE.HELMET, EquipmentItem.TYPE.ARMOR, EquipmentItem.TYPE.BOOTS],
+	EquipmentItem.SETS.SACRED_CRUSADER:
+	[
+		EquipmentItem.TYPE.HELMET,
+		EquipmentItem.TYPE.ARMOR,
+		EquipmentItem.TYPE.BOOTS
+	],
 	EquipmentItem.SETS.FROSTBEAR_WRATH:
 	[
 		EquipmentItem.TYPE.HELMET,
@@ -270,7 +275,10 @@ const SETS_AVAILABLE_PARTS = {
 		EquipmentItem.TYPE.GLOVES,
 		EquipmentItem.TYPE.WEAPON,
 	],
-	EquipmentItem.SETS.ELEMENTALS_POWERFULL: [EquipmentItem.TYPE.RING, EquipmentItem.TYPE.AMULET]
+	EquipmentItem.SETS.ELEMENTALS_POWERFULL: [
+		EquipmentItem.TYPE.RING,
+		EquipmentItem.TYPE.AMULET
+	]
 }
 
 const ALLOWED_ATTRIBUTES_PER_TYPE: Dictionary[EquipmentItem.TYPE, Array] = {

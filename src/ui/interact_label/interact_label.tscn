@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://byr2mw2xosb8c"]
+
+[ext_resource type="Script" uid="uid://dh0ilh0fa3ikq" path="res://src/ui/interact_label/interact_label.gd" id="1_rhxi8"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="1_yaoq5"]
+
+[node name="InteractLabel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -48.0
+offset_right = 48.0
+offset_bottom = 16.0
+script = ExtResource("1_rhxi8")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5)
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_yaoq5")
+text = "Collect"
+horizontal_alignment = 1
+vertical_alignment = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true

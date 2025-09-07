@@ -17,7 +17,7 @@ texture_margin_right = 45.0
 texture_margin_bottom = 48.0
 region_rect = Rect2(25, 112, 144, 136)
 
-[node name="StatsAndEquipsPanel" type="Panel"]
+[node name="StatsAndEquipsUI" type="Panel"]
 custom_minimum_size = Vector2(456, 456)
 offset_right = 416.0
 offset_bottom = 468.0
@@ -66,9 +66,9 @@ theme_override_fonts/font = ExtResource("5_d3dn8")
 text = "Equipments"
 icon = ExtResource("6_cxpm7")
 
-[node name="EquipmentsSlotsUI" parent="MarginContainer/MainConteiner" instance=ExtResource("7_d3dn8")]
-visible = false
+[node name="EquipmentContentUI" parent="MarginContainer/MainConteiner" instance=ExtResource("7_d3dn8")]
 layout_mode = 2
+size_flags_horizontal = 6
 
 [node name="StatsContentUI" parent="MarginContainer/MainConteiner" instance=ExtResource("8_d3dn8")]
 layout_mode = 2

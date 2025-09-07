@@ -1,13 +1,13 @@
 class_name EquipmentContentUI
 extends GridContainer
 
-@onready var helmet_slot: EquipmentSlotUI = $Top/HelmetSlot
-@onready var amulet_slot: EquipmentSlotUI = $Top/AmuletSlot
-@onready var ring_slot: EquipmentSlotUI = $Top/RingSlot
-@onready var gloves_slot: EquipmentSlotUI = $Mid/GlovesSlot
-@onready var armor_slot: EquipmentSlotUI = $Mid/ArmorSlot
-@onready var weapon_slot: EquipmentSlotUI = $Bottom/WeaponSlot
-@onready var boots_slot: EquipmentSlotUI = $Bottom/BootsSlot
+@onready var amulet_slot: EquipmentSlotUI = $Left/AmuletSlot
+@onready var gloves_slot: EquipmentSlotUI = $Left/GlovesSlot
+@onready var helmet_slot: EquipmentSlotUI = $Center/HelmetSlot
+@onready var armor_slot: EquipmentSlotUI = $Center/ArmorSlot
+@onready var boots_slot: EquipmentSlotUI = $Center/BootsSlot
+@onready var ring_slot: EquipmentSlotUI = $Right/RingSlot
+@onready var weapon_slot: EquipmentSlotUI = $Right/WeaponSlot
 
 # Dicionário para mapear tipos de equipamento para slots
 var slot_map: Dictionary

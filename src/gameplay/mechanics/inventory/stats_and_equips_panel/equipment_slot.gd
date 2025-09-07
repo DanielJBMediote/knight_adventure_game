@@ -3,7 +3,7 @@ extends Panel
 
 @onready var rarity_texture: TextureRect = $MarginContainer/RarityTexture
 @onready var unique_border: Panel = $UniqueBorder
-@onready var equipment_level: Label = $MarginContainer/MarginContainer/TextureRect/EquipmentLevel
+@onready var equipment_level: Label = $MarginContainer/MarginContainer/LevelPanel/EquipmentLevel
 @onready var equipment_texture: TextureRect = $MarginContainer/EquipmentTexture
 @onready var background_item: TextureRect = $BackgroundItem
 

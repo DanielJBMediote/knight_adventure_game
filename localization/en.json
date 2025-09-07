@@ -1,434 +1,474 @@
 {
-  "game_name": "Knight Adventure",
-  "items": {
-    "potions": {
-      "names": {
-        "health": "Health Potion",
-        "mana": "Mana Potion",
-        "energy": "Energy Potion",
-        "defense": "Defense Potion",
-        "damage": "Damage Potion",
-        "critical_rate": "Critical Rate Potion",
-        "critical_damage": "Critical Damage Potion",
-        "attack_speed": "Attack Speed Potion",
-        "move_speed": "Speed Potion"
-      },
-      "base_descriptions": {
-        "health": "A red potion that instantly restores {amount} of health.",
-        "mana": "A blue potion that instantly restores {amount} of mana.",
-        "energy": "A green potion that instantly restores {amount} of energy.",
-        "defense": "A gray potion that increases defense by {amount}% for {duration} seconds.",
-        "damage": "An orange potion that increases damage by {amount}% for {duration} seconds.",
-        "critical_rate": "A purple potion that increases critical rate by {amount}% for {duration} seconds.",
-        "critical_damage": "A dark red potion that increases critical damage by {amount}% for {duration} seconds.",
-        "attack_speed": "A yellow potion that increases attack speed by {amount}% for {duration} seconds.",
-        "move_speed": "A light blue potion that increases movement speed by {amount}% for {duration} seconds."
-      }
-    },
-    "gems": {
-      "names": {
-        "health": "Health Gem",
-        "mana": "Mana Gem",
-        "energy": "Health Gem",
-        "defense": "Defense Gem",
-        "damage": "Damage Gem",
-        "critical_rate": "Critical Rate Gem",
-        "critical_damage": "Critical Damage Gem",
-        "attack_speed": "Attack Speed Gem",
-        "move_speed": "Speed Gem",
-        "health_regen": "Unique Life Gem",
-        "mana_regen": "Unique Power Gem",
-        "energy_regen": "Unique Energised Gem",
-        "exp_buff": "Unique Knowledge Gem"
-      },
-      "quality": {
-        "fragmented": "Fragmented",
-        "common": "Common",
-        "refined": "Refined",
-        "flawless": "Flawless",
-        "exquisite": "Exquisite",
-        "pristine": "Pristine"
-      },
-      "base_descriptions": {
-        "health": "A {quality} gem that increases maximum health.",
-        "mana": "A {quality} gem that increases maximum mana.",
-        "energy": "A {quality} gem that increases maximum energy.",
-        "defense": "A {quality} gem that increases defense.",
-        "damage": "A {quality} gem that increases damage.",
-        "critical_rate": "A {quality} gem that increases critical rate.",
-        "critical_damage": "A {quality} gem that increases critical damage.",
-        "attack_speed": "A {quality} gem that increases attack speed.",
-        "move_speed": "A {quality} gem that increases movement speed.",
-        "health_regen": "A unique gem that provides health regeneration over time.",
-        "mana_regen": "A unique gem that provides mana regeneration over time.",
-        "energy_regen": "A unique gem that provides energy regeneration over time.",
-        "exp_buff": "A unique gem that provides additional experience when defeating monsters or completing missions.",
-        "unique_gem": "It's a unique jewel that increses your base attribute value."
-      },
-      "unique_descriptions": {
-        "health_regen": "\"A pulsating gem with a bright red core that exudes comforting warmth. It is said to have been formed from the crystallized tears of a reborn phoenix. Its life-giving power continually restores the wearer's strength, like a heart that never stops beating.\"",
-        "mana_regen": "\"This deep blue gem contains swirls of arcane energy that slowly swirl within. Created during an astral convergence, it whispers cosmic secrets and channels the mystical currents of the universe to fuel the wearer's magical reserves.\"",
-        "energy_regen": "\"A shimmering green gem that seems to breathe with primordial energy. Forged in the core of an ancient meteorite, it emits a gentle vibration that revitalizes the body and mind, granting its possessor tireless vigor and supernatural agility.\"",
-        "exp_buff": "\"This translucent golden gem contains geometric patterns that constantly rearrange themselves, like an infinite puzzle. Legend has it that it was carved by the first celestial archivist, and its brilliance accelerates understanding of the world, transforming each experience into crystallized wisdom.\""
-      },
-      "alert_messages": {
-        "gem_upgrade_max_gem": "Can't upgrade this gem. It's reseached on max level.",
-        "gem_upgrade_no_money": "You don't have enought coins to upgrade this gem.",
-        "gem_upgrade_level_required": "You don't have required level to upgrade this gem.",
-        "gem_upgrade_no_runes": "You don't have enought runes to upgrade."
-      }
-    },
-    "runes": {
-      "names": {
-        "vitality": "Vitality Rune",
-        "essence": "Essence Rune",
-        "vigor": "Vigor Rune",
-        "protection": "Protection Rune",
-        "strength": "Strength Rune",
-        "precision": "Precision Rune",
-        "fury": "Fury Rune",
-        "swiftness": "Swiftness Rune",
-        "agility": "Agility Rune",
-        "special": "Special Rune"
-      },
-      "base_descriptions": {
-        "vitality": "Forged from the heart of ancient forest guardians. A rune that use to upgrade {gem_quality} Health Gems to {next_gem_quality}.",
-        "essence": "Crystallized from the tears of moon goddesses. A rune that use to upgrade {gem_quality} Mana Gems to {next_gem_quality}.",
-        "vigor": "Born from the first lightning of creation. A rune that use to upgrade {gem_quality} Energy Gems to {next_gem_quality}.",
-        "protection": "Tempered in the scales of mountain dragons. A rune that use to upgrade {gem_quality} Defense Gems to {next_gem_quality}.",
-        "strength": "Carved from the bones of fallen titans. A rune that use to upgrade {gem_quality} Damage Gems to {next_gem_quality}.",
-        "precision": "Polished by wind spirits over millennia. A rune that use to upgrade {gem_quality} Critical Rate gems to {next_gem_quality}.",
-        "fury": "Infused with the rage of volcanic eruptions. A rune that use to upgrade {gem_quality} Critical Damage gems to {next_gem_quality}.",
-        "swiftness": "Weaved from the threads of time itself. A rune that use to upgrade {gem_quality} Attack Speed gems to {next_gem_quality}.",
-        "agility": "Harvested from zephyr winds at dawn. A rune that use to upgrade {gem_quality} Move Speed gems to {next_gem_quality}.",
-        "special": "Crafted by forgotten star-smiths. A rune that use to upgrade {gem_quality} unique gems to {next_gem_quality}."
-      }
-    },
-    "equipments": {
-      "commons": {
-        "traveler": {
-          "set_name": "Traveler's Set",
-          "description": "Lightweight and flexible armor made from durable materials, offering essential protection for novice explorers venturing into unknown lands.",
-          "helmet": "Traveler's Hat",
-          "armor": "Traveler's Tunic",
-          "boots": "Traveler's Boots",
-          "gloves": "Traveler's Gloves",
-          "weapon": "Apprentice's Sword"
-        },
-        "leather": {
-          "set_name": "Leather Set",
-          "description": "Treated leather armor that enhances durability while maintaining flexibility, offering moderate defense for those who prefer speed and cunning over direct confrontation.",
-          "helmet": "Leather Cap",
-          "armor": "Leather Jerkin",
-          "boots": "Leather Boots",
-          "gloves": "Leather Gloves",
-          "weapon": "Long Sword"
-        },
-        "hunter": {
-          "set_name": "Hunter's Set",
-          "description": "Leather and reinforced fabric armor with camouflage patterns, providing excellent mobility and protection for hunting and reconnaissance missions.",
-          "helmet": "Hunter's Hood",
-          "armor": "Hunter's Vest",
-          "boots": "Hunter's Boots",
-          "gloves": "Hunter's Gloves",
-          "weapon": "Hunter's Dagger"
-        },
-        "bronze": {
-          "set_name": "Bronze Set",
-          "description": "Sturdy bronze plate armor reinforced with leather, offering reliable protection and mobility for various combat situations.",
-          "helmet": "Bronze Helm",
-          "armor": "Bronze Chestplate",
-          "boots": "Bronze Greaves",
-          "gloves": "Bronze Gauntlets",
-          "weapon": "Bronze Mace",
-          "ring": "Bronze Ring"
-        },
-        "iron": {
-          "set_name": "Iron Set",
-          "description": "Solid iron plate armor that withstands heavy blows, providing robust protection for frontline warriors and knights.",
-          "helmet": "Iron Helm",
-          "armor": "Iron Chestplate",
-          "boots": "Iron Greaves",
-          "gloves": "Iron Gauntlets",
-          "weapon": "Iron Double Axe"
-        },
-        "heavy": {
-          "set_name": "Heavy Set",
-          "description": "Reinforced steel armor offering maximum protection against powerful attacks, ideal for elite warriors facing overwhelming odds.",
-          "helmet": "Heavy Helm",
-          "armor": "Heavy Chestplate",
-          "boots": "Heavy Greaves",
-          "gloves": "Heavy Gauntlets",
-          "ring": "Silver Ring",
-          "weapon": "Heavy Sword",
-          "amulet": "Amulet of Fortitude"
-        },
-        "guardian": {
-          "set_name": "Guardian Set",
-          "description": "Enchanted steel and leather armor offering exceptional protection against physical and magical attacks for elite defenders.",
-          "helmet": "Guardian Helm",
-          "armor": "Guardian Chestplate",
-          "boots": "Guardian Greaves",
-          "gloves": "Guardian Gauntlets",
-          "weapon": "Guardian Sword",
-          "ring": "Ring of the Guardian",
-          "amulet": "Guardian's Amulet"
-        },
-        "noble_platinum": {
-          "set_name": "Noble Platinum Set",
-          "description": "Rare platinum alloy armor with brilliant polish, offering superior protection and symbolizing high status for noble warriors.",
-          "helmet": "Noble Platinum Helm",
-          "armor": "Noble Platinum Chestplate",
-          "boots": "Noble Platinum Sabatons",
-          "gloves": "Noble Platinum Gauntlets",
-          "weapon": "Gracefull Platinum Longsword",
-          "ring": "Ring of the Platinum Order",
-          "amulet": "Commander's Medallion"
-        },
-        "shadow_ebony": {
-          "set_name": "Shadow Ebony Set",
-          "description": "Dark ebony wood and steel armor designed for stealth and agility, favored by shadow warriors and assassins.",
-          "helmet": "Shadow Ebony Helm",
-          "armor": "Shadow Ebony Chestplate",
-          "boots": "Shadow Ebony Greaves",
-          "gloves": "Shadow Ebony Gauntlets",
-          "weapon": "Shadow Ebony Sword",
-          "ring": "Ring of the Hidden Passage",
-          "amulet": "Black Signet"
-        }
-      },
-      "uniques": {
-        "juggernout": {
-          "set_name": "Juggernaut's Judgments",
-          "description": "Massive armor and weaponry designed for unstoppable force and overwhelming power in combat.",
-          "weapon": "Juggernaut's Greatsword"
-        },
-        "samurai": {
-          "set_name": "Samurai's Set",
-          "description": "Traditional eastern warrior armor emphasizing precision, honor, and deadly efficiency in battle.",
-          "weapon": "Katana"
-        },
-        "silver_moon": {
-          "set_name": "Moonlight's Set",
-          "description": "Mystical armor imbued with moonlight essence, offering both elegance and magical protection to its wearer.",
-          "armor": "Moonlight Scale Mail",
-          "boots": "Moonlight Boots",
-          "weapon": "Whisper of the Silver Moon"
-        },
-        "windcutter": {
-          "set_name": "Windcutter's Set",
-          "description": "Lightweight armor designed for incredible speed and precision strikes, harnessing the power of the wind.",
-          "helmet": "Gale Visor Helm",
-          "gloves": "Cyclone Strike Gauntlets",
-          "weapon": "Windcutter"
-        },
-        "elemental_powerfull": {
-          "set_name": "Elemental Power's Set",
-          "description": "Magical accessories imbued with the raw power of the elements, enhancing the wearer's connection to natural forces.",
-          "ring": "Elemental Powerfull Ring",
-          "amulet": "Elemental Powerfull Amulet"
-        },
-        "serpent_embrace": {
-          "set_name": "Serpent's Embrace Set",
-          "description": "Legendary armor crafted from ancient serpent scales, granting enhanced agility and mystical resilience.",
-          "helmet": "Helmet of the Constricting Serpent",
-          "armor": "Breastplate of Viper Scales",
-          "boots": "Silent Slither of the Snake",
-          "gloves": "Venomous Fang Gauntlets",
-          "weapon": "Serpent's Poison Tongue"
-        },
-        "frostbear_wrath": {
-          "set_name": "Frostbear's Wrath Set",
-          "description": "Arctic armor imbued with freezing power, capable of freezing anything it touches and enduring extreme cold.",
-          "helmet": "Glacier Bear Snout",
-          "armor": "Eternal Winter Fur",
-          "boots": "Freezing Roar Paws",
-          "gloves": "Cutting Ice Claws",
-          "amulet": "Silverfang Amulet"
-        },
-        "lost_king": {
-          "set_name": "Lost King's Regalia's Set",
-          "description": "Magnificent armor once belonging to a legendary ruler, imbued with ancient magic and unparalleled strength.",
-          "helmet": "Crown of the Forgotten Monarch",
-          "armor": "Torn Tunic of Lost Heritage",
-          "gloves": "Gauntlets of the Vanished Empire",
-          "weapon": "Blade of the Silent Throne",
-          "ring": "Signet of the Forgotten Kingdom",
-          "amulet": "Embalmed Heart of the Last King"
-        },
-        "demons_bane": {
-          "set_name": "Demon's Bane Set",
-          "description": "Celestial metal armor enchanted with holy runes, radiating divine light to vanquish demonic forces.",
-          "helmet": "Halo of the Divine Protector",
-          "armor": "Breastplate of Sacred Light",
-          "boots": "Greaves of Divine Protection",
-          "gloves": "Gauntlets of Righteous Fury",
-          "weapon": "Sword of the Celestial Guardian"
-        },
-        "sacred_crusader": {
-          "set_name": "Sacred Crusader's Set",
-          "description": "Blessed armor worn by holy warriors, radiating divine aura to protect the innocent and vanquish evil.",
-          "helmet": "Helm of the Holy Sentinel",
-          "armor": "Breastplate of Divine Justice",
-          "boots": "Greaves of Sacred Duty",
-          "amulet": "Pendant of the Faithful"
-        },
-        "solaris": {
-          "set_name": "Solaris Set",
-          "description": "Radiant golden armor capturing the sun's power, illuminating darkness and imbuing warmth and vitality.",
-          "helmet": "Mask of the Radiant Sun",
-          "armor": "Breastplate of Solar Flare",
-          "boots": "Greaves of Blazing Speed",
-          "gloves": "Gauntlets of Sunlit Fury",
-          "weapon": "Sword of the Eternal Dawn",
-          "ring": "Ring of the Sun's Core",
-          "amulet": "Amulet of the Sun Core"
-        },
-        "death_reaper": {
-          "set_name": "Death Reaper's Set",
-          "description": "Dark otherworldly armor embodying mortality, granting dominion over life and death itself.",
-          "helmet": "Reaper's Bone Helmet",
-          "armor": "Cloak of Lost Souls",
-          "boots": "Whispers of the Grave",
-          "gloves": "Herald's Bony Fingers",
-          "weapon": "Bone's Skull Mace",
-          "ring": "Death Ring"
-        }
-      },
-      "base_set_description": "A powerful piece of equipment from the {set_name} set.",
-      "types": {
-        "weapon": "Weapon",
-        "helmet": "Helmet",
-        "gloves": "Gloves",
-        "boots": "Boots",
-        "armor": "Armor",
-        "amulet": "Amulet",
-        "ring": "Ring"
-      }
-    },
-    "rarity": {
-      "common": "Common",
-      "uncommon": "Uncommon",
-      "rare": "Rare",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "mythical": "Mythical"
-    },
-    "rarity_prefix": {
-      "common": "",
-      "uncommon": "Improved",
-      "rare": "Superior",
-      "epic": "Epic",
-      "legendary": "Legendary",
-      "mythical": "Mythical"
-    },
-    "rarity_sufix": {
-      "common": "",
-      "uncommon": "",
-      "rare": "",
-      "epic": "",
-      "legendary": "",
-      "mythical": ""
-    },
-    "category": {
-      "consumables": "Consumables",
-      "loots": "Loots",
-      "quest": "Quest Item",
-      "equipments": "Equipments",
-      "miscellaneous": "Miscellaneous"
-    },
-    "subcategory": {
-      "potion": "Potion",
-      "weapon": "Weapons",
-      "armor": "Armors",
-      "amulet": "Amulet",
-      "ring": "Ring",
-      "accessory": "Accessory",
-      "food": "Food",
-      "resource": "Resource",
-      "gem": "Gem"
-    }
-  },
-  "ui": {
-    "id": "ID",
-    "level": "Level",
-    "level_required": "Level Required",
-    "rarity": "Rarity",
-    "category": "Category",
-    "sub_category": "Sub-Category",
-    "items": "Items",
-    "equipments": "Equipments",
-    "miscellaneous": "Miscellaneous",
-    "equip": "Equip",
-    "unequip": "Unequip",
-    "upgrade": "Upgrade",
-    "pieces": "pieces",
-    "empty_slot": "Empty Slot",
-    "gem_upgrade_ui_title": "Gem Upgrade",
-    "gem_upgrade_ui_subtitle": "Upgrading {gem} to {next_gem}.",
-    "gem_upgrade_ui_requeriments_label": "Requeriments",
-    "gem_equip_slots": "Can equip in",
-    "maximized": "Maximized",
-    "unique": "Unique",
-    "upgrade_gem": "Upgrade Gem",
-    "upgrage_gem_desc": "Upgrading {gem} to {next_gem}",
-    "rune_required": "Rune Required",
-    "price_required": "Price Required",
-    "insufficient_level": "Insufficient level",
-    "use": "Use",
-    "sell": "Sell",
-    "quick_sell": "Quick Sell",
-    "confirm": "Confirm",
-    "cancel": "Cancel",
-    "are_you_sure_sell": "Are you sure you want to sell {item}?",
-    "are_you_sure_upgrade": "Are you sure you want to upgrade {item}?",
-    "sell_price": "Sell Price",
-    "cannot_upgrade": "Cannot upgrade",
-    "no_attributes": "No Attributes",
-    "set_bonus": "Set Bonus",
-    "bonus": "Bonus",
-    "item_value": "Item value",
-    "stats": "Stats",
-    "offensive": "Offensive",
-    "defensive": "Defensive",
-    "knockback_resistance": "Knockback Resistance",
-    "knockback_force": "Knockback Force",
-    "reduction": "Reduction",
-    "increase": "Increase",
-    "normal": "Normal",
-    "attributes": "Attributes",
-    "health": "Health",
-    "health_regen": "Health Regen",
-    "mana": "Mana",
-    "mana_regen": "Mana Regen",
-    "energy": "Energy",
-    "energy_regen": "Energy Regen",
-    "defense": "Defense",
-    "damage": "Damage",
-    "critical_rate": "Critical Rate",
-    "critical_damage": "Critical Damage",
-    "attack_speed": "Attack Speed",
-    "move_speed": "Speed",
-    "bleed_hit_rate": "Bleed Hit Rate",
-    "poison_hit_rate": "Posion Hit Rate",
-    "exp_buff": "Additional Experience",
-    "experience": "Experience",
-    "effects": "Effects",
-    "poison": "Poison",
-    "poisoning": "Poisoning",
-    "bleed": "Bleed",
-    "bleeding": "Bleeding",
-    "stun": "Stun",
-    "stunned": "Stunned",
-    "inventory": "Inventory",
-    "sort": "Sort",
-    "close": "Close",
-    "open": "Open",
-    "refresh": "Refresh",
-    "new_game": "New Game",
-    "load_game": "Load Game",
-    "settigns": "Settings",
-    "exit": "Exit",
-    "language": "Language"
-  }
+	"game_name": "Knight Adventure",
+	"items": {
+		"potions": {
+			"names": {
+				"health": "Health Potion",
+				"mana": "Mana Potion",
+				"energy": "Energy Potion",
+				"defense": "Defense Potion",
+				"damage": "Damage Potion",
+				"critical_rate": "Critical Rate Potion",
+				"critical_damage": "Critical Damage Potion",
+				"attack_speed": "Attack Speed Potion",
+				"move_speed": "Speed Potion"
+			},
+			"base_descriptions": {
+				"health": "A red potion that instantly restores {amount} of health.",
+				"mana": "A blue potion that instantly restores {amount} of mana.",
+				"energy": "A green potion that instantly restores {amount} of energy.",
+				"defense": "A gray potion that increases defense by {amount}% for {duration} seconds.",
+				"damage": "An orange potion that increases damage by {amount}% for {duration} seconds.",
+				"critical_rate": "A purple potion that increases critical rate by {amount}% for {duration} seconds.",
+				"critical_damage": "A dark red potion that increases critical damage by {amount}% for {duration} seconds.",
+				"attack_speed": "A yellow potion that increases attack speed by {amount}% for {duration} seconds.",
+				"move_speed": "A light blue potion that increases movement speed by {amount}% for {duration} seconds."
+			}
+		},
+		"gems": {
+			"names": {
+				"health": "Health Gem",
+				"mana": "Mana Gem",
+				"energy": "Health Gem",
+				"defense": "Defense Gem",
+				"damage": "Damage Gem",
+				"critical_rate": "Critical Rate Gem",
+				"critical_damage": "Critical Damage Gem",
+				"attack_speed": "Attack Speed Gem",
+				"move_speed": "Speed Gem",
+				"health_regen": "Unique Life Gem",
+				"mana_regen": "Unique Power Gem",
+				"energy_regen": "Unique Energised Gem",
+				"exp_buff": "Unique Knowledge Gem"
+			},
+			"quality": {
+				"fragmented": "Fragmented",
+				"common": "Common",
+				"refined": "Refined",
+				"flawless": "Flawless",
+				"exquisite": "Exquisite",
+				"pristine": "Pristine"
+			},
+			"base_descriptions": {
+				"health": "A {quality} gem that increases maximum health.",
+				"mana": "A {quality} gem that increases maximum mana.",
+				"energy": "A {quality} gem that increases maximum energy.",
+				"defense": "A {quality} gem that increases defense.",
+				"damage": "A {quality} gem that increases damage.",
+				"critical_rate": "A {quality} gem that increases critical rate.",
+				"critical_damage": "A {quality} gem that increases critical damage.",
+				"attack_speed": "A {quality} gem that increases attack speed.",
+				"move_speed": "A {quality} gem that increases movement speed.",
+				"health_regen": "A unique gem that provides health regeneration over time.",
+				"mana_regen": "A unique gem that provides mana regeneration over time.",
+				"energy_regen": "A unique gem that provides energy regeneration over time.",
+				"exp_buff": "A unique gem that provides additional experience when defeating monsters or completing missions.",
+				"unique_gem": "It's a unique jewel that increses your base attribute value."
+			},
+			"unique_descriptions": {
+				"health_regen": "\"A pulsating gem with a bright red core that exudes comforting warmth. It is said to have been formed from the crystallized tears of a reborn phoenix. Its life-giving power continually restores the wearer's strength, like a heart that never stops beating.\"",
+				"mana_regen": "\"This deep blue gem contains swirls of arcane energy that slowly swirl within. Created during an astral convergence, it whispers cosmic secrets and channels the mystical currents of the universe to fuel the wearer's magical reserves.\"",
+				"energy_regen": "\"A shimmering green gem that seems to breathe with primordial energy. Forged in the core of an ancient meteorite, it emits a gentle vibration that revitalizes the body and mind, granting its possessor tireless vigor and supernatural agility.\"",
+				"exp_buff": "\"This translucent golden gem contains geometric patterns that constantly rearrange themselves, like an infinite puzzle. Legend has it that it was carved by the first celestial archivist, and its brilliance accelerates understanding of the world, transforming each experience into crystallized wisdom.\""
+			},
+			"alert_messages": {
+				"gem_upgrade_success": "Successfully! You upgraded {amount} {gem}.",
+				"gem_no_slots_free": "You don't have slots in your inventory to put new gem.",
+				"gem_upgrade_max_gem": "Can't upgrade this gem. It's reseached on max level.",
+				"gem_upgrade_no_money": "You don't have enought coins to upgrade this gem.",
+				"gem_upgrade_level_required": "You don't have required level to upgrade this gem.",
+				"gem_upgrade_no_runes": "You don't have enought runes to upgrade."
+			}
+		},
+		"runes": {
+			"names": {
+				"vitality": "Vitality Rune",
+				"essence": "Essence Rune",
+				"vigor": "Vigor Rune",
+				"protection": "Protection Rune",
+				"strength": "Strength Rune",
+				"precision": "Precision Rune",
+				"fury": "Fury Rune",
+				"swiftness": "Swiftness Rune",
+				"agility": "Agility Rune",
+				"special": "Special Rune"
+			},
+			"base_descriptions": {
+				"vitality": "Forged from the heart of ancient forest guardians. A rune that use to upgrade {gem_quality} Health Gems to {next_gem_quality}.",
+				"essence": "Crystallized from the tears of moon goddesses. A rune that use to upgrade {gem_quality} Mana Gems to {next_gem_quality}.",
+				"vigor": "Born from the first lightning of creation. A rune that use to upgrade {gem_quality} Energy Gems to {next_gem_quality}.",
+				"protection": "Tempered in the scales of mountain dragons. A rune that use to upgrade {gem_quality} Defense Gems to {next_gem_quality}.",
+				"strength": "Carved from the bones of fallen titans. A rune that use to upgrade {gem_quality} Damage Gems to {next_gem_quality}.",
+				"precision": "Polished by wind spirits over millennia. A rune that use to upgrade {gem_quality} Critical Rate gems to {next_gem_quality}.",
+				"fury": "Infused with the rage of volcanic eruptions. A rune that use to upgrade {gem_quality} Critical Damage gems to {next_gem_quality}.",
+				"swiftness": "Weaved from the threads of time itself. A rune that use to upgrade {gem_quality} Attack Speed gems to {next_gem_quality}.",
+				"agility": "Harvested from zephyr winds at dawn. A rune that use to upgrade {gem_quality} Move Speed gems to {next_gem_quality}.",
+				"special": "Crafted by forgotten star-smiths. A rune that use to upgrade {gem_quality} unique gems to {next_gem_quality}."
+			}
+		},
+		"equipments": {
+			"commons": {
+				"traveler": {
+					"set_name": "Traveler's Set",
+					"description": "\"Lightweight and flexible armor made from durable materials, offering essential protection for novice explorers venturing into unknown lands.\"",
+					"helmet": "Traveler's Hat",
+					"armor": "Traveler's Tunic",
+					"boots": "Traveler's Boots",
+					"gloves": "Traveler's Gloves",
+					"weapon": "Apprentice's Sword"
+				},
+				"leather": {
+					"set_name": "Leather Set",
+					"description": "\"Treated leather armor that enhances durability while maintaining flexibility, offering moderate defense for those who prefer speed and cunning over direct confrontation.\"",
+					"helmet": "Leather Cap",
+					"armor": "Leather Jerkin",
+					"boots": "Leather Boots",
+					"gloves": "Leather Gloves",
+					"weapon": "Long Sword"
+				},
+				"hunter": {
+					"set_name": "Hunter's Set",
+					"description": "\"Leather and reinforced fabric armor with camouflage patterns, providing excellent mobility and protection for hunting and reconnaissance missions.\"",
+					"helmet": "Hunter's Hood",
+					"armor": "Hunter's Vest",
+					"boots": "Hunter's Boots",
+					"gloves": "Hunter's Gloves",
+					"weapon": "Hunter's Dagger"
+				},
+				"bronze": {
+					"set_name": "Bronze Set",
+					"description": "\"Sturdy bronze plate armor reinforced with leather, offering reliable protection and mobility for various combat situations.\"",
+					"helmet": "Bronze Helm",
+					"armor": "Bronze Chestplate",
+					"boots": "Bronze Greaves",
+					"gloves": "Bronze Gauntlets",
+					"weapon": "Bronze Mace",
+					"ring": "Bronze Ring"
+				},
+				"iron": {
+					"set_name": "Iron Set",
+					"description": "\"Solid iron plate armor that withstands heavy blows, providing robust protection for frontline warriors and knights.\"",
+					"helmet": "Iron Helm",
+					"armor": "Iron Chestplate",
+					"boots": "Iron Greaves",
+					"gloves": "Iron Gauntlets",
+					"weapon": "Iron Double Axe"
+				},
+				"heavy": {
+					"set_name": "Heavy Set",
+					"description": "\"Reinforced steel armor offering maximum protection against powerful attacks, ideal for elite warriors facing overwhelming odds.\"",
+					"helmet": "Heavy Helm",
+					"armor": "Heavy Chestplate",
+					"boots": "Heavy Greaves",
+					"gloves": "Heavy Gauntlets",
+					"ring": "Silver Ring",
+					"weapon": "Heavy Sword",
+					"amulet": "Amulet of Fortitude"
+				},
+				"guardian": {
+					"set_name": "Guardian Set",
+					"description": "\"Enchanted steel and leather armor offering exceptional protection against physical and magical attacks for elite defenders.\"",
+					"helmet": "Guardian Helm",
+					"armor": "Guardian Chestplate",
+					"boots": "Guardian Greaves",
+					"gloves": "Guardian Gauntlets",
+					"weapon": "Guardian Sword",
+					"ring": "Ring of the Guardian",
+					"amulet": "Guardian's Amulet"
+				},
+				"noble_platinum": {
+					"set_name": "Noble Platinum Set",
+					"description": "\"Rare platinum alloy armor with brilliant polish, offering superior protection and symbolizing high status for noble warriors.\"",
+					"helmet": "Noble Platinum Helm",
+					"armor": "Noble Platinum Chestplate",
+					"boots": "Noble Platinum Sabatons",
+					"gloves": "Noble Platinum Gauntlets",
+					"weapon": "Gracefull Platinum Longsword",
+					"ring": "Ring of the Platinum Order",
+					"amulet": "Commander's Medallion"
+				},
+				"shadow_ebony": {
+					"set_name": "Shadow Ebony Set",
+					"description": "\"Dark ebony wood and steel armor designed for stealth and agility, favored by shadow warriors and assassins.\"",
+					"helmet": "Shadow Ebony Helm",
+					"armor": "Shadow Ebony Chestplate",
+					"boots": "Shadow Ebony Greaves",
+					"gloves": "Shadow Ebony Gauntlets",
+					"weapon": "Shadow Ebony Sword",
+					"ring": "Ring of the Hidden Passage",
+					"amulet": "Black Signet"
+				}
+			},
+			"uniques": {
+				"juggernout": {
+					"set_name": "Juggernaut's Judgments",
+					"description": "\"Massive armor and weaponry designed for unstoppable force and overwhelming power in combat.\"",
+					"weapon": "Juggernaut's Greatsword"
+				},
+				"samurai": {
+					"set_name": "Samurai's Set",
+					"description": "\"Traditional eastern warrior armor emphasizing precision, honor, and deadly efficiency in battle.\"",
+					"weapon": "Katana"
+				},
+				"silver_moon": {
+					"set_name": "Moonlight's Set",
+					"description": "\"Mystical armor imbued with moonlight essence, offering both elegance and magical protection to its wearer.\"",
+					"armor": "Moonlight Scale Mail",
+					"boots": "Moonlight Boots",
+					"weapon": "Whisper of the Silver Moon"
+				},
+				"windcutter": {
+					"set_name": "Windcutter's Set",
+					"description": "\"Lightweight armor designed for incredible speed and precision strikes, harnessing the power of the wind.\"",
+					"helmet": "Gale Visor Helm",
+					"gloves": "Cyclone Strike Gauntlets",
+					"weapon": "Windcutter"
+				},
+				"elemental_powerfull": {
+					"set_name": "Elemental Power's Set",
+					"description": "\"Magical accessories imbued with the raw power of the elements, enhancing the wearer's connection to natural forces.\"",
+					"ring": "Elemental Powerfull Ring",
+					"amulet": "Elemental Powerfull Amulet"
+				},
+				"serpent_embrace": {
+					"set_name": "Serpent's Embrace Set",
+					"description": "\"Legendary armor crafted from ancient serpent scales, granting enhanced agility and mystical resilience.\"",
+					"helmet": "Helmet of the Constricting Serpent",
+					"armor": "Breastplate of Viper Scales",
+					"boots": "Silent Slither of the Snake",
+					"gloves": "Venomous Fang Gauntlets",
+					"weapon": "Serpent's Poison Tongue"
+				},
+				"frostbear_wrath": {
+					"set_name": "Frostbear's Wrath Set",
+					"description": "\"Arctic armor imbued with freezing power, capable of freezing anything it touches and enduring extreme cold.\"",
+					"helmet": "Glacier Bear Snout",
+					"armor": "Eternal Winter Fur",
+					"boots": "Freezing Roar Paws",
+					"gloves": "Cutting Ice Claws",
+					"amulet": "Silverfang Amulet"
+				},
+				"lost_king": {
+					"set_name": "Lost King's Regalia's Set",
+					"description": "\"Magnificent armor once belonging to a legendary ruler, imbued with ancient magic and unparalleled strength.\"",
+					"helmet": "Crown of the Forgotten Monarch",
+					"armor": "Torn Tunic of Lost Heritage",
+					"gloves": "Gauntlets of the Vanished Empire",
+					"boots": "Steps of Fallen King",
+					"weapon": "Blade of the Silent Throne",
+					"ring": "Signet of the Forgotten Kingdom",
+					"amulet": "Embalmed Heart of the Last King"
+				},
+				"demons_bane": {
+					"set_name": "Demon's Bane Set",
+					"description": "\"Celestial metal armor enchanted with holy runes, radiating divine light to vanquish demonic forces.\"",
+					"helmet": "Halo of the Divine Protector",
+					"armor": "Breastplate of Sacred Light",
+					"boots": "Greaves of Divine Protection",
+					"gloves": "Gauntlets of Righteous Fury",
+					"weapon": "Sword of the Celestial Guardian"
+				},
+				"sacred_crusader": {
+					"set_name": "Sacred Crusader's Set",
+					"description": "\"Blessed armor worn by holy warriors, radiating divine aura to protect the innocent and vanquish evil.\"",
+					"helmet": "Helm of the Holy Sentinel",
+					"armor": "Breastplate of Divine Justice",
+					"boots": "Greaves of Sacred Duty",
+					"amulet": "Pendant of the Faithful"
+				},
+				"solaris": {
+					"set_name": "Solaris Set",
+					"description": "\"Radiant golden armor capturing the sun's power, illuminating darkness and imbuing warmth and vitality.\"",
+					"helmet": "Mask of the Radiant Sun",
+					"armor": "Breastplate of Solar Flare",
+					"boots": "Greaves of Blazing Speed",
+					"gloves": "Gauntlets of Sunlit Fury",
+					"weapon": "Axe of the Eternal Dawn",
+					"ring": "Ring of the Sun's Core",
+					"amulet": "Amulet of the Sun Core"
+				},
+				"death_reaper": {
+					"set_name": "Death Reaper's Set",
+					"description": "\"Dark otherworldly armor embodying mortality, granting dominion over life and death itself.\"",
+					"helmet": "Reaper's Bone Helmet",
+					"armor": "Cloak of Lost Souls",
+					"boots": "Whispers of the Grave",
+					"gloves": "Herald's Bony Fingers",
+					"weapon": "Bone's Skull Mace",
+					"ring": "Death Ring"
+				}
+			},
+			"base_set_description": "A powerful piece of equipment from the {set_name} set.",
+			"types": {
+				"weapon": "Weapon",
+				"helmet": "Helmet",
+				"gloves": "Gloves",
+				"boots": "Boots",
+				"armor": "Armor",
+				"amulet": "Amulet",
+				"ring": "Ring"
+			}
+		},
+		"rarity": {
+			"common": "Common",
+			"uncommon": "Uncommon",
+			"rare": "Rare",
+			"epic": "Epic",
+			"legendary": "Legendary",
+			"mythical": "Mythical"
+		},
+		"rarity_prefix": {
+			"common": "",
+			"uncommon": "Improved",
+			"rare": "Superior",
+			"epic": "Epic",
+			"legendary": "Legendary",
+			"mythical": "Mythical"
+		},
+		"rarity_sufix": {
+			"common": "",
+			"uncommon": "",
+			"rare": "",
+			"epic": "",
+			"legendary": "",
+			"mythical": ""
+		},
+		"category": {
+			"consumables": "Consumables",
+			"loots": "Loots",
+			"quest": "Quest Item",
+			"equipments": "Equipments",
+			"miscellaneous": "Miscellaneous"
+		},
+		"subcategory": {
+			"potion": "Potion",
+			"weapon": "Weapons",
+			"armor": "Armors",
+			"amulet": "Amulet",
+			"ring": "Ring",
+			"accessory": "Accessory",
+			"food": "Food",
+			"resource": "Resource",
+			"gem": "Gem"
+		}
+	},
+	"npcs": {
+		"blacksmith": {
+			"name": "Blacksmith",
+			"dialogs": {
+				"questing": [],
+				"greetings": [
+					"“So... another adventurer seeking the perfect blade to face the darkness? Or did you just come to warm yourself by the fire?”",
+					"“Be careful what you touch. Everything here burns... or cuts.”",
+					"“I don't have time to waste. Speak up. What brings you to my forge?”"
+				],
+				"exiting": [
+					"“Don't linger at the door. The night wind brings things that even my fire cannot drive away.”",
+					"“Whatever you need, come back. My forge will always be hot.”",
+					"“Beware of the shadows outside. They chew steel... and bones.”"
+				],
+				"buying_selling": [
+					"“Let's get down to business. My blades cut through flesh and soul. Choose wisely.”",
+					"“Iron bleeds, steel screams... every piece here has its price. And its story. What interests you?”",
+					"“I can sell you what I have, or buy the junk you carry... if it's worth anything.”"
+				],
+				"after_buying": [
+					"“That one... she's already drunk demon blood. I hope you're up to the task.”",
+					"“A good choice. May she keep you alive long enough to pay me the rest.”"
+				],
+				"after_selling": [
+					"“Hmm. Weak iron. But it can be melted down and turned into something better... maybe.”",
+					"*Chuckling* “You stole that from a corpse, didn't you? Don't answer me. I don't want to know.”"
+				]
+			}
+		}
+	},
+	"ui": {
+		"id": "ID",
+		"level": "Level",
+		"level_required": "Level Required",
+		"rarity": "Rarity",
+		"category": "Category",
+		"sub_category": "Sub-Category",
+		"items": "Items",
+		"equipments": "Equipments",
+		"miscellaneous": "Miscellaneous",
+		"equip": "Equip",
+		"unequip": "Unequip",
+		"upgrade": "Upgrade",
+		"pieces": "pieces",
+		"empty_slot": "Empty Slot",
+		"power": "Power",
+		"equipment_gem_socket_ui": "Equipments Sockets",
+		"gem_upgrade_ui_title": "Gem Upgrade",
+		"gem_upgrade_ui_subtitle": "Upgrading {gem} to {next_gem}.",
+		"gem_upgrade_ui_requeriments_label": "Requeriments",
+		"gem_equip_slots": "Can equip in",
+		"maximized": "Maximized",
+		"unique": "Unique",
+		"upgrade_gem": "Upgrade Gem",
+		"upgrage_gem_desc": "Upgrading {gem} to {next_gem}",
+		"rune_required": "Rune Required",
+		"price_required": "Price Required",
+		"insufficient_level": "Insufficient level",
+		"use": "Use",
+		"sell": "Sell",
+		"quick_sell": "Quick Sell",
+		"confirm": "Confirm",
+		"cancel": "Cancel",
+		"are_you_sure_sell": "Are you sure you want to sell {item}?",
+		"are_you_sure_upgrade": "Are you sure you want to upgrade {item}?",
+		"sell_price": "Sell Price",
+		"cannot_upgrade": "Cannot upgrade",
+		"no_attributes": "No Attributes",
+		"set_bonus": "Set Bonus",
+		"bonus": "Bonus",
+		"item_value": "Item value",
+		"stats": "Stats",
+		"offensive": "Offensive",
+		"defensive": "Defensive",
+		"knockback_resistance": "Knockback Resistance",
+		"knockback_force": "Knockback Force",
+		"reduction": "Reduction",
+		"increase": "Increase",
+		"normal": "Normal",
+		"attributes": "Attributes",
+		"health": "Health",
+		"health_regen": "Health Regen",
+		"mana": "Mana",
+		"mana_regen": "Mana Regen",
+		"energy": "Energy",
+		"energy_regen": "Energy Regen",
+		"defense": "Defense",
+		"damage": "Damage",
+		"critical_rate": "Critical Rate",
+		"critical_damage": "Critical Damage",
+		"attack_speed": "Attack Speed",
+		"move_speed": "Speed",
+		"bleed_hit_rate": "Bleed Hit Rate",
+		"poison_hit_rate": "Posion Hit Rate",
+		"exp_buff": "Additional Experience",
+		"experience": "Experience",
+		"effects": "Effects",
+		"poison": "Poison",
+		"poisoning": "Poisoning",
+		"bleed": "Bleed",
+		"bleeding": "Bleeding",
+		"stun": "Stun",
+		"stunned": "Stunned",
+		"inventory": "Inventory",
+		"sort": "Sort",
+		"close": "Close",
+		"open": "Open",
+		"refresh": "Refresh",
+		"buy_sell": "Buy/Sell",
+		"new_game": "New Game",
+		"load_game": "Load Game",
+		"settigns": "Settings",
+		"exit": "Exit",
+		"language": "Language",
+		"alerts": {
+			"no_space_in_inventory": "You don't have free spaces in inventory."
+		}
+	}
 }

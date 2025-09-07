@@ -1,9 +1,6 @@
 class_name PotionItem
 extends Item
 
-const POTION_RESOURCE_NAMES := ItemAttribute.ATTRIBUTE_NAMES
-const POTION_ATTRIBUTE_KEYS := ItemAttribute.ATTRIBUTE_KEYS
-
 const POTION_WEIGHTS := {
 	ItemAttribute.TYPE.HEALTH: 60, # 60% de chance
 	ItemAttribute.TYPE.MANA: 15, # 15% de chance
@@ -27,8 +24,6 @@ const BASE_POTION_VALUE = 100
 
 
 func _init() -> void:
-	#setup()
-	#setup_texture()
 	pass
 
 
@@ -44,7 +39,7 @@ func setup(enemy_stats: EnemyStats) -> void:
 	self.spawn_chance = calculate_potion_spawn_chance()
 	self.item_action = setup_potion_action()
 	self.item_name = set_potion_name()
-	self.item_description = setup_potion_description()
+	self.item_descriptions = setup_potion_description()
 	self.item_id = generate_potion_id()
 	self.item_price = calculate_item_price(BASE_POTION_VALUE)
 
@@ -93,7 +88,7 @@ func calculate_potion_spawn_chance() -> float:
 
 
 func generate_potion_id() -> String:
-	var potion_resource_name = str(POTION_RESOURCE_NAMES.get(potion_type, "UNKNOWN")).to_upper()
+	var potion_resource_name = ItemAttribute.ATTRIBUTE_NAMES.get(potion_type, "UNKNOWN")
 	var rarity_name = Item.get_rarity_text(self.item_rarity)
 	var level_str = str("L", self.item_level)
 	return generate_item_id(["POTION", potion_resource_name, rarity_name, level_str])
@@ -117,29 +112,30 @@ func get_random_potion_type() -> ItemAttribute.TYPE:
 
 
 func set_potion_name() -> String:
-	var potion_key = POTION_ATTRIBUTE_KEYS[potion_type].to_lower()
+	var potion_key = ItemAttribute.ATTRIBUTE_KEYS[potion_type].to_lower()
 	var base_name = LocalizationManager.get_potion_name_text(potion_key)
 	var rarity_prefix = Item.get_rarity_prefix_text(item_rarity)
 	var rarity_sufix = Item.get_rarity_sufix_text(item_rarity)
 	return "%s %s %s" % [rarity_prefix, base_name, rarity_sufix]
 
 
-func setup_potion_description() -> String:
-	var potion_type_name = POTION_ATTRIBUTE_KEYS.get(potion_type, "unknown")
-	var description = LocalizationManager.get_potion_base_description_text(potion_type_name)
-
+func setup_potion_description() -> Array[String]:
+	var potion_type_name = ItemAttribute.ATTRIBUTE_KEYS.get(potion_type, "unknown")
+	var base_description = LocalizationManager.get_potion_base_description_text(potion_type_name)
 	var params = {"amount": item_action.attribute.value, "duration": item_action.duration}
-
-	description = LocalizationManager.format_text_with_params(description, params)
-
-	return description
+	base_description = LocalizationManager.format_text_with_params(base_description, params)
+	return [base_description]
 
 
 func calculate_instant_amount() -> float:
 	var base_multiply = 1.0 if potion_type == ItemAttribute.TYPE.ENERGY else 5.0
 
 	# Valores base para poção nível 1 comum
-	var base_values = {ItemAttribute.TYPE.HEALTH: 600.0, ItemAttribute.TYPE.MANA: 10.0, ItemAttribute.TYPE.ENERGY: 15.0}
+	var base_values = {
+		ItemAttribute.TYPE.HEALTH: 300.0,
+		ItemAttribute.TYPE.MANA: 10.0,
+		ItemAttribute.TYPE.ENERGY: 15.0
+	}
 
 	# Multiplicadores por nível (cada +10 níveis dobra o valor aproximadamente)
 	var level_multiplier = 1.0 + (item_level / float(LEVEL_INTERVAL)) * base_multiply
@@ -212,8 +208,7 @@ func calculate_potion_level(enemy_level: int) -> int:
 
 func setup_potion_action() -> ItemAction:
 	var action = ItemAction.new()
-	var attribute_type = POTION_ATTRIBUTE_KEYS.get(self.potion_type, "")
-	var attribute = ItemAttribute.new(attribute_type, 0)
+	var attribute = ItemAttribute.new(potion_type, 0)
 
 	# Define se é instantâneo ou buff
 	if potion_type in [ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.MANA, ItemAttribute.TYPE.ENERGY]:
@@ -229,47 +224,20 @@ func setup_potion_action() -> ItemAction:
 
 
 func setup_texture() -> void:
-	var potion_resource_name = get_potion_attribute_key(potion_type)
+	var resource_key = ItemAttribute.ATTRIBUTE_KEYS.get(potion_type)
 	var potion_rank = get_potion_rank()
-
-	var file_path = str("res://assets/sprites/items/potions/" + potion_resource_name + potion_rank + ".png")
-	var basic_path = "res://assets/sprites/items/potions/%s_potion_01.png" % get_potion_attribute_key(potion_type)
-	var resource_key = get_potion_attribute_key(potion_type)
-	var texture = load_texture_with_fallback(file_path, basic_path, resource_key)
+	var base_path = "res://assets/sprites/items/potions/%s_potion_%s.png" % [resource_key, potion_rank]
+	var texture = load_texture_with_fallback(base_path, base_path, resource_key)
 	self.item_texture = texture
 
 
 func get_potion_rank() -> String:
 	if item_level >= 60:
-		return "_potion_03"
+		return "03"
 	elif item_level >= 30:
-		return "_potion_02"
+		return "02"
 	else:
-		return "_potion_01"
-
-
-static func get_potion_attribute_key(potion_res: ItemAttribute.TYPE) -> String:
-	match potion_res:
-		ItemAttribute.TYPE.HEALTH:
-			return "health"
-		ItemAttribute.TYPE.MANA:
-			return "mana"
-		ItemAttribute.TYPE.ENERGY:
-			return "energy"
-		ItemAttribute.TYPE.DEFENSE:
-			return "defense"
-		ItemAttribute.TYPE.DAMAGE:
-			return "damage"
-		ItemAttribute.TYPE.CRITICAL_RATE:
-			return "critical_rate"
-		ItemAttribute.TYPE.CRITICAL_DAMAGE:
-			return "critical_damage"
-		ItemAttribute.TYPE.ATTACK_SPEED:
-			return "attack_speed"
-		ItemAttribute.TYPE.MOVE_SPEED:
-			return "move_speed"
-		_:
-			return ""
+		return "01"
 
 
 static func sort_by_type(a: PotionItem, b: PotionItem, mode := "ASC"):

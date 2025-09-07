@@ -5,6 +5,7 @@ signal health_changed(health: float)
 signal trigged_dead(exp_amount: float)
 
 enum ENEMY_TYPE { MOB, MINIBOSS, BOSS }
+enum RACE { BATS, SKELETONS, ORCS }
 
 const MAX_CRITICAL_RATE := 100.0  # 100% máximo
 const MAX_CRITICAL_DAMAGE := 300.0  # 300% máximo
@@ -39,7 +40,7 @@ const SPEED := 100.0
 ## Default is 10.0, it will increment per level and difficult.
 @export var base_experience := 10.0
 ## Base of number of loots can be spawnable
-@export var base_num_drops: int = 1
+@export var base_num_drops: int = 10
 ## Base Defense
 @export var base_defense := 1.0
 
@@ -88,7 +89,7 @@ var bleed_duration: float = 0.0
 
 var current_health_points: float = 0.0
 var num_drops := 0
-var num_of_coins := 0
+var amount_coins := 0
 
 func _init() -> void:
 	pass
@@ -121,8 +122,8 @@ func _ready() -> void:
 	self.max_attack_damage = max(base_max_damage * (damage_factor * stats_mod_factor), 1)
 
 	# Calcula stats de velocidade
-	self.attack_speed = clamp(base_attack_speed * stats_mod_factor, 1.0, 2.0)
-	self.move_speed = SPEED * clamp(base_move_speed * stats_mod_factor, base_move_speed, base_move_speed * 2.0)
+	self.attack_speed = clamp(base_attack_speed * stats_mod_factor * level_factor * 0.02, 1.0, 2.0)
+	self.move_speed = SPEED * clamp(base_move_speed * stats_mod_factor * level_factor * 0.02, base_move_speed, base_move_speed * 2.0)
 
 	# Fórmulas balanceadas para CRITICAL RATE e CRITICAL DAMAGE
 	calculate_critical_stats(level_factor, stats_mod_factor)
@@ -138,8 +139,8 @@ func _ready() -> void:
 	self.experience = max(1, base_experience * exp_factor * stats_mod_factor)
 
 	# Número Drops
-	self.num_drops = calculate_amount_drops(difficultty)
-	self.num_of_coins = calculate_num_of_coins()
+	self.num_drops = calculate_amount_drops()
+	self.amount_coins = calculate_num_of_coins()
 
 #endregion
 
@@ -154,22 +155,20 @@ func generate_base_factor() -> float:
 			return 1.0
 
 
-func calculate_amount_drops(difficultty: GameEvents.DIFFICULTY) -> int:
-	var value: int = 10
-	var difficulty_multiply: float = GameEvents.get_drop_modificator_by_difficult(difficultty)
+func calculate_amount_drops() -> int:
+	var difficulty_multiply: float = GameEvents.get_drop_modificator_by_difficult()
 	var level_factor = clampi(level / 10, 1, 10)
-	value += max(roundi(difficulty_multiply * level_factor), 1)
-
-	return value
+	var amount_drops = base_num_drops + maxi(difficulty_multiply * level_factor, 1)
+	return amount_drops
 
 
 func calculate_num_of_coins() -> int:
 	var base_amount = 1
-	
+	var difficulty_factor = 1.0 + GameEvents.get_drop_modificator_by_difficult()
 	var level_factor = ceili(1 + (self.level * 0.25))
-	var type_factor = 1 * enemy_type
-	
-	return base_amount + (level_factor * type_factor) 
+	var type_factor = 1 + (enemy_type * 1.0)
+	var _amount_coins = base_amount + ceili(level_factor * type_factor * difficulty_factor)
+	return _amount_coins
 
 func calculate_critical_stats(level_factor: float, difficulty_factor: float) -> void:
 	# Critical Rate - escala suavemente até o máximo

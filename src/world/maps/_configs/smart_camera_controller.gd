@@ -4,8 +4,8 @@ extends Node2D
 @onready var start_marker: Marker2D = $StartMarker
 @onready var end_marker: Marker2D = $EndMarker
 
-@export var left_marker_position := Vector2.ZERO
-@export var right_marker_position := Vector2.ZERO
+@export var left_marker_position := Vector2(0, 360)
+@export var right_marker_position := Vector2(1280, 360)
 @export var default_margins: Vector2 = Vector2(200, 100)
 @export var limit_bottom: float = 1000.0
 

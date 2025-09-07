@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=3 uid="uid://cjuc0cljmt5pw"]
+
+[ext_resource type="Script" uid="uid://d1gvkky78icag" path="res://src/actors/npcs/blacksmith/npc_blacksmith.gd" id="1_355hk"]
+[ext_resource type="Texture2D" uid="uid://cg7sxuw0kqd52" path="res://assets/sprites/entities/npcs/blacksmith.png" id="1_yux4x"]
+[ext_resource type="PackedScene" uid="uid://byr2mw2xosb8c" path="res://src/ui/interact_label/interact_label.tscn" id="3_blonl"]
+[ext_resource type="PackedScene" uid="uid://uyf6ebm3ykmf" path="res://src/actors/npcs/ui/npc_interface.tscn" id="5_fvauq"]
+[ext_resource type="PackedScene" uid="uid://duy21k5fasp13" path="res://src/actors/npcs/dialog_ballon.tscn" id="5_gbyye"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_355hk"]
+size = Vector2(64, 112)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_riww4"]
+size = Vector2(256, 144)
+
+[node name="NPC_Blacksmith" type="Node2D" node_paths=PackedStringArray("interact_area", "player_detection_area", "interact_label", "dialog_ballon", "npc_interface")]
+script = ExtResource("1_355hk")
+npc_name = "Blacksmith"
+interact_area = NodePath("InteractArea")
+player_detection_area = NodePath("PlayerDetectionArea")
+interact_label = NodePath("InteractLabel")
+dialog_ballon = NodePath("DialogBallon")
+npc_interface = NodePath("NPCInterface")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_yux4x")
+offset = Vector2(0, -106)
+
+[node name="InteractArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 128
+collision_mask = 8
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+position = Vector2(0, -40)
+shape = SubResource("RectangleShape2D_355hk")
+debug_color = Color(0, 0.273505, 0.323658, 0.42)
+
+[node name="InteractLabel" parent="." instance=ExtResource("3_blonl")]
+visible = false
+offset_top = -126.0
+offset_bottom = -114.0
+text = "Interact"
+
+[node name="PlayerDetectionArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 128
+collision_mask = 8
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionArea"]
+position = Vector2(0, -56)
+shape = SubResource("RectangleShape2D_riww4")
+metadata/_edit_lock_ = true
+
+[node name="DialogBallon" parent="." instance=ExtResource("5_gbyye")]
+offset_top = -160.0
+offset_bottom = -127.0
+dialog = "“Whatever you need, come back. My forge will always be hot.”"
+
+[node name="NPCInterface" parent="." instance=ExtResource("5_fvauq")]

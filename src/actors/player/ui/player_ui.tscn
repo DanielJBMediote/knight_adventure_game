@@ -15,4 +15,3 @@ script = ExtResource("1_7bq4i")
 [node name="PlayerQuickSlotbar" parent="." instance=ExtResource("4_s50b6")]
 
 [node name="InventoryUI" parent="." instance=ExtResource("2_7bq4i")]
-visible = false

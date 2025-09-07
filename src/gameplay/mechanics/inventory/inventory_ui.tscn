@@ -7,7 +7,7 @@
 [ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="5_ua31u"]
 [ext_resource type="PackedScene" uid="uid://cvbmrrputn3w6" path="res://src/gameplay/mechanics/inventory/currency/currency_info_ui.tscn" id="6_p32c0"]
 [ext_resource type="PackedScene" uid="uid://cf0qdgwe72vtp" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_and_equips_panel.tscn" id="6_ua31u"]
-[ext_resource type="PackedScene" uid="uid://b17ivcxpr6qu2" path="res://src/gameplay/mechanics/inventory/inventory_slots_panel/inventory_slots_panel.tscn" id="7_ua31u"]
+[ext_resource type="PackedScene" uid="uid://b17ivcxpr6qu2" path="res://src/gameplay/mechanics/inventory/inventory_slots/inventory_slots_panel_ui.tscn" id="7_ua31u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_un16p"]
 atlas = ExtResource("3_ua31u")
@@ -48,7 +48,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.784314)
+color = Color(0, 0, 0, 0.882353)
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
@@ -151,10 +151,10 @@ size_flags_vertical = 3
 theme_override_constants/separation = 16
 metadata/_edit_use_anchors_ = true
 
-[node name="StatsAndEquipsPanel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer" instance=ExtResource("6_ua31u")]
+[node name="StatsAndEquipsUI" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer" instance=ExtResource("6_ua31u")]
 layout_mode = 2
 
-[node name="InventorySlotsPanel" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer" instance=ExtResource("7_ua31u")]
+[node name="InventorySlotsUI" parent="MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer" instance=ExtResource("7_ua31u")]
 layout_mode = 2
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/CloseInventoryButton" to="." method="_on_close_inventory_button_pressed"]

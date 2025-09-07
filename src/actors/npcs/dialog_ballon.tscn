@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://duy21k5fasp13"]
+
+[ext_resource type="Script" uid="uid://gr0823ofks1n" path="res://src/actors/npcs/dialog_ballon.gd" id="1_bl8xt"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="1_de1gn"]
+
+[node name="DialogBallon" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -128.0
+offset_top = -67.0
+offset_right = 128.0
+offset_bottom = -35.0
+grow_vertical = 0
+script = ExtResource("1_bl8xt")
+timer_before_exit = 2.0
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+metadata/_edit_lock_ = true
+
+[node name="DialogText" type="Label" parent="MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_fonts/font = ExtResource("1_de1gn")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true

@@ -77,98 +77,120 @@ func unequip(equipment: EquipmentItem) -> bool: # Retornar bool para sucesso
 			return false
 	return false
 
+# player_equipments.gd (métodos atualizados)
 
 func apply_equipment_stats(equipment: EquipmentItem) -> void:
 	if not equipment:
 		return
-		
-	if equipment.equipment_type == EquipmentItem.TYPE.WEAPON:
-		PlayerStats.update_min_damage(equipment.damage.min_value)
-		PlayerStats.update_max_damage(equipment.damage.max_value)
-	else:
-		PlayerStats.update_defense(equipment.defense.value)
-
+	
+	# Remove todos os atributos (incluindo bônus de set que serão recalculados)
+	remove_all_set_bonuses()
+	remove_base_equipment_stats(equipment)
+	
+	# Reaplica os bônus de set (recalculados após a remoção do equipamento)
 	var all_attributes = equipment.get_all_attributes()
-	var bonus_attributes = get_set_bonus_Attributes()
-	for attr in bonus_attributes:
-		print("Bônus de Set Ativo: +", attr.value, " ", attr.attribute_name)
-
-	# Processa todos os atributos de uma vez
-	for attribute in all_attributes:
-		match attribute.type:
-			ItemAttribute.TYPE.HEALTH:
-				PlayerStats.update_max_health(attribute.value)
-			ItemAttribute.TYPE.MANA:
-				PlayerStats.update_max_mana(attribute.value)
-			ItemAttribute.TYPE.DAMAGE:
-				PlayerStats.update_min_damage(attribute.value)
-				PlayerStats.update_max_damage(attribute.value)
-			ItemAttribute.TYPE.DEFENSE:
-				PlayerStats.update_defense(attribute.value)
-			ItemAttribute.TYPE.CRITICAL_RATE:
-				PlayerStats.update_critical_rate(attribute.value)
-			ItemAttribute.TYPE.CRITICAL_DAMAGE:
-				PlayerStats.update_critical_damage(attribute.value)
-			ItemAttribute.TYPE.ATTACK_SPEED:
-				PlayerStats.update_attack_speed(attribute.value)
-			ItemAttribute.TYPE.MOVE_SPEED:
-				PlayerStats.update_move_speed(attribute.value)
-			ItemAttribute.TYPE.ENERGY:
-				PlayerStats.update_max_energy(attribute.value)
-			ItemAttribute.TYPE.ENERGY_REGEN:
-				PlayerStats.update_energy_regen(attribute.value)
-			ItemAttribute.TYPE.HEALTH_REGEN:
-				PlayerStats.update_health_regen(attribute.value)
-			ItemAttribute.TYPE.MANA_REGEN:
-				PlayerStats.update_mana_regen(attribute.value)
-
-			
-	# Atualiza a UI com um único evento
+	apply_attributes_to_stats(all_attributes, 1.0)
+	apply_base_equipment_stats(equipment)
+	apply_all_set_bonuses()
+	
 	PlayerStats.emit_attributes_changed()
 
 func remove_equipment_stats(equipment: EquipmentItem) -> void:
 	if not equipment:
 		return
+
+	# Remove todos os atributos (incluindo bônus de set que serão recalculados)
+	remove_all_set_bonuses()
+	remove_base_equipment_stats(equipment)
 	
+	# Reaplica os bônus de set (recalculados após a remoção do equipamento)
+	var all_attributes = equipment.get_all_attributes()
+	apply_attributes_to_stats(all_attributes, -1.0)
+	apply_base_equipment_stats(equipment)
+	apply_all_set_bonuses()
+	
+	
+	PlayerStats.emit_attributes_changed()
+
+# Método auxiliar para aplicar stats base do equipamento
+func apply_base_equipment_stats(equipment: EquipmentItem) -> void:
+	if equipment.equipment_type == EquipmentItem.TYPE.WEAPON:
+		PlayerStats.update_min_damage(equipment.damage.min_value)
+		PlayerStats.update_max_damage(equipment.damage.max_value)
+	else:
+		PlayerStats.update_defense_points(equipment.defense.value)
+
+# Método auxiliar para remover stats base do equipamento
+func remove_base_equipment_stats(equipment: EquipmentItem) -> void:
 	if equipment.equipment_type == EquipmentItem.TYPE.WEAPON:
 		PlayerStats.update_min_damage(-equipment.damage.min_value)
 		PlayerStats.update_max_damage(-equipment.damage.max_value)
 	else:
-		PlayerStats.update_defense(-equipment.defense.value)
-	
-	# Processa todos os atributos de uma vez (subtraindo)
-	for attribute in equipment.get_all_attributes():
-		match attribute.type:
-			ItemAttribute.TYPE.HEALTH:
-				PlayerStats.update_max_health(-attribute.value)
-			ItemAttribute.TYPE.MANA:
-				PlayerStats.update_max_mana(-attribute.value)
-			ItemAttribute.TYPE.DAMAGE:
-				PlayerStats.update_min_damage(-attribute.value)
-				PlayerStats.update_max_damage(-attribute.value)
-			ItemAttribute.TYPE.DEFENSE:
-				PlayerStats.update_defense(-attribute.value)
-			ItemAttribute.TYPE.CRITICAL_RATE:
-				PlayerStats.update_critical_rate(-attribute.value)
-			ItemAttribute.TYPE.CRITICAL_DAMAGE:
-				PlayerStats.update_critical_damage(-attribute.value)
-			ItemAttribute.TYPE.ATTACK_SPEED:
-				PlayerStats.update_attack_speed(-attribute.value)
-			ItemAttribute.TYPE.MOVE_SPEED:
-				PlayerStats.update_move_speed(-attribute.value)
-			ItemAttribute.TYPE.ENERGY:
-				PlayerStats.update_max_energy(-attribute.value)
-			ItemAttribute.TYPE.ENERGY_REGEN:
-				PlayerStats.update_energy_regen(-attribute.value)
-			ItemAttribute.TYPE.HEALTH_REGEN:
-				PlayerStats.update_health_regen(-attribute.value)
-			ItemAttribute.TYPE.MANA_REGEN:
-				PlayerStats.update_mana_regen(-attribute.value)
-	
-	PlayerStats.emit_attributes_changed()
+		PlayerStats.update_defense_points(-equipment.defense.value)
+
+func apply_all_set_bonuses() -> void:
+	var bonus_attributes = get_set_bonus_attributes()
+	apply_attributes_to_stats(bonus_attributes, 1.0)
+
+func remove_all_set_bonuses() -> void:
+	var bonus_attributes = get_set_bonus_attributes()
+	apply_attributes_to_stats(bonus_attributes, -1.0)
+
+# Método genérico para aplicar/remover atributos
+func apply_attributes_to_stats(attributes: Array[ItemAttribute], multiplier: float) -> void:
+	for attribute in attributes:
+		var value = attribute.value * multiplier
+		apply_single_attribute(attribute.type, value)
+
+# Método para aplicar um único atributo
+func apply_single_attribute(attribute_type: ItemAttribute.TYPE, value: float) -> void:
+	match attribute_type:
+		ItemAttribute.TYPE.HEALTH:
+			PlayerStats.update_max_health(value)
+		ItemAttribute.TYPE.MANA:
+			PlayerStats.update_max_mana(value)
+		ItemAttribute.TYPE.DAMAGE:
+			PlayerStats.update_min_damage(value)
+			PlayerStats.update_max_damage(value)
+		ItemAttribute.TYPE.DEFENSE:
+			PlayerStats.update_defense_points(value)
+		ItemAttribute.TYPE.CRITICAL_RATE:
+			PlayerStats.update_critical_rate(value)
+		ItemAttribute.TYPE.CRITICAL_DAMAGE:
+			PlayerStats.update_critical_damage(value)
+		ItemAttribute.TYPE.ATTACK_SPEED:
+			PlayerStats.update_attack_speed(value)
+		ItemAttribute.TYPE.MOVE_SPEED:
+			PlayerStats.update_move_speed(value)
+		ItemAttribute.TYPE.ENERGY:
+			PlayerStats.update_max_energy(value)
+		ItemAttribute.TYPE.ENERGY_REGEN:
+			PlayerStats.update_energy_regen(value)
+		ItemAttribute.TYPE.HEALTH_REGEN:
+			PlayerStats.update_health_regen(value)
+		ItemAttribute.TYPE.MANA_REGEN:
+			PlayerStats.update_mana_regen(value)
+		ItemAttribute.TYPE.POISON_HIT_RATE:
+			PlayerStats.update_poison_rate(value)
+		ItemAttribute.TYPE.BLEED_HIT_RATE:
+			PlayerStats.update_bleed_rate(value)
+		ItemAttribute.TYPE.EXP_BUFF:
+			PlayerStats.update_exp_buff(value)
+		# ItemAttribute.TYPE.GOLD_FIND:
+		# 	PlayerStats.update_gold_find(value)
+		# ItemAttribute.TYPE.ITEM_FIND:
+		# 	PlayerStats.update_item_find(value)
+		# ItemAttribute.TYPE.DAMAGE_REDUCTION:
+		# 	PlayerStats.update_damage_reduction(value)
+		# ItemAttribute.TYPE.SLOW_EFFECT:
+		# 	PlayerStats.update_slow_effect(value)
+		# ItemAttribute.TYPE.SPELL_POWER:
+		# 	PlayerStats.update_spell_power(value)
+		# ItemAttribute.TYPE.ALL_STATS:
+		# 	PlayerStats.update_all_stats(value)
 
 
-func get_set_bonus_Attributes() -> Array[ItemAttribute]:
+func get_set_bonus_attributes() -> Array[ItemAttribute]:
 	var set_counts: Dictionary = {}
 	var all_bonuses: Array[ItemAttribute] = []
 	
@@ -185,6 +207,16 @@ func get_set_bonus_Attributes() -> Array[ItemAttribute]:
 		all_bonuses.append_array(bonuses)
 	
 	return all_bonuses
+
+func get_equipped_set_items(set_type: EquipmentItem.SETS) -> Array[EquipmentItem]:
+	var equipped_set_items: Array[EquipmentItem] = []
+	
+	for slot in equipped_items:
+		var item = equipped_items[slot]
+		if item is EquipmentItem and item.equipment_set == set_type:
+			equipped_set_items.append(item)
+	
+	return equipped_set_items
 
 func get_equipped_item_type(slot_type: EquipmentItem.TYPE) -> EquipmentItem:
 	return equipped_items.get(slot_type, null)
@@ -206,13 +238,15 @@ func get_all_equipped_items() -> Array[EquipmentItem]:
 			items.append(equipped_items[slot])
 	return items
 
-func get_all_unique_sets_equipped_items() -> Dictionary[EquipmentItem.SETS, EquipmentItem]:
-	var unique_sets = {}
+func get_all_unique_sets_equipped_items() -> Dictionary:
+	var unique_sets: Dictionary = {}
+	
 	for item in get_all_equipped_items():
 		if item.equipment_set in EquipmentConsts.UNIQUES_SETS:
-			unique_sets[item.equipment_set] = item
-	if unique_sets.size() > 0:
-		return {}
+			if not unique_sets.has(item.equipment_set):
+				unique_sets[item.equipment_set] = []
+			unique_sets[item.equipment_set].append(item)
+	
 	return unique_sets
 
 
@@ -229,17 +263,4 @@ func get_total_equipment_bonuses() -> Dictionary:
 		"attack_speed": 0.0,
 		"move_speed": 0.0
 	}
-
-	#for item in get_all_equipped_items():
-	#bonuses.health += item.health_bonus
-	#bonuses.mana += item.mana_bonus
-	#bonuses.energy += item.energy_bonus
-	#bonuses.min_damage += item.min_damage_bonus
-	#bonuses.max_damage += item.max_damage_bonus
-	#bonuses.defense += item.defense_bonus
-	#bonuses.critical_rate += item.critical_rate_bonus
-	#bonuses.critical_damage += item.critical_damage_bonus
-	#bonuses.attack_speed += item.attack_speed_bonus
-	#bonuses.move_speed += item.move_speed_bonus
-
 	return bonuses

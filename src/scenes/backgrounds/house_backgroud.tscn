@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://b0w07uqdq3p1r"]
+
+[ext_resource type="Texture2D" uid="uid://dle3xtsph651e" path="res://assets/sprites/backgrounds/parallaxes/night_houses.png" id="1_c7d40"]
+[ext_resource type="Texture2D" uid="uid://b7uh7f030ream" path="res://assets/sprites/backgrounds/parallaxes/night_houses_lights.png" id="2_ix2qb"]
+
+[sub_resource type="Environment" id="Environment_c7d40"]
+background_mode = 3
+glow_enabled = true
+glow_normalized = true
+glow_bloom = 0.3
+glow_blend_mode = 0
+
+[node name="HouseBackgroud" type="Sprite2D"]
+scale = Vector2(0.735577, 0.735577)
+texture = ExtResource("1_c7d40")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_c7d40")
+
+[node name="NightHousesLights" type="Sprite2D" parent="."]
+modulate = Color(1.5, 1.5, 1.5, 1)
+position = Vector2(383.99, 208)
+texture = ExtResource("2_ix2qb")
+metadata/_edit_lock_ = true

@@ -5,6 +5,9 @@ signal page_changed
 signal inventory_updated
 # signal inventory_saved
 # signal inventory_loaded
+signal item_drag_started(item: Item, slot_index: int)
+signal item_drag_ended(success: bool)
+signal items_swapped(slot_index_a: int, slot_index_b: int)
 
 signal update_inventory_visible(is_open: bool)
 
@@ -19,6 +22,8 @@ const SLOTS_PER_PAGE: int = 18
 var is_open: bool = false
 var current_select_item: Item
 
+var drag_item: Item = null
+var drag_slot_index: int = -1
 
 func _ready():
 	# Inicializa slots vazios
@@ -30,23 +35,26 @@ func _ready():
 
 func create_ramdon_items() -> void:
 	var enemy_stats = EnemyStats.new()
+	var player_level = PlayerStats.level
 	# var total_itens = 0
-	for i in 40:
-		enemy_stats.level = randi_range(60, 90)
-		# if i % 2 == 0:
-		var rune = RuneItem.new()
-		rune.setup(enemy_stats)
-		add_item(rune)
+	for i in 10:
+		# enemy_stats.level = randi_range(player_level, player_level)
+		enemy_stats.level = player_level
+		# var rune = RuneItem.new()
+		# rune.setup(enemy_stats)
+		# add_item(rune)
+		# var gem = GemItem.new()
+		# gem.setup(enemy_stats)
+		# add_item(gem)
+		# var potion = PotionItem.new()
+		# potion.setup(enemy_stats)
+		# add_item(potion)
+
 		# if is_addded:
 		# 	total_itens += 1
-		var gem = GemItem.new()
-		gem.setup(enemy_stats)
-		add_item(gem)
-		# if is_addded:
-		# 	total_itens += 1
-		# var equip = EquipmentItem.new()
-		# equip.setup(enemy_stats)
-		# add_item(equip)
+		var equip = EquipmentItem.new()
+		equip.setup(enemy_stats)
+		add_item(equip)
 	# print("Total itens added: ", total_itens)
 
 
@@ -310,7 +318,6 @@ func find_many_stackable_items_by_id(_item_id: String) -> Item:
 
 	return _item
 
-
 # Função auxiliar para conectar os botões corretamente
 func connect_sort_buttons(asc_button: Button, desc_button: Button) -> void:
 	asc_button.pressed.connect(sort_inventory.bind("ASC"))
@@ -328,6 +335,79 @@ func get_current_page_items() -> Array[Item]:
 	var start_index = current_page * SLOTS_PER_PAGE
 	var end_index = start_index + SLOTS_PER_PAGE
 	return slots.slice(start_index, end_index)
+
+
+func start_item_drag(item: Item, slot_index: int) -> void:
+	drag_item = item
+	drag_slot_index = slot_index
+	item_drag_started.emit(item, slot_index)
+
+func cancel_item_drag() -> void:
+	# Não precisa adicionar de volta pois o item nunca foi removido
+	drag_item = null
+	drag_slot_index = -1
+	item_drag_ended.emit(false)
+
+func move_item(from_slot: int, to_slot: int) -> void:
+	if from_slot == to_slot:
+		cancel_item_drag()
+		return
+	
+	if not is_valid_slot_index(from_slot) or not is_valid_slot_index(to_slot):
+		cancel_item_drag()
+		return
+	
+	# Verifica se o slot de destino está desbloqueado
+	if not is_slot_unlocked(to_slot):
+		cancel_item_drag()
+		return
+	
+	var from_item = slots[from_slot]
+	var to_item = slots[to_slot]
+	
+	# Caso 1: Slot destino vazio - move o item
+	if to_item == null:
+		slots[to_slot] = from_item
+		slots[from_slot] = null
+	
+	# Caso 2: Mesmo item e stackable - tenta juntar stacks
+	elif (from_item.item_id == to_item.item_id and
+		  from_item.item_rarity == to_item.item_rarity and
+		  from_item.stackable and to_item.stackable):
+		var total_stack = from_item.current_stack + to_item.current_stack
+		var max_stack = from_item.max_stack
+		
+		if total_stack <= max_stack:
+			# Cabe tudo no slot de destino
+			to_item.current_stack = total_stack
+			slots[from_slot] = null
+			# Remove do array de items
+			var item_index = items.find(from_item)
+			if item_index != -1:
+				items.remove_at(item_index)
+		else:
+			# Só cabe parte, deixa o resto no slot original
+			to_item.current_stack = max_stack
+			from_item.current_stack = total_stack - max_stack
+	
+	# Caso 3: Itens diferentes - troca de posição
+	else:
+		slots[from_slot] = to_item
+		slots[to_slot] = from_item
+	
+	# Limpa o estado de drag
+	drag_item = null
+	drag_slot_index = -1
+	inventory_updated.emit()
+	item_drag_ended.emit(true)
+	items_swapped.emit(from_slot, to_slot)
+
+func move_item_to_slot(item: Item, target_slot: int) -> void:
+	if drag_item != null and drag_slot_index != -1:
+		move_item(drag_slot_index, target_slot)
+
+func is_valid_slot_index(index: int) -> bool:
+	return index >= 0 and index < slots.size()
 
 
 func save_inventory():

@@ -6,7 +6,7 @@
 script = ExtResource("1_ckabi")
 
 [node name="StartMarker" type="Marker2D" parent="."]
-position = Vector2(-448, 160)
+position = Vector2(0, 360)
 
 [node name="EndMarker" type="Marker2D" parent="."]
-position = Vector2(5888, 256)
+position = Vector2(1280, 360)

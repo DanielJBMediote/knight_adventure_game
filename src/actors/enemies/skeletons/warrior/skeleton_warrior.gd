@@ -49,7 +49,6 @@ func _ready() -> void:
 	enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
 
 	hit_flash_animation.animation_finished.connect(_on_hit_flash_animation_animation_finished)
-	enemy_control_ui.setup(enemy_stats)
 
 
 func update_attack_speed():

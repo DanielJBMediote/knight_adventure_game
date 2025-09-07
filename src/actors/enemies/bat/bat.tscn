@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="15_4siq7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8os3d"]
+resource_local_to_scene = true
 shader = ExtResource("3_jrggf")
 shader_parameter/BooleanParameter = false
 shader_parameter/hint = Color(1, 1, 1, 1)
@@ -660,10 +661,11 @@ height = 50.0
 
 [node name="EnemyStats" parent="." instance=ExtResource("14_55kbc")]
 enemy_name = "Bat"
-base_min_damage = 5.0
-base_max_damage = 10.0
-base_experience = 25.0
-base_num_drops = 4
+base_health_points = 200.0
+base_min_damage = 10.0
+base_max_damage = 15.0
+base_experience = 50.0
+base_num_drops = 8
 base_poison_chance = 0.15
 base_poison_duration = 5.0
 base_poison_damage = 0.1

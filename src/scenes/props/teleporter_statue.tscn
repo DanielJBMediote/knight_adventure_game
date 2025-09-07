@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://dqjnvsgepfajj"]
+
+[ext_resource type="Texture2D" uid="uid://dk5reff4cfkvi" path="res://assets/sprites/props/Salt.png" id="1_oxf2n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oge21"]
+size = Vector2(94, 32)
+
+[sub_resource type="Gradient" id="Gradient_2rfrr"]
+offsets = PackedFloat32Array(0, 0.396396)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_osmr3"]
+gradient = SubResource("Gradient_2rfrr")
+use_hdr = true
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Curve" id="Curve_oxf2n"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.740845, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="TeleporterStatue" type="StaticBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_oxf2n")
+offset = Vector2(0, -112)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_oge21")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+amount = 64
+texture = SubResource("GradientTexture2D_osmr3")
+speed_scale = 0.3
+emission_shape = 3
+emission_rect_extents = Vector2(47, 1)
+gravity = Vector2(0, -980)
+angle_min = -40.0
+scale_amount_min = 0.05
+scale_amount_max = 0.2
+scale_amount_curve = SubResource("Curve_oxf2n")
+color = Color(0.486275, 0.984314, 1, 1)
+metadata/_edit_group_ = true

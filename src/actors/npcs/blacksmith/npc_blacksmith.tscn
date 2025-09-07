@@ -1,0 +1,95 @@
+[gd_scene load_steps=13 format=3 uid="uid://cjuc0cljmt5pw"]
+
+[ext_resource type="Script" uid="uid://d1gvkky78icag" path="res://src/actors/npcs/blacksmith/npc_blacksmith.gd" id="1_355hk"]
+[ext_resource type="Texture2D" uid="uid://6ejmhlf7ese0" path="res://assets/sprites/entities/npcs/blacksmith_portrait.png" id="2_fvauq"]
+[ext_resource type="PackedScene" uid="uid://byr2mw2xosb8c" path="res://src/ui/interact_label/interact_label.tscn" id="3_blonl"]
+[ext_resource type="Texture2D" uid="uid://82ccspfrp55u" path="res://assets/sprites/entities/npcs/blacksmith_spritesheet.png" id="3_fvauq"]
+[ext_resource type="PackedScene" uid="uid://uyf6ebm3ykmf" path="res://src/actors/npcs/ui/npc_interface.tscn" id="5_fvauq"]
+[ext_resource type="PackedScene" uid="uid://duy21k5fasp13" path="res://src/actors/npcs/dialog_ballon.tscn" id="5_gbyye"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_boa78"]
+atlas = ExtResource("3_fvauq")
+region = Rect2(0, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c1mya"]
+atlas = ExtResource("3_fvauq")
+region = Rect2(256, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kf5mw"]
+atlas = ExtResource("3_fvauq")
+region = Rect2(512, 0, 256, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lwaum"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_boa78")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c1mya")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kf5mw")
+}],
+"loop": true,
+"name": &"speaking",
+"speed": 16.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_355hk"]
+size = Vector2(192, 112)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_riww4"]
+size = Vector2(352, 128)
+
+[node name="NPC_Blacksmith" type="Node2D" node_paths=PackedStringArray("interact_area", "player_detection_area", "interact_label", "dialog_ballon", "npc_interface")]
+script = ExtResource("1_355hk")
+npc_name = "Blacksmith"
+interact_area = NodePath("InteractArea")
+player_detection_area = NodePath("PlayerDetectionArea")
+interact_label = NodePath("InteractLabel")
+dialog_ballon = NodePath("DialogBallon")
+npc_interface = NodePath("NPCInterface")
+npc_texture_portrait = ExtResource("2_fvauq")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_lwaum")
+animation = &"speaking"
+offset = Vector2(0, -106)
+
+[node name="InteractArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 128
+collision_mask = 8
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+position = Vector2(0, -40)
+shape = SubResource("RectangleShape2D_355hk")
+debug_color = Color(0, 0.273505, 0.323658, 0.42)
+
+[node name="InteractLabel" parent="." instance=ExtResource("3_blonl")]
+offset_top = -144.0
+offset_bottom = -132.0
+text = "Interact"
+
+[node name="PlayerDetectionArea" type="Area2D" parent="."]
+visible = false
+collision_layer = 128
+collision_mask = 8
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionArea"]
+position = Vector2(0, -64)
+shape = SubResource("RectangleShape2D_riww4")
+
+[node name="DialogBallon" parent="." instance=ExtResource("5_gbyye")]
+custom_minimum_size = Vector2(256, 115)
+offset_top = -272.0
+offset_bottom = -157.0
+grow_vertical = 1
+timer_before_exit = 1.0
+
+[node name="NPCInterface" parent="." instance=ExtResource("5_fvauq")]
+visible = false

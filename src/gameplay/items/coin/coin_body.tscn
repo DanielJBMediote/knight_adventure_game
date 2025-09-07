@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bvspsdvis07m8" path="res://src/gameplay/items/coin/coin_body.gd" id="1_26wga"]
 [ext_resource type="Texture2D" uid="uid://5iorjr58n6di" path="res://assets/sprites/items/icons/coin_effect.png" id="2_s4nfn"]
-[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_odcur"]
+[ext_resource type="PackedScene" uid="uid://byr2mw2xosb8c" path="res://src/ui/interact_label/interact_label.tscn" id="3_oxlrq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c7qms"]
 radius = 32.0
@@ -143,41 +143,10 @@ debug_color = Color(0.621362, 0.353166, 1, 0.42)
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_c7qms")
 
-[node name="InteractLabel" type="Control" parent="."]
-layout_mode = 3
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -38.0
-offset_top = -96.0
-offset_right = 38.0
-offset_bottom = -84.0
-grow_horizontal = 2
-
-[node name="ColorRect" type="ColorRect" parent="InteractLabel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.5)
-metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
-
-[node name="Label" type="Label" parent="InteractLabel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_fonts/font = ExtResource("5_odcur")
-text = "Collect"
-horizontal_alignment = 1
-vertical_alignment = 1
-metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
+[node name="InteractLabel" parent="." instance=ExtResource("3_oxlrq")]
+offset_top = -64.0
+offset_bottom = -52.0
+control_size = Vector2(72, 16)
 
 [connection signal="body_entered" from="CollectZone" to="." method="_on_collect_zone_body_entered"]
 [connection signal="body_exited" from="CollectZone" to="." method="_on_collect_zone_body_exited"]

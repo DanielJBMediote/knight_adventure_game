@@ -176,10 +176,10 @@ func calculate_distance_to_floors() -> void:
 		distance_to_floor_up = 9999.0
 
 func handle_actions() -> void:
-	if Input.is_action_just_pressed("Test"):
-		#PlayerStats.add_experience(100)
-		if GameEvents.current_map.difficulty < 3:
-			GameEvents.current_map.difficulty += 1
+	#if Input.is_action_just_pressed("Test"):
+		#PlayerStats.add_experience(10000)
+		# if GameEvents.current_map.difficulty < 3:
+		# 	GameEvents.current_map.difficulty += 1
 		#PlayerStats.update_defense(-15000)
 		#GameEvents.current_map.difficulty += 1
 	if is_on_floor():
@@ -242,7 +242,7 @@ func handle_actions_when_on_floor() -> void:
 		if is_jumping:
 			is_crouching = false
 			
-	if Input.is_action_just_pressed("roll"):
+	if Input.is_action_just_pressed("roll") and input_direction != 0:
 		if can_roll and PlayerStats.has_energy_to_roll():
 			is_rolling = true
 			PlayerStats.update_energy(PlayerStats.energy_cost_to_roll * -1)

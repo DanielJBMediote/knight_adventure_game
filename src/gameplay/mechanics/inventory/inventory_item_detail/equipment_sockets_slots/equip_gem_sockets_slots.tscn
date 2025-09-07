@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://db24xs6jb4xpd"]
+
+[ext_resource type="Script" uid="uid://dfx4y6slhi65g" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/equipment_sockets_slots/equip_gem_sockets_slots.gd" id="1_y4af2"]
+
+[node name="EquipmentGemSocketSlotsUI" type="VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+offset_right = 320.0
+offset_bottom = 40.0
+script = ExtResource("1_y4af2")

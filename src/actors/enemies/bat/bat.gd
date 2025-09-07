@@ -255,7 +255,7 @@ func update_sprite_direction(moving_right: bool) -> void:
 
 func play_animations()-> void:
 	if is_in_knockback or is_hurting:
-		animated_sprite_2d.play("hurt")
+		#animated_sprite_2d.play("hurt")
 		return
 	match state:
 		STATES.IDLE:

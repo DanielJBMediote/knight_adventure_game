@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="GemItem" load_steps=2 format=3 uid="uid://88upxl238s3t"]
+[gd_resource type="Resource" script_class="GemItem" load_steps=3 format=3 uid="uid://88upxl238s3t"]
 
+[ext_resource type="Script" uid="uid://pe8gfcul0vjx" path="res://src/gameplay/items/item_attribute/item_attribute.gd" id="1_3uo16"]
 [ext_resource type="Script" uid="uid://biwu18uemd06n" path="res://src/gameplay/items/loots/gems/gem_item.gd" id="1_cqqmo"]
 
 [resource]
@@ -11,16 +12,17 @@ price_to_upgrade = 0
 equip_slot_sockets = Array[int]([])
 item_id = ""
 item_name = ""
-item_description = ""
+item_descriptions = Array[String]([])
 item_category = 4
 item_subcategory = 7
 item_rarity = 0
+item_price = 0
+item_level = 0
+item_usable = false
 spawn_chance = 1.0
 stackable = false
 max_stack = 1
 current_stack = 1
 is_unique = false
-item_price = 0
-item_level = 0
-item_usable = false
+item_attributes = Array[ExtResource("1_3uo16")]([])
 metadata/_custom_type_script = "uid://biwu18uemd06n"

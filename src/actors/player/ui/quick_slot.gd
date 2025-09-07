@@ -19,12 +19,12 @@ var slot_key: int
 func set_slot_key(key: int):
 	slot_key = key
 
-func setup_item(item: Item)-> void:
-	if item != null:
-		stacks.text = str(item.current_stack) if item.stackable else ""
-		item_texture.texture = item.item_texture
-		stacks.visible = item.stackable
-		set_item_background_texture(item.item_rarity, item.is_unique)
+func setup_item(new_item: Item) -> void:
+	if new_item != null:
+		stacks.text = str(new_item.current_stack) if new_item.stackable else ""
+		item_texture.texture = new_item.item_texture
+		stacks.visible = new_item.stackable
+		set_item_background_texture(new_item.item_rarity)
 	else:
 		stacks.text = ""
 		item_texture.texture = null
@@ -33,7 +33,7 @@ func setup_item(item: Item)-> void:
 		unique_border.remove_theme_stylebox_override("panel")
 		unique_border.hide()
 
-func set_item_background_texture(rarity: Item.RARITY, is_unique: bool) -> void:
+func set_item_background_texture(rarity: Item.RARITY) -> void:
 	match rarity:
 		Item.RARITY.COMMON:
 			# Azul para itens Normais
@@ -62,7 +62,7 @@ func set_item_background_texture(rarity: Item.RARITY, is_unique: bool) -> void:
 		_:
 			background_texture.texture = null
 
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 	pass
 	#if event.is_action_pressed(str("slot_key_", slot_key)):
 		#item.use()

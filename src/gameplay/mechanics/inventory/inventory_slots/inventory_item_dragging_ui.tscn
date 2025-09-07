@@ -1,0 +1,70 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3qydgnch1lu3"]
+
+[ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_3871s"]
+[ext_resource type="Script" uid="uid://b8qvjmc5mba5a" path="res://src/gameplay/mechanics/inventory/inventory_slots/inventory_item_dragging_ui.gd" id="1_bbff4"]
+[ext_resource type="Theme" uid="uid://k0ll6m3w6kk3" path="res://src/ui/themes/items_themes/unique_border.tres" id="3_q2dcp"]
+
+[node name="ItemDragDisplay" type="Control"]
+z_index = 100
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 96.0
+offset_bottom = 96.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_bbff4")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = ExtResource("1_3871s")
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="RarityTexture" type="TextureRect" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="ItemTexture" type="TextureRect" parent="Panel/MarginContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Stacks" type="Label" parent="Panel/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+
+[node name="UniqueBorder" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -41.0
+offset_top = -41.0
+offset_right = 41.0
+offset_bottom = 41.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("3_q2dcp")
+metadata/_edit_lock_ = true

@@ -39,7 +39,7 @@ func setup(enemy_stats: EnemyStats) -> void:
 	self.item_attributes = setup_gem_attributes()
 	self.equip_slot_sockets = get_available_equip_slots()
 	self.item_name = generate_gem_name()
-	self.item_description = generate_gem_description()
+	self.item_descriptions = generate_gem_descriptions()
 	self.item_id = generate_gem_id()
 	self.item_price = calculate_item_price(int(GemConsts.BASE_GEM_PRICE))
 	self.num_runes_to_upgrade = GemConsts.NUM_RUNES_TO_UPGRADE if can_upgrade_gem() else 0
@@ -91,22 +91,23 @@ func generate_gem_name() -> String:
 	return base_name
 
 
-func generate_gem_description() -> String:
+func generate_gem_descriptions() -> Array[String]:
 	var type_str = ItemAttribute.ATTRIBUTE_KEYS.get(gem_type)
-	var description = LocalizationManager.get_gem_base_description_text(type_str)
+	var base_Description = LocalizationManager.get_gem_base_description_text(type_str)
 
 	var quality = self.gem_quality
 	var quality_name = LocalizationManager.get_gem_quality_text(quality)
 
-	description = LocalizationManager.format_text_with_params(description, {"quality": quality_name})
+	base_Description = LocalizationManager.format_text_with_params(base_Description, {"quality": quality_name})
 
+	var unique_description = ""
 	if is_unique:
 		if gem_type in GemConsts.UNIQUE_GEMS_KEYS:
-			description += "\n\n" + LocalizationManager.get_gem_unique_description_text(type_str)
+			unique_description = LocalizationManager.get_gem_unique_description_text(type_str)
 		else:
-			description += ". " + LocalizationManager.get_gem_base_description_text("unique_gem")
+			unique_description = LocalizationManager.get_gem_base_description_text("unique_gem")
 
-	return description
+	return [base_Description, unique_description]
 
 
 func get_gem_quality() -> QUALITY:
@@ -149,7 +150,7 @@ func get_preview_next_gem() -> GemItem:
 	# next_gem.is_unique = next_gem.setup_gem_unique()
 	next_gem.item_attributes = next_gem.setup_gem_attributes()
 	next_gem.item_name = next_gem.generate_gem_name()
-	next_gem.item_description = next_gem.generate_gem_description()
+	next_gem.item_descriptions = next_gem.generate_gem_descriptions()
 	next_gem.item_id = next_gem.generate_gem_id()
 	next_gem.num_runes_to_upgrade = GemConsts.NUM_RUNES_TO_UPGRADE if next_gem.can_upgrade_gem() else 0
 	next_gem.price_to_upgrade = next_gem.calculate_price_to_upgrade() if next_gem.can_upgrade_gem() else 0
@@ -196,7 +197,7 @@ func get_required_preview_rune_for_upgrade() -> RuneItem:
 	rune.item_rarity = get_required_rune_rarity_for_upgrade()
 	rune.item_level = rune.get_level_by_rarity()
 	rune.item_name = rune.generate_rune_name()
-	rune.item_description = rune.generate_rune_description()
+	rune.item_descriptions = rune.generate_rune_descriptions()
 	rune.item_id = rune.generate_rune_id()
 	rune.item_texture = rune.generate_rune_texture()
 	# rune.item_price = rune.calculate_item_price(RuneConsts.BASE_PRICE)
@@ -251,7 +252,6 @@ func upgrade_gem(runes: Array[Item], gems: Array[Item], quanity: int = 1) -> boo
 		GameEvents.show_instant_message(message, InstantMessage.TYPE.DANGER)
 		return false
 	
-	
 	# Verifica se todas as runas são válidas
 	for rune in runes:
 		if not is_valid_rune_for_upgrade(rune):
@@ -268,21 +268,27 @@ func upgrade_gem(runes: Array[Item], gems: Array[Item], quanity: int = 1) -> boo
 		new_gem.price_to_upgrade = new_gem.calculate_price_to_upgrade() if new_gem.can_upgrade_gem() else 0
 		new_gem.item_id = new_gem.generate_gem_id()
 		new_gem.item_name = new_gem.generate_gem_name()
-		new_gem.item_description = new_gem.generate_gem_description()
+		new_gem.item_descriptions = new_gem.generate_gem_descriptions()
 		new_gem.is_unique = new_gem.setup_gem_unique()
 		new_gem.item_attributes = new_gem.setup_gem_attributes()
 		new_gem.item_texture = new_gem.generate_gem_texture()
 		new_gem.current_stack = quanity
 		
-		CurrencyManager.remove_coins(price_to_upgrade)
-
-		InventoryManager.remove_items(runes, quanity * num_runes_to_upgrade)
-		InventoryManager.remove_items(gems, quanity * 2)
 		
-		InventoryManager.add_item(new_gem)
+		if InventoryManager.add_item(new_gem):
+			CurrencyManager.remove_coins(price_to_upgrade)
+			InventoryManager.remove_items(runes, quanity * num_runes_to_upgrade)
+			InventoryManager.remove_items(gems, quanity * 2)
+			
+			var message = LocalizationManager.get_gem_alert_text("gem_upgrade_success")
+			message = LocalizationManager.format_text_with_params(message, {"amount": quanity, "gem": new_gem.item_name})
+			GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+			return true
+		else:
+			var message = LocalizationManager.get_gem_alert_text("gem_no_slots_free")
+			GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+			return false
 
-		return true
-	
 	return false
 
 

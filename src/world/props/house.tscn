@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmh2ag3e6w14v"]
+
+[ext_resource type="Script" uid="uid://vrsk71h764mg" path="res://src/world/props/house.gd" id="1_y54wf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5e1ml"]
+size = Vector2(128, 32)
+
+[node name="House" type="StaticBody2D"]
+script = ExtResource("1_y54wf")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(3, 3)
+offset = Vector2(0, -64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -16)
+shape = SubResource("RectangleShape2D_5e1ml")

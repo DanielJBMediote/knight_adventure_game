@@ -33,7 +33,7 @@ const SUBCATEGORY_KEYS = {
 
 @export var item_id: String
 @export var item_name: String
-@export var item_description: String
+@export var item_descriptions: Array[String] = []
 @export var item_category: CATEGORY = CATEGORY.MISCELLANEOUS
 @export var item_subcategory: SUBCATEGORY = SUBCATEGORY.RESOURCE
 @export var item_rarity: RARITY = RARITY.COMMON
@@ -63,10 +63,11 @@ var _item_attributes: Array[ItemAttribute] = []
 		_item_attributes = value
 
 
-func setup(enemy_stats: EnemyStats) -> void:
+func setup(_enemy_stats: EnemyStats) -> void:
 	return
 
 
+## Use this instead duplicate() native function
 func clone() -> Item:
 	var copy = self.duplicate()
 
@@ -279,7 +280,7 @@ func load_texture_with_fallback(file_path: String, fallback_path: String, attrib
 	#return texture
 
 	# Fallback 3: Textura programática vermelha de erro
-	printerr("Nenhuma textura encontrada para ", get_category_text(self.item_category), attribute_key)
+	printerr("No texture finded for: ", get_category_text(self.item_category), " ", attribute_key)
 	return create_error_texture()
 
 

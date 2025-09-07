@@ -129,8 +129,6 @@ static func get_attribute_value_color(_attribute: ItemAttribute) -> Color:
 		return COLOR_NORMAL # 🟢 95% - 115%
 	elif percentage < 1.25:
 		return COLOR_GOOD # 🟡 115% - 125%
-	#elif percentage < 1.25:
-		#return COLOR_EXCELLENT  # 🔵 115% - 125%
 	else:
 		return COLOR_PERFECT # 🟣 125%+ (Perfeito)
 

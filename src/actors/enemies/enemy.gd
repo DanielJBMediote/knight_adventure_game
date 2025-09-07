@@ -245,7 +245,7 @@ func drop_loots() -> void:
 				item_instance.position = global_position + random_offset
 				drop_zone.add_child(item_instance)
 	
-	for i in range(enemy_stats.num_of_coins):
+	for i in range(enemy_stats.amount_coins):
 		var coin_scene = preload("res://src/gameplay/items/coin/coin_body.tscn")
 		var coin_instance: CoinBody = coin_scene.instantiate()
 		coin_instance.position = global_position + random_offset

@@ -1,8 +1,8 @@
-class_name StatsAndEquipsPanelUI
+class_name StatsAndEquipsUI
 extends Panel
 
-@onready var equipments_slots_ui: EquipmentContentUI = $MarginContainer/MainConteiner/EquipmentsSlotsUI
 @onready var stats_content_ui: StatsContentUI = $MarginContainer/MainConteiner/StatsContentUI
+@onready var equipment_content_ui: EquipmentContentUI = $MarginContainer/MainConteiner/EquipmentContentUI
 
 @onready var equip_and_stats_label: Label = $MarginContainer/MainConteiner/Header/EquipAndStatsLabel
 @onready var toggle_stats_equips_button: Button = $MarginContainer/MainConteiner/Header/ToggleStatsEquipsButton
@@ -24,7 +24,7 @@ func _toggle_content():
 
 
 func update_showing_content():
-	equipments_slots_ui.visible = show_equipment
+	equipment_content_ui.visible = show_equipment
 	stats_content_ui.visible = !show_equipment
 
 func update_title_label() -> void:

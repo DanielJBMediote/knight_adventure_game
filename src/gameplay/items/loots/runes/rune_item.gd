@@ -24,7 +24,7 @@ func setup(enemy_stats: EnemyStats) -> void:
 	self.item_rarity = get_rune_rarity()
 	self.spawn_chance = calculate_spawn_chance(enemy_stats.level)
 	self.item_name = generate_rune_name()
-	self.item_description = generate_rune_description()
+	self.item_descriptions = generate_rune_descriptions()
 	self.item_id = generate_rune_id()
 	self.item_price = calculate_item_price(RuneConsts.BASE_PRICE)
 	self.item_texture = generate_rune_texture()
@@ -45,16 +45,16 @@ func generate_rune_name() -> String:
 	return rune_name
 
 
-func generate_rune_description() -> String:
+func generate_rune_descriptions() -> Array[String]:
 	var rune_key = RuneConsts.RUNE_TYPE_KEYS.get(self.rune_type, "UNKNOWN")
 	var next_gem_quality = GemItem.get_next_gem_quality_by_required_rune(self.item_rarity)
 	var prev_gem_quality = next_gem_quality - 1
 	var prev_gem_name = LocalizationManager.get_gem_quality_text(prev_gem_quality).capitalize()
 	var next_gem_name = LocalizationManager.get_gem_quality_text(next_gem_quality).capitalize()
-	var description = LocalizationManager.get_rune_description_text(rune_key)
+	var base_description = LocalizationManager.get_rune_description_text(rune_key)
 	var params = {"next_gem_quality": next_gem_name, "gem_quality": prev_gem_name}
-	description = LocalizationManager.format_text_with_params(description, params)
-	return description
+	base_description = LocalizationManager.format_text_with_params(base_description, params)
+	return [base_description]
 
 func get_random_type() -> TYPE:
 	var total_weight: float = 0.0

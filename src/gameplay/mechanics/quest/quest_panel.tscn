@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://bqy0whmhuo41s"]
+
+[node name="QuestPanel" type="StaticBody2D"]

@@ -33,7 +33,7 @@ var knockback_resistance: float = 1.0
 var knockback_force: float = 300.0
 var knockback_chance: float = 1.0 # de 0% até 60%
 
-var level: int = 100
+var level: int = 1
 
 var total_exp := 0.0
 var current_exp := 0.0
@@ -41,20 +41,24 @@ var exp_to_next_level := 0.0
 var exp_buff := 1.0 # 100% de Experincia
 
 # Valores base no nível 1
-var base_max_health: float = 1000.0
+var base_max_health: float = 1200.0
+var base_min_health: float = 800.0
+
 var base_max_mana: float = 40.0
+
 var base_max_energy: float = 100.0
+
 var base_min_damage: float = 150.0
 var base_max_damage: float = 250.0
 
 # Valores atuais
 var max_health_points: float = 1000.0
 var health_points: float = 1000.0
-var health_regen_per_seconds: float = 0.0
+var health_regen_per_seconds: float = 1.0
 
 var max_mana_points: float = 40.0
 var mana_points: float = 40.0
-var mana_regen_per_seconds: float = 0.0
+var mana_regen_per_seconds: float = 1.0
 
 var max_energy_points: float = 100.0
 var energy_points: float = 100.0
@@ -100,11 +104,16 @@ func _ready() -> void:
 
 func initialize_base_stats() -> void:
 	# Valores aleatórios dentro dos ranges especificados
-	base_max_health = randf_range(800.0, 1200.0)
-	base_max_mana = randf_range(25.0, 50.0)
-	base_max_energy = 100.0
-	base_min_damage = randf_range(100.0, 200.0)
-	base_max_damage = randf_range(200.0, 300.0)
+	base_max_health = calculate_health_at_level(level)
+	base_max_mana = calculate_mana_at_level(level)
+	base_max_energy = calculate_energy_at_level(level)
+	base_min_damage = calculate_damage_at_level(level).min_damage
+	base_max_damage = calculate_damage_at_level(level).max_damage
+	# base_max_health = randf_range(800.0, 1200.0)
+	# base_max_mana = randf_range(25.0, 50.0)
+	# base_max_energy = 100.0
+	# base_min_damage = randf_range(100.0, 200.0)
+	# base_max_damage = randf_range(200.0, 300.0)
 
 	# Aplica valores base
 	max_health_points = base_max_health
@@ -121,14 +130,9 @@ func initialize_base_stats() -> void:
 
 
 func update_health(value: float) -> void:
-	self.health_points += value
-
-	if self.health_points >= self.max_health_points:
-		self.health_points = self.max_health_points
-	elif self.health_points <= 0:
-		self.health_points = 0
+	self.health_points = clampf(self.health_points + value, 0.0, self.max_health_points)
+	if self.health_points <= 0:
 		player_dead.emit()
-
 	health_changed.emit(self.health_points)
 
 
@@ -137,13 +141,7 @@ func update_max_health(value: float) -> void:
 
 
 func update_mana(value: float) -> void:
-	self.mana_points += value
-
-	if self.mana_points >= self.max_mana_points:
-		self.mana_points = self.max_mana_points
-	elif self.mana_points <= 0:
-		self.mana_points = 0
-
+	self.mana_points = clampf(self.mana_points + value, 0.0, self.max_mana_points)
 	mana_changed.emit(self.mana_points)
 
 
@@ -152,13 +150,7 @@ func update_max_mana(value: float) -> void:
 
 
 func update_energy(value: float) -> void:
-	self.energy_points += value
-
-	if self.energy_points >= self.max_energy_points:
-		self.energy_points = self.max_energy_points
-	elif self.energy_points <= 0:
-		self.energy_points = 0
-
+	self.energy_points = clampf(self.energy_points + value, 0.0, self.max_energy_points)
 	energy_changed.emit(self.energy_points)
 
 
@@ -166,7 +158,7 @@ func update_max_energy(value: float) -> void:
 	self.max_energy_points += value
 
 
-func update_defense(value: float) -> void:
+func update_defense_points(value: float) -> void:
 	self.defense_points = max(defense_points + value, 1)
 
 
@@ -194,6 +186,12 @@ func update_attack_speed(value: float) -> void:
 func update_move_speed(value: float) -> void:
 	self.move_speed = clamp(self.move_speed + value, 1.0, 2.0)
 
+
+func update_bleed_rate(value: float) -> void:
+	self.bleed_hit_rate = clampf(self.bleed_hit_rate + value, 0.0, 1.0)
+
+func update_poison_rate(value: float) -> void:
+	self.poison_hit_rate = clampf(self.poison_hit_rate + value, 0.0, 1.0)
 
 func update_knockback_resistance(value: float) -> void:
 	self.knockback_resistance = value
@@ -270,12 +268,8 @@ func get_critical_rate() -> float:
 	return min((critical_points / max_critical_points) * MAX_CRITICAL_RATE, MAX_CRITICAL_RATE)
 
 func get_max_critical_points_for_current_level() -> float:
-	var difficulty_factor = {
-		GameEvents.DIFFICULTY.NORMAL: 1.0,
-		GameEvents.DIFFICULTY.PAINFUL: 1.25,
-		GameEvents.DIFFICULTY.FATAL: 1.5,
-		GameEvents.DIFFICULTY.INFERNAL: 1.75,
-	}[GameEvents.current_map.difficulty]
+	var difficulty = GameEvents.current_map.difficulty
+	var difficulty_factor = 1.0 + (difficulty * 0.25)
 	
 	# Pontos necessários escalam linearmente com o nível
 	var critical_points_for_max = BASE_CRITICAL_POINTS_FOR_MAX + (level - 1) * CRITICAL_GROWTH_FACTOR_PER_LEVEL
@@ -332,12 +326,8 @@ func get_defense_percentage() -> float:
 ## Escala linear de 800 a 8000.
 ## Função para obter a defesa máxima possível no nível atual
 func get_max_defense_for_current_level() -> float:
-	var difficulty_factor = {
-		GameEvents.DIFFICULTY.NORMAL: 1.0,
-		GameEvents.DIFFICULTY.PAINFUL: 1.25,
-		GameEvents.DIFFICULTY.FATAL: 1.5,
-		GameEvents.DIFFICULTY.INFERNAL: 1.75,
-	}[GameEvents.current_map.difficulty]
+	var difficulty = GameEvents.current_map.difficulty
+	var difficulty_factor = 1.0 + (difficulty * 0.25)
 	
 	var defense_to_hit_max = 800.0 + (level - 1) * (7200.0 / 99.0)
 	return defense_to_hit_max * difficulty_factor
@@ -360,9 +350,10 @@ func get_defense_effectiveness_percentage_for_current_level() -> float:
 
 func calculate_health_at_level(target_level: int) -> float:
 	# Health: 800-1200 no nível 1, 80k-85k no nível 100
-	var min_target = 80000.0
-	var max_target = 85000.0
-	var growth_factor = pow(max_target / base_max_health, 1.0 / 99.0)
+	# var target_min = 80000.0
+	var target_max = 85000.0
+	
+	var growth_factor = pow(target_max / base_max_health, 1.0 / 99.0)
 	return base_max_health * pow(growth_factor, target_level - 1)
 
 
@@ -378,7 +369,7 @@ func calculate_energy_at_level(target_level: int) -> float:
 	return base_max_energy + (target_level - 1) * 0.5 # +0.5 por nível
 
 
-func calculate_damage_at_level(target_level: int) -> Dictionary:
+func calculate_damage_at_level(target_level: int) -> DamageStats:
 	# Damage: 100-300 no nível 1, 10k-12k no nível 100
 	var target_min = 10500.0 # Valor médio
 	var target_max = 11000.0 # Valor médio
@@ -386,10 +377,10 @@ func calculate_damage_at_level(target_level: int) -> Dictionary:
 	var min_growth = pow(target_min / base_min_damage, 1.0 / 99.0)
 	var max_growth = pow(target_max / base_max_damage, 1.0 / 99.0)
 
-	return {
-		"min": base_min_damage * pow(min_growth, target_level - 1),
-		"max": base_max_damage * pow(max_growth, target_level - 1)
-	}
+	var min_damage_value = base_min_damage * pow(min_growth, target_level - 1)
+	var max_damage_value = base_max_damage * pow(max_growth, target_level - 1)
+
+	return DamageStats.new(min_damage_value, max_damage_value)
 
 
 func calculate_exp_to_next_level():
@@ -438,8 +429,8 @@ func add_level() -> int:
 	self.max_energy_points = new_energy
 	self.energy_points = new_energy * energy_ratio
 
-	self.min_damage = new_damage["min"]
-	self.max_damage = new_damage["max"]
+	self.min_damage = new_damage.min_damage
+	self.max_damage = new_damage.max_damage
 
 	# Recalcula para o próximo nível
 	calculate_exp_to_next_level()
@@ -453,36 +444,38 @@ func emit_attributes_changed() -> void:
 	attributes_changed.emit(get_attributes())
 
 
-func get_attributes() -> Dictionary[String, Variant]:
-	return {
-		"level": level,
-		"health_points": health_points,
-		"max_health_points": max_health_points,
-		"health_regen_per_seconds": health_regen_per_seconds,
-		"mana_points": mana_points,
-		"max_mana_points": max_mana_points,
-		"mana_regen_per_seconds": mana_regen_per_seconds,
-		"energy_points": energy_points,
-		"max_energy_points": max_energy_points,
-		"energy_regen_per_seconds": energy_regen_per_seconds,
-		"attack_speed": attack_speed,
-		"move_speed": move_speed,
-		"min_damage": min_damage,
-		"max_damage": max_damage,
-		"critical_points": critical_points,
-		"critical_rate": get_critical_rate(),
-		"max_critical_points": get_max_critical_points_for_current_level(),
-		"critical_damage": critical_damage,
-		"defense_points": defense_points,
-		"defense_rate": get_defense_effectiveness_percentage_for_current_level(),
-		"max_defense_points": get_max_defense_for_current_level(),
-		"current_exp": current_exp,
-		"total_exp": total_exp,
-		"exp_to_next_level": exp_to_next_level,
-		"exp_buff": exp_buff,
-		"bleed_hit_rate": bleed_hit_rate,
-		"poison_hit_rate": poison_hit_rate,
-		"knockback_resistance": knockback_resistance,
-		"knockback_force": knockback_force,
-		"knockback_chance": knockback_chance
-	}
+func get_attributes() -> PlayerAttributes:
+	var player_attributes = PlayerAttributes.new()
+
+	player_attributes.level = level
+	player_attributes.health_points = health_points
+	player_attributes.max_health_points = max_health_points
+	player_attributes.health_regen_per_seconds = health_regen_per_seconds
+	player_attributes.mana_points = mana_points
+	player_attributes.max_mana_points = max_mana_points
+	player_attributes.mana_regen_per_seconds = mana_regen_per_seconds
+	player_attributes.energy_points = energy_points
+	player_attributes.max_energy_points = max_energy_points
+	player_attributes.energy_regen_per_seconds = energy_regen_per_seconds
+	player_attributes.attack_speed = attack_speed
+	player_attributes.move_speed = move_speed
+	player_attributes.min_damage = min_damage
+	player_attributes.max_damage = max_damage
+	player_attributes.critical_points = critical_points
+	player_attributes.critical_rate = get_critical_rate()
+	player_attributes.max_critical_points = get_max_critical_points_for_current_level()
+	player_attributes.critical_damage = critical_damage
+	player_attributes.defense_points = defense_points
+	player_attributes.defense_rate = get_defense_effectiveness_percentage_for_current_level()
+	player_attributes.max_defense_points = get_max_defense_for_current_level()
+	player_attributes.current_exp = current_exp
+	player_attributes.total_exp = total_exp
+	player_attributes.exp_to_next_level = exp_to_next_level
+	player_attributes.exp_buff = exp_buff
+	player_attributes.bleed_hit_rate = bleed_hit_rate
+	player_attributes.poison_hit_rate = poison_hit_rate
+	player_attributes.knockback_resistance = knockback_resistance
+	player_attributes.knockback_force = knockback_force
+	player_attributes.knockback_chance = knockback_chance
+
+	return player_attributes

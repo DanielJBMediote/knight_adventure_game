@@ -14,12 +14,7 @@ texture_margin_bottom = 44.0
 region_rect = Rect2(293, 120, 52, 48)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fub5i"]
-bg_color = Color(0.0941176, 0.0941176, 0.105882, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.658824, 0.552941, 0.458824, 1)
+bg_color = Color(0.0596392, 0.0596389, 0.0687134, 1)
 
 [node name="EquipmentSlotUI" type="Panel"]
 custom_minimum_size = Vector2(96, 96)
@@ -60,17 +55,17 @@ size_flags_vertical = 4
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/margin_right = 2
-theme_override_constants/margin_bottom = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
-[node name="TextureRect" type="Panel" parent="MarginContainer/MarginContainer"]
+[node name="LevelPanel" type="Panel" parent="MarginContainer/MarginContainer"]
 custom_minimum_size = Vector2(24, 20)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxFlat_fub5i")
 
-[node name="EquipmentLevel" type="Label" parent="MarginContainer/MarginContainer/TextureRect"]
+[node name="EquipmentLevel" type="Label" parent="MarginContainer/MarginContainer/LevelPanel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -85,8 +80,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.658824, 0.552941, 0.458824, 1)
-theme_override_colors/font_outline_color = Color(0.188235, 0.168627, 0.160784, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("6_mnqdt")
 text = "98"

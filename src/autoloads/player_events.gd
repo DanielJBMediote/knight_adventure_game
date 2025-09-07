@@ -16,10 +16,27 @@ func _ready() -> void:
 
 
 func _on_use_potion(potion: PotionItem) -> bool:
-	print("Potion use: ", potion.item_name)
-	print("Effects: ", potion.item_description)
-
-	return true
+	var potion_action = potion.get_item_action()
+	if potion_action.action_type.INSTANTLY:
+		match potion_action.attribute.type:
+			ItemAttribute.TYPE.HEALTH:
+				PlayerStats.update_health(potion_action.attribute.value)
+			ItemAttribute.TYPE.MANA:
+				PlayerStats.update_mana(potion_action.attribute.value)
+			ItemAttribute.TYPE.ENERGY:
+				PlayerStats.update_energy(potion_action.attribute.value)
+			_:
+				return false
+		PlayerStats.emit_attributes_changed()
+		return true
+	else:
+		match potion_action.attribute.type:
+			ItemAttribute.TYPE.DAMAGE:
+				pass
+			_:
+				return false
+		return true
+	return false
 
 
 func _on_use_equipment(item: EquipmentItem) -> void:
