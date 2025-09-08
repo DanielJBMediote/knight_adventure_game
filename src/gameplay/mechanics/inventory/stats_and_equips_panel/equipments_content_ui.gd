@@ -1,13 +1,13 @@
 class_name EquipmentContentUI
 extends GridContainer
 
-@onready var amulet_slot: EquipmentSlotUI = $Left/AmuletSlot
-@onready var gloves_slot: EquipmentSlotUI = $Left/GlovesSlot
-@onready var helmet_slot: EquipmentSlotUI = $Center/HelmetSlot
-@onready var armor_slot: EquipmentSlotUI = $Center/ArmorSlot
-@onready var boots_slot: EquipmentSlotUI = $Center/BootsSlot
-@onready var ring_slot: EquipmentSlotUI = $Right/RingSlot
-@onready var weapon_slot: EquipmentSlotUI = $Right/WeaponSlot
+@onready var amulet_slot: EquipmentItemSlotUI = $Left/AmuletSlot
+@onready var gloves_slot: EquipmentItemSlotUI = $Left/GlovesSlot
+@onready var helmet_slot: EquipmentItemSlotUI = $Center/HelmetSlot
+@onready var armor_slot: EquipmentItemSlotUI = $Center/ArmorSlot
+@onready var boots_slot: EquipmentItemSlotUI = $Center/BootsSlot
+@onready var ring_slot: EquipmentItemSlotUI = $Right/RingSlot
+@onready var weapon_slot: EquipmentItemSlotUI = $Right/WeaponSlot
 
 # Dicionário para mapear tipos de equipamento para slots
 var slot_map: Dictionary
@@ -41,5 +41,5 @@ func clear_all_equipment() -> void:
 		slot.setup_equipment(null)
 
 # Método para obter um slot específico pelo tipo
-func get_slot_by_type(equipment_type: int) -> EquipmentSlotUI:
+func get_slot_by_type(equipment_type: int) -> EquipmentItemSlotUI:
 	return slot_map.get(equipment_type, null)

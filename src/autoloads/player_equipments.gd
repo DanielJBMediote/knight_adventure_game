@@ -1,6 +1,8 @@
 extends Node
 
-var equipped_items: Dictionary = {} # Dicionário por tipo de equipamento
+signal equipment_updated(slot_type: EquipmentItem.TYPE, equipment: EquipmentItem)
+
+var equipped_items: Dictionary = {}  # Dicionário por tipo de equipamento
 var equipment_slots: Array[EquipmentItem.TYPE] = [
 	EquipmentItem.TYPE.HELMET,
 	EquipmentItem.TYPE.AMULET,
@@ -45,55 +47,89 @@ func can_equip(equipment: EquipmentItem) -> bool:
 	return true
 
 
-func equip(new_equipment: EquipmentItem) -> void:
-	#if not can_equip(new_equipment):
-		#return
+func swap_equipment(new_equipment: EquipmentItem) -> bool:
 	var slot_type = new_equipment.equipment_type
 
-	# Desequipa item atual se houver
+	# Verifica se pode equipar
+	if not can_equip(new_equipment):
+		return false
+
+	# Guarda o item atual para possível restauração
+	var current_equipped = equipped_items[slot_type]
+
+	# Tenta adicionar o item atual de volta ao inventário se existir
+	if current_equipped:
+		if not InventoryManager.add_item(current_equipped):
+			# Não tem espaço no inventário - cancela a operação
+			return false
+		remove_equipment_stats(current_equipped)
+
+	# Equipa o novo item
+	equipped_items[slot_type] = new_equipment
+	apply_equipment_stats(new_equipment)
+
+	# Remove o novo item do inventário
+	InventoryManager.remove_item(new_equipment)
+
+	equipment_updated.emit(slot_type, new_equipment)
+	return true
+
+
+func equip(new_equipment: EquipmentItem) -> void:
+	var slot_type = new_equipment.equipment_type
+
+	# Verifica se pode equipar
+	if not can_equip(new_equipment):
+		return
+
+	# Se já tem item equipado, tenta desequipar primeiro
 	if equipped_items[slot_type] != null:
 		var current_equipped = equipped_items[slot_type]
-		unequip(current_equipped)
+		if not unequip(current_equipped):
+			# Não foi possível desequipar (inventário cheio)
+			return
 
 	# Equipa novo item
 	equipped_items[slot_type] = new_equipment
 	apply_equipment_stats(new_equipment)
+
+	# Remove do inventário
 	InventoryManager.remove_item(new_equipment)
+	equipment_updated.emit(slot_type, new_equipment)
 
-	#print("Equipado: ", new_equipment.item_name, " no slot: ", slot_type)
 
-
-func unequip(equipment: EquipmentItem) -> bool: # Retornar bool para sucesso
+# Retornar bool para sucesso
+func unequip(equipment: EquipmentItem) -> bool:
 	var slot_type = equipment.equipment_type
 	if equipped_items[slot_type] == equipment:
 		# Verifica se tem espaço no inventário primeiro
 		if InventoryManager.add_item(equipment):
 			remove_equipment_stats(equipment)
 			equipped_items[slot_type] = null
-			#InventoryManager.add_item(equipment)
+			equipment_updated.emit(slot_type, null)
 			return true
 		else:
-			print("Inventário cheio! Não foi possível desequipar.")
+			# print("Inventário cheio! Não foi possível desequipar.")
 			return false
 	return false
 
-# player_equipments.gd (métodos atualizados)
 
 func apply_equipment_stats(equipment: EquipmentItem) -> void:
 	if not equipment:
 		return
-	
+
 	# Remove todos os atributos (incluindo bônus de set que serão recalculados)
 	remove_all_set_bonuses()
 	remove_base_equipment_stats(equipment)
-	
+
 	# Reaplica os bônus de set (recalculados após a remoção do equipamento)
 	var all_attributes = equipment.get_all_attributes()
 	apply_attributes_to_stats(all_attributes, 1.0)
 	apply_base_equipment_stats(equipment)
 	apply_all_set_bonuses()
-	
+
 	PlayerStats.emit_attributes_changed()
+
 
 func remove_equipment_stats(equipment: EquipmentItem) -> void:
 	if not equipment:
@@ -102,15 +138,15 @@ func remove_equipment_stats(equipment: EquipmentItem) -> void:
 	# Remove todos os atributos (incluindo bônus de set que serão recalculados)
 	remove_all_set_bonuses()
 	remove_base_equipment_stats(equipment)
-	
+
 	# Reaplica os bônus de set (recalculados após a remoção do equipamento)
 	var all_attributes = equipment.get_all_attributes()
 	apply_attributes_to_stats(all_attributes, -1.0)
 	apply_base_equipment_stats(equipment)
 	apply_all_set_bonuses()
-	
-	
+
 	PlayerStats.emit_attributes_changed()
+
 
 # Método auxiliar para aplicar stats base do equipamento
 func apply_base_equipment_stats(equipment: EquipmentItem) -> void:
@@ -120,6 +156,7 @@ func apply_base_equipment_stats(equipment: EquipmentItem) -> void:
 	else:
 		PlayerStats.update_defense_points(equipment.defense.value)
 
+
 # Método auxiliar para remover stats base do equipamento
 func remove_base_equipment_stats(equipment: EquipmentItem) -> void:
 	if equipment.equipment_type == EquipmentItem.TYPE.WEAPON:
@@ -128,19 +165,23 @@ func remove_base_equipment_stats(equipment: EquipmentItem) -> void:
 	else:
 		PlayerStats.update_defense_points(-equipment.defense.value)
 
+
 func apply_all_set_bonuses() -> void:
 	var bonus_attributes = get_set_bonus_attributes()
 	apply_attributes_to_stats(bonus_attributes, 1.0)
 
+
 func remove_all_set_bonuses() -> void:
 	var bonus_attributes = get_set_bonus_attributes()
 	apply_attributes_to_stats(bonus_attributes, -1.0)
+
 
 # Método genérico para aplicar/remover atributos
 func apply_attributes_to_stats(attributes: Array[ItemAttribute], multiplier: float) -> void:
 	for attribute in attributes:
 		var value = attribute.value * multiplier
 		apply_single_attribute(attribute.type, value)
+
 
 # Método para aplicar um único atributo
 func apply_single_attribute(attribute_type: ItemAttribute.TYPE, value: float) -> void:
@@ -193,30 +234,32 @@ func apply_single_attribute(attribute_type: ItemAttribute.TYPE, value: float) ->
 func get_set_bonus_attributes() -> Array[ItemAttribute]:
 	var set_counts: Dictionary = {}
 	var all_bonuses: Array[ItemAttribute] = []
-	
+
 	# Conta peças de cada set
 	for slot in equipped_items:
 		var item = equipped_items[slot]
 		if item is EquipmentItem and item.equipment_set in EquipmentConsts.UNIQUES_SETS:
 			set_counts[item.equipment_set] = set_counts.get(item.equipment_set, 0) + 1
-	
+
 	# Calcula bônus ativos
 	for set_type in set_counts:
 		var equipped_count = set_counts[set_type]
 		var bonuses = SetBonus.get_active_set_bonuses(set_type, equipped_count)
 		all_bonuses.append_array(bonuses)
-	
+
 	return all_bonuses
+
 
 func get_equipped_set_items(set_type: EquipmentItem.SETS) -> Array[EquipmentItem]:
 	var equipped_set_items: Array[EquipmentItem] = []
-	
+
 	for slot in equipped_items:
 		var item = equipped_items[slot]
 		if item is EquipmentItem and item.equipment_set == set_type:
 			equipped_set_items.append(item)
-	
+
 	return equipped_set_items
+
 
 func get_equipped_item_type(slot_type: EquipmentItem.TYPE) -> EquipmentItem:
 	return equipped_items.get(slot_type, null)
@@ -224,7 +267,7 @@ func get_equipped_item_type(slot_type: EquipmentItem.TYPE) -> EquipmentItem:
 
 func is_equipped(item: EquipmentItem) -> bool:
 	var equipped = equipped_items.get(item.equipment_type, null)
-	return equipped == item
+	return item == equipped
 
 
 func is_slot_occupied(slot_type: EquipmentItem.TYPE) -> bool:
@@ -238,15 +281,16 @@ func get_all_equipped_items() -> Array[EquipmentItem]:
 			items.append(equipped_items[slot])
 	return items
 
+
 func get_all_unique_sets_equipped_items() -> Dictionary:
 	var unique_sets: Dictionary = {}
-	
+
 	for item in get_all_equipped_items():
 		if item.equipment_set in EquipmentConsts.UNIQUES_SETS:
 			if not unique_sets.has(item.equipment_set):
 				unique_sets[item.equipment_set] = []
 			unique_sets[item.equipment_set].append(item)
-	
+
 	return unique_sets
 
 

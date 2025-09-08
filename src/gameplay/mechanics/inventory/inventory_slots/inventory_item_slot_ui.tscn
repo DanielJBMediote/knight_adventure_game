@@ -14,13 +14,17 @@ region = Rect2(282, 20, 13, 12)
 atlas = ExtResource("4_qeglh")
 region = Rect2(248, 20, 17, 20)
 
-[node name="InventoryItemSlotUI" type="Panel" groups=["inventory_slots"]]
+[node name="InventoryItemSlotUI" type="Panel" node_paths=PackedStringArray("rarity_texture", "item_texture", "unique_border", "item_info")]
 custom_minimum_size = Vector2(96, 96)
 anchors_preset = -1
 anchor_right = 0.075
 anchor_bottom = 0.133333
 theme_override_styles/panel = ExtResource("1_knfd5")
 script = ExtResource("2_qs42h")
+rarity_texture = NodePath("MarginContainer/RarityTexture")
+item_texture = NodePath("MarginContainer/ItemTexture")
+unique_border = NodePath("UniqueBorder")
+item_info = NodePath("MarginContainer/Stacks")
 metadata/_edit_use_anchors_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="KnightAdventure"
-run/main_scene="uid://cc8bkuey3se7e"
+run/main_scene="uid://nxgqn7u057kw"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="uid://cw0oacjh3btgt"
 

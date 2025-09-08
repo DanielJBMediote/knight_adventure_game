@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://uyf6ebm3ykmf"]
+[gd_scene load_steps=9 format=3 uid="uid://uyf6ebm3ykmf"]
 
 [ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="1_7c3lr"]
 [ext_resource type="Script" uid="uid://dh6dqd0jb2a0f" path="res://src/actors/npcs/ui/npc_interface.gd" id="1_nb0u3"]
 [ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="2_7c3lr"]
 [ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="3_3adie"]
 [ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="3_nb0u3"]
+[ext_resource type="PackedScene" uid="uid://cge3pyyhqcd5i" path="res://src/gameplay/mechanics/equipment_socket_gem_system_ui.tscn" id="6_024eq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_024eq"]
 atlas = ExtResource("3_nb0u3")
@@ -46,10 +47,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
 
 [node name="MainContainer" type="VBoxContainer" parent="Control/MarginContainer"]
 layout_mode = 2
@@ -110,5 +111,9 @@ theme_override_fonts/font = ExtResource("3_3adie")
 text = "Test"
 
 [node name="OptionsList" type="VBoxContainer" parent="Control/MarginContainer/MainContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 16
+
+[node name="EquipmentSocketGemSystemUI" parent="Control/MarginContainer/MainContainer" instance=ExtResource("6_024eq")]
+layout_mode = 2

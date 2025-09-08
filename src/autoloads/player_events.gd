@@ -36,8 +36,6 @@ func _on_use_potion(potion: PotionItem) -> bool:
 			_:
 				return false
 		return true
-	return false
-
 
 func _on_use_equipment(item: EquipmentItem) -> void:
 	# Verifica se pode equipar

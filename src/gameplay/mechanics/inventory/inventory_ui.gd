@@ -17,9 +17,11 @@ var item_drag_display: InventoryItemDragingUI
 func _ready() -> void:
 	inventory_slots_panel._update_inventory()
 	update_inventory_actions_buttons()
+	
 	ItemManager.selected_item_updated.connect(_show_item_detail_modal)
+	PlayerEquipments.equipment_updated.connect(_on_equipment_updated)
+	
 	InventoryManager.update_inventory_visible.connect(_on_inventory_open_close)
-
 	InventoryManager.item_drag_started.connect(_on_item_drag_started)
 	InventoryManager.item_drag_ended.connect(_on_item_drag_ended)
 	
@@ -38,13 +40,25 @@ func _on_item_drag_ended(success: bool):
 		item_drag_display.queue_free()
 		item_drag_display = null
 
+
+func _on_equipment_updated(slot_type: EquipmentItem.TYPE, equipment: EquipmentItem):
+	# Encontra o slot correspondente e atualiza
+	for slot in get_tree().get_nodes_in_group("equipment_slots"):
+		if slot is EquipmentItemSlotUI and slot.slot_type == slot_type:
+			slot.setup_equipment(equipment)
+
+
 func _input(event: InputEvent) -> void:
 	# Fallback: se o mouse for solto em qualquer lugar e houver drag, finaliza
+	# Procura por algum slot que esteja em drag para forçar o end_drag
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if not event.pressed and InventoryManager.drag_item != null:
-			# Procura por algum slot que esteja em drag para forçar o end_drag
 			for slot in get_tree().get_nodes_in_group("inventory_slots"):
 				if slot is InventoryItemSlotUI and slot.is_dragging:
+					slot.end_drag()
+					break
+			for slot in get_tree().get_nodes_in_group("equipment_slots"):
+				if slot is EquipmentItemSlotUI and slot.is_dragging:
 					slot.end_drag()
 					break
 

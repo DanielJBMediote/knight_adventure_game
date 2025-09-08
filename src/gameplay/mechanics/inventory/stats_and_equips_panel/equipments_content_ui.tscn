@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://3lxtv3ol7qqs"]
 
-[ext_resource type="Script" uid="uid://gd71um7fs47e" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipments_slots_grid_ui.gd" id="1_4geyu"]
-[ext_resource type="PackedScene" uid="uid://m0vqy4aot5xa" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipment_slot.tscn" id="1_t7x3x"]
+[ext_resource type="Script" uid="uid://gd71um7fs47e" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipments_content_ui.gd" id="1_4geyu"]
+[ext_resource type="PackedScene" uid="uid://m0vqy4aot5xa" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipment_item_slot_ui.tscn" id="1_t7x3x"]
 [ext_resource type="Texture2D" uid="uid://804xravw1xba" path="res://assets/sprites/items/equipments/helmet/iron.png" id="3_e1gqp"]
 [ext_resource type="Texture2D" uid="uid://dd1e7s2p5euuw" path="res://assets/sprites/items/equipments/amulet/solaris.png" id="4_3vqi1"]
 [ext_resource type="Texture2D" uid="uid://cbwpj24c1rx20" path="res://assets/sprites/items/equipments/ring/bronze.png" id="5_7tb7f"]
@@ -28,10 +28,12 @@ metadata/_edit_lock_ = true
 [node name="AmuletSlot" parent="Left" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("4_3vqi1")
+slot_type = 5
 
 [node name="GlovesSlot" parent="Left" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("6_85dh3")
+slot_type = 3
 
 [node name="Center" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -46,10 +48,12 @@ default_texture = ExtResource("3_e1gqp")
 [node name="ArmorSlot" parent="Center" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("7_e1gqp")
+slot_type = 1
 
 [node name="BootsSlot" parent="Center" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("9_fsf7x")
+slot_type = 2
 
 [node name="Right" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -61,7 +65,9 @@ metadata/_edit_lock_ = true
 [node name="RingSlot" parent="Right" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("5_7tb7f")
+slot_type = 4
 
 [node name="WeaponSlot" parent="Right" instance=ExtResource("1_t7x3x")]
 layout_mode = 2
 default_texture = ExtResource("8_lnl12")
+slot_type = 6

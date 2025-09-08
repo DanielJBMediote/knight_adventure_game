@@ -1,12 +1,12 @@
 [gd_scene load_steps=10 format=3 uid="uid://cf0qdgwe72vtp"]
 
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_doq6e"]
-[ext_resource type="Script" uid="uid://0dcg17eebqna" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_and_equips_panel.gd" id="2_iqjlt"]
+[ext_resource type="Script" uid="uid://0dcg17eebqna" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_and_equips_ui.gd" id="2_iqjlt"]
 [ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="2_xven0"]
 [ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="3_iqjlt"]
 [ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_d3dn8"]
 [ext_resource type="Texture2D" uid="uid://s5epdhw2o7gb" path="res://assets/sprites/items/icons/Icon300.png" id="6_cxpm7"]
-[ext_resource type="PackedScene" uid="uid://3lxtv3ol7qqs" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipments_slots_grid.tscn" id="7_d3dn8"]
+[ext_resource type="PackedScene" uid="uid://3lxtv3ol7qqs" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipments_content_ui.tscn" id="7_d3dn8"]
 [ext_resource type="PackedScene" uid="uid://bvg01jmtkcafx" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_content_ui.tscn" id="8_d3dn8"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ad3cl"]

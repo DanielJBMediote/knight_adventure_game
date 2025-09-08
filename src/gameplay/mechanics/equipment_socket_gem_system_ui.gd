@@ -3,12 +3,13 @@ extends Control
 
 signal system_closed
 
-@onready var title: Label = $HBoxContainer/Panel/MarginContainer/Container/Title
-@onready var equipment_slot_ui: EquipmentSlotUI = $HBoxContainer/Panel/MarginContainer/Container/EquipmentSlotUI
+@onready var title: Label = $GemManagerPanel/MarginContainer/Container/Title
+@onready var equipment_slot_ui: EquipmentItemSlotUI = $GemManagerPanel/MarginContainer/Container/EquipmentSlotUI
 
 
 func _ready() -> void:
 	title.text = LocalizationManager.get_ui_text("equipment_gem_socket_ui")
+	InventoryManager.inventory_updated.emit()
 	
 func close_ui() -> void:
 	# Lógica para fechar a UI adequadamente

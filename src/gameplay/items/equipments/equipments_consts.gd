@@ -1,6 +1,5 @@
 class_name EquipmentConsts
 
-
 const EQUIPMENT_SPAWN_WEIGHTS = {
 	EquipmentItem.TYPE.HELMET: 20,
 	EquipmentItem.TYPE.ARMOR: 20,
@@ -206,11 +205,7 @@ const SETS_AVAILABLE_PARTS = {
 		EquipmentItem.TYPE.WEAPON,
 	],
 	EquipmentItem.SETS.SACRED_CRUSADER:
-	[
-		EquipmentItem.TYPE.HELMET,
-		EquipmentItem.TYPE.ARMOR,
-		EquipmentItem.TYPE.BOOTS
-	],
+	[EquipmentItem.TYPE.HELMET, EquipmentItem.TYPE.ARMOR, EquipmentItem.TYPE.BOOTS],
 	EquipmentItem.SETS.FROSTBEAR_WRATH:
 	[
 		EquipmentItem.TYPE.HELMET,
@@ -275,10 +270,7 @@ const SETS_AVAILABLE_PARTS = {
 		EquipmentItem.TYPE.GLOVES,
 		EquipmentItem.TYPE.WEAPON,
 	],
-	EquipmentItem.SETS.ELEMENTALS_POWERFULL: [
-		EquipmentItem.TYPE.RING,
-		EquipmentItem.TYPE.AMULET
-	]
+	EquipmentItem.SETS.ELEMENTALS_POWERFULL: [EquipmentItem.TYPE.RING, EquipmentItem.TYPE.AMULET]
 }
 
 const ALLOWED_ATTRIBUTES_PER_TYPE: Dictionary[EquipmentItem.TYPE, Array] = {
@@ -297,17 +289,9 @@ const ALLOWED_ATTRIBUTES_PER_TYPE: Dictionary[EquipmentItem.TYPE, Array] = {
 		ItemAttribute.TYPE.DEFENSE,
 	],
 	EquipmentItem.TYPE.HELMET:
-	[
-		ItemAttribute.TYPE.DEFENSE,
-		ItemAttribute.TYPE.HEALTH,
-		ItemAttribute.TYPE.CRITICAL_DAMAGE
-	],
+	[ItemAttribute.TYPE.DEFENSE, ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.CRITICAL_DAMAGE],
 	EquipmentItem.TYPE.BOOTS:
-	[
-		ItemAttribute.TYPE.HEALTH,
-		ItemAttribute.TYPE.DEFENSE,
-		ItemAttribute.TYPE.MOVE_SPEED
-	],
+	[ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.DEFENSE, ItemAttribute.TYPE.MOVE_SPEED],
 	EquipmentItem.TYPE.GLOVES:
 	[
 		ItemAttribute.TYPE.DAMAGE,
