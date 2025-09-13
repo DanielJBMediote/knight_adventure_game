@@ -14,7 +14,7 @@ enum QUALITY {
 @export var gem_quality: QUALITY
 @export var num_runes_to_upgrade: int = 0
 @export var price_to_upgrade: int = 0
-@export var equip_slot_sockets: Array[EquipmentItem.TYPE]
+@export var available_equipments_type: Array[EquipmentItem.TYPE]
 
 func _init() -> void:
 	pass
@@ -32,16 +32,16 @@ func setup(enemy_stats: EnemyStats) -> void:
 	self.item_level = calculate_gem_level(enemy_stats.level)
 	self.gem_quality = get_gem_quality()
 	#self.can_upgrade = can_upgrade_gem()
-	self.spawn_chance = calculate_spawn_chance(enemy_stats.level)
+	self.spawn_chance = _calculate_spawn_chance(enemy_stats.level)
 	self.item_rarity = get_gem_rarity()
 	self.item_action = null
 	self.is_unique = setup_gem_unique()
-	self.item_attributes = setup_gem_attributes()
-	self.equip_slot_sockets = get_available_equip_slots()
-	self.item_name = generate_gem_name()
-	self.item_descriptions = generate_gem_descriptions()
-	self.item_id = generate_gem_id()
-	self.item_price = calculate_item_price(int(GemConsts.BASE_GEM_PRICE))
+	self.item_attributes = _generate_attributes()
+	self.available_equipments_type = get_available_equip_slots()
+	self.item_name = _generate_gem_name()
+	self.item_descriptions = _generate_gem_descriptions()
+	self.item_id = _generate_gem_id()
+	self.item_price = _calculate_item_price(int(GemConsts.BASE_GEM_PRICE))
 	self.num_runes_to_upgrade = GemConsts.NUM_RUNES_TO_UPGRADE if can_upgrade_gem() else 0
 	self.price_to_upgrade = calculate_price_to_upgrade() if can_upgrade_gem() else 0
 	self.item_texture = generate_gem_texture()
@@ -70,16 +70,16 @@ func get_random_gem_type() -> ItemAttribute.TYPE:
 	return ItemAttribute.TYPE.HEALTH
 
 
-func generate_gem_id() -> String:
+func _generate_gem_id() -> String:
 	var quality = self.gem_quality
 	var quality_str = GemConsts.GEM_QUALITY_KEY[quality]
 	var type_str = ItemAttribute.ATTRIBUTE_KEYS[gem_type]
 	var unique_str = "UNIQUE" if is_unique else ""
-	var gem_id = generate_item_id(["GEM", quality_str, type_str, unique_str])
+	var gem_id = Item._generate_item_id(["GEM", quality_str, type_str, unique_str])
 	return gem_id
 
 
-func generate_gem_name() -> String:
+func _generate_gem_name() -> String:
 	var quality = self.gem_quality
 	var quality_name = LocalizationManager.get_gem_quality_text(quality)
 	var type_str = ItemAttribute.ATTRIBUTE_KEYS[gem_type]
@@ -91,7 +91,7 @@ func generate_gem_name() -> String:
 	return base_name
 
 
-func generate_gem_descriptions() -> Array[String]:
+func _generate_gem_descriptions() -> Array[String]:
 	var type_str = ItemAttribute.ATTRIBUTE_KEYS.get(gem_type)
 	var base_Description = LocalizationManager.get_gem_base_description_text(type_str)
 
@@ -148,10 +148,10 @@ func get_preview_next_gem() -> GemItem:
 	next_gem.item_level = get_level_for_quality(next_gem.gem_quality)
 	next_gem.item_rarity = next_gem.get_gem_rarity()
 	# next_gem.is_unique = next_gem.setup_gem_unique()
-	next_gem.item_attributes = next_gem.setup_gem_attributes()
-	next_gem.item_name = next_gem.generate_gem_name()
-	next_gem.item_descriptions = next_gem.generate_gem_descriptions()
-	next_gem.item_id = next_gem.generate_gem_id()
+	next_gem.item_attributes = next_gem._generate_attributes()
+	next_gem.item_name = next_gem._generate_gem_name()
+	next_gem.item_descriptions = next_gem._generate_gem_descriptions()
+	next_gem.item_id = next_gem._generate_gem_id()
 	next_gem.num_runes_to_upgrade = GemConsts.NUM_RUNES_TO_UPGRADE if next_gem.can_upgrade_gem() else 0
 	next_gem.price_to_upgrade = next_gem.calculate_price_to_upgrade() if next_gem.can_upgrade_gem() else 0
 	next_gem.item_texture = next_gem.generate_gem_texture()
@@ -266,11 +266,11 @@ func upgrade_gem(runes: Array[Item], gems: Array[Item], quanity: int = 1) -> boo
 		new_gem.item_rarity = new_gem.get_gem_rarity()
 		new_gem.num_runes_to_upgrade = GemConsts.NUM_RUNES_TO_UPGRADE if new_gem.can_upgrade_gem() else 0
 		new_gem.price_to_upgrade = new_gem.calculate_price_to_upgrade() if new_gem.can_upgrade_gem() else 0
-		new_gem.item_id = new_gem.generate_gem_id()
-		new_gem.item_name = new_gem.generate_gem_name()
-		new_gem.item_descriptions = new_gem.generate_gem_descriptions()
+		new_gem.item_id = new_gem._generate_gem_id()
+		new_gem.item_name = new_gem._generate_gem_name()
+		new_gem.item_descriptions = new_gem._generate_gem_descriptions()
 		new_gem.is_unique = new_gem.setup_gem_unique()
-		new_gem.item_attributes = new_gem.setup_gem_attributes()
+		new_gem.item_attributes = new_gem._generate_attributes()
 		new_gem.item_texture = new_gem.generate_gem_texture()
 		new_gem.current_stack = quanity
 		
@@ -326,7 +326,7 @@ func get_level_for_quality(quality: QUALITY) -> int:
 			return 5
 
 
-func calculate_spawn_chance(enemy_level: int) -> float:
+func _calculate_spawn_chance(enemy_level: int) -> float:
 	var base_chance = 1.0 if enemy_level >= GemConsts.MIN_LEVEL else 0.0
 
 	# Reduz a chance conforme a qualidade aumenta
@@ -356,11 +356,14 @@ func calculate_spawn_chance(enemy_level: int) -> float:
 	return clamp(calculated_spawn_chance, 0.01, 1.0)
 
 
-func setup_gem_attributes() -> Array[ItemAttribute]:
+func _generate_attributes() -> Array[ItemAttribute]:
 	var attributes: Array[ItemAttribute] = []
 	var attribute = ItemAttribute.new(gem_type, 0)
 	attribute.type = gem_type
-	attribute.value = calculate_final_attribute_value()
+
+	var base_value = _calculate_final_attribute_value()
+	attribute.base_value = base_value
+	attribute.value = base_value
 
 	if self.gem_quality == QUALITY.PRISTINE and is_unique:
 		attribute.value *= 1.5
@@ -369,7 +372,7 @@ func setup_gem_attributes() -> Array[ItemAttribute]:
 	return attributes
 
 
-func calculate_final_attribute_value(_gem_type: ItemAttribute.TYPE = gem_type) -> float:
+func _calculate_final_attribute_value(_gem_type: ItemAttribute.TYPE = gem_type) -> float:
 	var base_value = GemConsts.BASE_VALUES[_gem_type]
 	var quality_multiplier = get_quality_multiplier()
 	#var level_multiplier = 1.0 + (item_level / 100.0)

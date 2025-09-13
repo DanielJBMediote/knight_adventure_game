@@ -8,7 +8,8 @@ const ITEM_SLOT_STYLEBOX_NORMAL = preload("res://src/ui/themes/item_slot_stylebo
 @export var rarity_texture: TextureRect
 @export var item_texture: TextureRect
 @export var unique_border: Panel
-@export var item_info: Label
+@export var info: Label
+@export var preview_gems_attached: VBoxContainer
 
 # Variáveis comuns
 var current_item: Item
@@ -37,7 +38,7 @@ func _ready() -> void:
 
 	# Timer para diferenciar clique de drag
 	click_timer = Timer.new()
-	click_timer.wait_time = 0.1
+	click_timer.wait_time = 0.3
 	click_timer.one_shot = true
 	add_child(click_timer)
 
@@ -53,13 +54,56 @@ func _setup_specifics() -> void:
 # Método virtual para setup do current_item
 func setup_item(new_item: Item) -> void:
 	current_item = new_item
-	update_lock_status()
+	_update_lock_status()
+	_update_item_rarity_texture()
+	_update_border_style()
+	_update_item_info()
+	_update_gems_attached()
 
+func get_item() -> Item:
+	return current_item
 
-func update_lock_status() -> void:
+func _update_lock_status() -> void:
 	# Implementação específica nas classes filhas
 	pass
 
+func _update_item_info() -> void:
+	if not current_item:
+		info.hide()
+	else:
+		info.show()
+		if current_item.stackable:
+			info.text = str(current_item.current_stack)
+			return
+		info.hide()
+
+func _update_gems_attached() -> void:
+	if not preview_gems_attached:
+		return
+
+	for child in preview_gems_attached.get_children():
+		child.queue_free()
+
+	if not current_item:
+		preview_gems_attached.hide()
+		return
+	if current_item.item_category != Item.CATEGORY.EQUIPMENTS:
+		preview_gems_attached.hide()
+		return
+	
+	preview_gems_attached.show()
+	var equipment = current_item as EquipmentItem
+	var attached_gems = equipment.attached_gems
+	for slot_key in attached_gems:
+		var gem = attached_gems.get(slot_key)
+		if gem:
+			var tx_rect =  TextureRect.new()
+			tx_rect.texture = gem.item_texture
+			tx_rect.custom_minimum_size = Vector2(12, 12)
+			tx_rect.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+			tx_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			preview_gems_attached.add_child(tx_rect)
+	
 
 # DRAG AND DROP - FUNÇÕES COMUNS
 func _on_gui_input(event: InputEvent) -> void:
@@ -139,23 +183,17 @@ func end_drag() -> void:
 
 
 func get_drop_target_slot() -> BaseSlotUI:
-	# Verifica todos os slots para ver se o mouse está sobre algum
 	var mouse_pos = get_global_mouse_position()
-
-	# Primeiro verifica slots de equipamento
-	for child in get_tree().get_nodes_in_group("equipment_slots"):
-		if child is BaseSlotUI and child != self:
-			var rect = Rect2(child.global_position, child.size)
-			if rect.has_point(mouse_pos) and not child.is_locked:
-				return child
-
-	# Depois verifica slots de inventário
-	for child in get_tree().get_nodes_in_group("inventory_slots"):
-		if child is BaseSlotUI and child != self:
-			var rect = Rect2(child.global_position, child.size)
-			if rect.has_point(mouse_pos) and not child.is_locked:
-				return child
-
+	
+	# Lista de grupos para verificar (na ordem de prioridade)
+	var slot_groups = [InventoryItemSlotUI.GROUP_NAME, EquipmentItemSlotUI.GROUP_NAME, ESGSEquipmentItemSlotUI.GROUP_NAME]
+	for group in slot_groups:
+		for slot in get_tree().get_nodes_in_group(group):
+			if slot is BaseSlotUI and slot != self and not slot.is_locked:
+				var rect = Rect2(slot.global_position, slot.size)
+				if rect.has_point(mouse_pos):
+					return slot
+	
 	return null
 
 
@@ -165,13 +203,25 @@ func _try_move_item(_target_slot: BaseSlotUI) -> void:
 
 
 func _hide_item_visuals() -> void:
-	# Implementação específica nas classes filhas
-	pass
+	if not current_item:
+		return
+	rarity_texture.hide()
+	item_texture.hide()
+	unique_border.hide()
+	preview_gems_attached.hide()
 
 
 func _show_item_visuals() -> void:
-	# Implementação específica nas classes filhas
-	pass
+	if not current_item:
+		return
+	
+	rarity_texture.show()
+	item_texture.show()
+	unique_border.visible = current_item.is_unique
+
+	if current_item.item_category == Item.CATEGORY.EQUIPMENTS:
+		preview_gems_attached.show()
+		
 
 
 # FUNÇÕES DE MOUSE COMUNS
@@ -193,8 +243,11 @@ func _on_mouse_exited() -> void:
 		self.add_theme_stylebox_override("panel", ITEM_SLOT_STYLEBOX_NORMAL)
 
 
-func _set_item_rarity_texture(rarity: Item.RARITY) -> void:
-	match rarity:
+func _update_item_rarity_texture() -> void:
+	if not current_item or not rarity_texture:
+		rarity_texture.texture = null
+		return
+	match current_item.item_rarity:
 		Item.RARITY.COMMON:
 			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_COMMOM
 		Item.RARITY.UNCOMMON:
@@ -210,6 +263,8 @@ func _set_item_rarity_texture(rarity: Item.RARITY) -> void:
 		_:
 			rarity_texture.texture = null
 
-
-func _update_border_style(is_unique: bool = false):
-	unique_border.visible = is_unique
+func _update_border_style():
+	if current_item:
+		unique_border.visible = current_item.is_unique
+	else:
+		unique_border.hide()

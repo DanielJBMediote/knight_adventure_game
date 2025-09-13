@@ -58,6 +58,8 @@ func change_to_scene_with_transition(new_scene: PackedScene, fade_suration: floa
 func set_current_map(map_data: MapData) -> void:
 	current_map = map_data
 
+func get_player_ui() -> PlayerUI:
+	return get_tree().get_first_node_in_group("player_ui")
 
 func check_initial_joypads():
 	var joypads = Input.get_connected_joypads()

@@ -37,8 +37,8 @@ const PANEL_MAX_SIZE = Vector2(460, 620)
 @onready var rarity_background_texture: TextureRect = $Panel/TextureMargin/RarityBackgroundTexture
 
 
-const VIEW_ICON_OPEN = Rect2(241, 65, 31, 21)
-const VIEW_ICON_CLOSE = Rect2(273, 78, 31, 18)
+const VIEW_ICON_OPEN = Rect2(240, 64, 32, 32)
+const VIEW_ICON_CLOSE = Rect2(272, 64, 32, 32)
 
 const SET_BONUS_COLORS = {1: Color.GREEN, 0: Color.SLATE_GRAY}
 
@@ -178,27 +178,27 @@ func update_bonus_attributes_info(equipment: EquipmentItem) -> void:
 	set_name_label.text = LocalizationManager.get_equipment_text("uniques.%s.set_name" % set_name_key) + ":"
 
 	for piece_info in set_info.get_equipped_pieces():
-		var equip_name_label = AttributeLabel.new()
-		equip_name_label.custom_text = str("  ", piece_info.get_name())
-		equip_name_label.custom_color = Color.ROYAL_BLUE if piece_info.is_equipped() else Color.DIM_GRAY
+		var equip_name_label = DefaultLabel.new()
 		attribute_bonus_container.add_child(equip_name_label)
+		equip_name_label.text = str("  ", piece_info.get_name())
+		equip_name_label.set_color(Color.ROYAL_BLUE if piece_info.is_equipped() else Color.DIM_GRAY)
 	
-	var bonus_label = AttributeLabel.new()
-	bonus_label.custom_text = LocalizationManager.get_ui_text("set_bonus") + ":"
+	var bonus_label = DefaultLabel.new()
 	attribute_bonus_container.add_child(bonus_label)
+	bonus_label.text = LocalizationManager.get_ui_text("set_bonus") + ":"
 
 	for attrib_info in set_info.get_active_bonuses():
-		var bonus_attrib_label = AttributeLabel.new()
-		bonus_attrib_label.custom_text = str("  ", attrib_info.get_description())
-		bonus_attrib_label.custom_color = Color.ROYAL_BLUE if attrib_info.is_active() else Color.DIM_GRAY
+		var bonus_attrib_label = DefaultLabel.new()
 		attribute_bonus_container.add_child(bonus_attrib_label)
+		bonus_attrib_label.text = str("  ", attrib_info.get_description())
+		bonus_attrib_label.set_color(Color.ROYAL_BLUE if attrib_info.is_active() else Color.DIM_GRAY)
 
 
 func update_gem_sockets_info(equipment: EquipmentItem) -> void:
-	var gems = equipment.gems_in_sockets
+	var attached_gems = equipment.attached_gems
 	for slot_index in equipment.available_sockets:
-		if slot_index < gems.size():
-			var gem = gems[slot_index]
+		if slot_index < attached_gems.size():
+			var gem = attached_gems[slot_index]
 			if gem:
 				equipment_gem_sockets_slots.gems.append(gem)
 			else:
@@ -237,7 +237,7 @@ func update_loot_informations(item: Item) -> void:
 
 
 func update_gem_informations(gem: GemItem) -> void:
-	var possible_equip_types = gem.equip_slot_sockets
+	var possible_equip_types = gem.available_equipments_type
 
 	level_container.show()
 	gem_available_slot_info.show()
@@ -261,40 +261,42 @@ func update_item_attributes_info(item: Item) -> void:
 	
 	# Caso sem atributos
 	if attributes.is_empty():
-		var attribute_label = AttributeLabel.new()
-		attribute_label.custom_text = LocalizationManager.get_ui_text("no_attributes")
+		var attribute_label = DefaultLabel.new()
 		attribute_container.add_child(attribute_label)
+		attribute_label.text = LocalizationManager.get_ui_text("no_attributes")
 		return
 	
 	for attribute in attributes:
 		attribute_container.add_theme_constant_override("separation", 0)
 		
-		var main_attribute_label = AttributeLabel.new()
+		var main_attribute_label = DefaultLabel.new()
+		attribute_container.add_child(main_attribute_label)
+		
 		var formatted_value = _format_attribute_value(attribute.value, attribute.type)
 		var attribute_name = ItemAttribute.get_attribute_type_name(attribute.type)
 		
 		if is_equipments:
 			var attribute_color = ItemAttribute.get_attribute_value_color(attribute)
-			main_attribute_label.custom_color = attribute_color
+			main_attribute_label.set_color(attribute_color)
 		
-		main_attribute_label.custom_text = str("+", formatted_value, " ", attribute_name)
-		attribute_container.add_child(main_attribute_label)
+		main_attribute_label.text = str("+", formatted_value, " ", attribute_name)
 		
 		if showing_advanced and is_equipments:
-			var advanced_label = AttributeLabel.new()
+			var advanced_label = DefaultLabel.new()
 			var min_formatted = _format_attribute_value(attribute.min_value, attribute.type)
 			var max_formatted = _format_attribute_value(attribute.max_value, attribute.type)
 			
-			advanced_label.custom_text = str("(", min_formatted, " - ", max_formatted, ")")
-			advanced_label.custom_color = Color.SLATE_GRAY
 			attribute_container.add_child(advanced_label)
+			advanced_label.text = str("(", min_formatted, " - ", max_formatted, ")")
+			advanced_label.set_color(Color.SLATE_GRAY)
+			
 
 func update_item_descriptions(descriptions: Array[String]) -> void:
 	for desc in descriptions:
-		var new_label = AttributeLabel.new()
-		new_label.custom_text = desc
+		var new_label = DefaultLabel.new()
 		description_container.add_child(new_label)
-		new_label.add_theme_color_override("font_color", Color.WHITE)
+		new_label.text = desc
+		new_label.set_color(Color.WHITE)
 		new_label.custom_minimum_size.y = 24
 		new_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
@@ -341,7 +343,7 @@ func _on_action_button_pressed() -> void:
 		if current_item.item_action != null and is_consumable:
 			ItemManager.consume_item(current_item)
 		elif is_equipable:
-			ItemManager.equip_item(current_item)
+			PlayerEvents.equip_item(current_item)
 		elif is_loots:
 			match current_item.item_subcategory:
 				Item.SUBCATEGORY.RESOURCE:

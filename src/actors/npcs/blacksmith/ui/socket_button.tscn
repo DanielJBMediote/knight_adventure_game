@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://ugixsawwxtkd"]
+
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="1_mvhs8"]
+[ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="1_wd7of"]
+[ext_resource type="Script" uid="uid://baaa24pkyv18g" path="res://src/actors/npcs/blacksmith/ui/socket_button.gd" id="2_fnlnc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aplcb"]
+atlas = ExtResource("1_wd7of")
+region = Rect2(304, 16, 32, 32)
+
+[node name="SocketButton" type="Button"]
+custom_minimum_size = Vector2(64, 48)
+anchors_preset = -1
+anchor_right = 0.0499063
+anchor_bottom = 0.0666667
+offset_right = 0.119991
+theme_override_fonts/font = ExtResource("1_mvhs8")
+text = "Attach"
+icon = SubResource("AtlasTexture_aplcb")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+script = ExtResource("2_fnlnc")
+metadata/_edit_use_anchors_ = true

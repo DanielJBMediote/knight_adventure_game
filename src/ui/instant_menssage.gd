@@ -22,6 +22,9 @@ func _ready() -> void:
 
 # Função para mostrar a mensagem
 func show_message(text: String, type: TYPE = TYPE.SUCCESS, duration: float = 3.0) -> void:
+	if not message:
+		printerr("Node: Message does not has initialized.")
+		return
 	message.text = text
 	
 	# Define a cor baseada no tipo

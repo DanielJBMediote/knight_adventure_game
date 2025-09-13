@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://csei5wo5mukis"]
+[gd_scene load_steps=9 format=3 uid="uid://csei5wo5mukis"]
 
 [ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_knfd5"]
 [ext_resource type="Script" uid="uid://ccfhx2mtxkqs" path="res://src/gameplay/mechanics/inventory/inventory_slots/inventory_item_slot_ui.gd" id="2_qs42h"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="3_qs42h"]
 [ext_resource type="Theme" uid="uid://k0ll6m3w6kk3" path="res://src/ui/themes/items_themes/unique_border.tres" id="3_w1xua"]
 [ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="4_qeglh"]
 [ext_resource type="StyleBox" uid="uid://bel6u03loird0" path="res://src/ui/themes/base_inventory_slot.tres" id="5_w7y7x"]
@@ -14,7 +15,7 @@ region = Rect2(282, 20, 13, 12)
 atlas = ExtResource("4_qeglh")
 region = Rect2(248, 20, 17, 20)
 
-[node name="InventoryItemSlotUI" type="Panel" node_paths=PackedStringArray("rarity_texture", "item_texture", "unique_border", "item_info")]
+[node name="InventoryItemSlotUI" type="Panel" node_paths=PackedStringArray("rarity_texture", "item_texture", "unique_border", "info", "preview_gems_attached")]
 custom_minimum_size = Vector2(96, 96)
 anchors_preset = -1
 anchor_right = 0.075
@@ -24,8 +25,10 @@ script = ExtResource("2_qs42h")
 rarity_texture = NodePath("MarginContainer/RarityTexture")
 item_texture = NodePath("MarginContainer/ItemTexture")
 unique_border = NodePath("UniqueBorder")
-item_info = NodePath("MarginContainer/Stacks")
+info = NodePath("MarginContainer/DetailContainer/Footer/Info")
+preview_gems_attached = NodePath("MarginContainer/DetailContainer/PreviewGemsAttatched")
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -38,6 +41,7 @@ theme_override_constants/margin_left = 4
 theme_override_constants/margin_top = 4
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
+metadata/_edit_lock_ = true
 
 [node name="RarityTexture" type="TextureRect" parent="MarginContainer"]
 layout_mode = 2
@@ -48,10 +52,28 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Stacks" type="Label" parent="MarginContainer"]
+[node name="DetailContainer" type="MarginContainer" parent="MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="PreviewGemsAttatched" type="VBoxContainer" parent="MarginContainer/DetailContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="Footer" type="HBoxContainer" parent="MarginContainer/DetailContainer"]
+layout_mode = 2
 size_flags_vertical = 8
+
+[node name="Info" type="Label" parent="MarginContainer/DetailContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("3_qs42h")
 
 [node name="UniqueBorder" type="Panel" parent="."]
 visible = false

@@ -26,14 +26,14 @@ func setup(enemy_stats: EnemyStats) -> void:
 	self.item_name = generate_rune_name()
 	self.item_descriptions = generate_rune_descriptions()
 	self.item_id = generate_rune_id()
-	self.item_price = calculate_item_price(RuneConsts.BASE_PRICE)
+	self.item_price = _calculate_item_price(RuneConsts.BASE_PRICE)
 	self.item_texture = generate_rune_texture()
 
 
 func generate_rune_id() -> String:
 	var rune_type_key = RuneConsts.RUNE_TYPE_KEYS.get(self.rune_type, "UNKNOWN")
 	var rune_name = "%s_%d" % [rune_type_key, self.item_level]
-	var rune_id = Item.generate_item_id([rune_name])
+	var rune_id = Item._generate_item_id([rune_name])
 	return rune_id
 
 

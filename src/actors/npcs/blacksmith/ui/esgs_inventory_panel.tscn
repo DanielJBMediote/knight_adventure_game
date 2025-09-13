@@ -1,0 +1,159 @@
+[gd_scene load_steps=10 format=3 uid="uid://c5tsjt1f7haeq"]
+
+[ext_resource type="Theme" uid="uid://dc8nwn3fsn3ag" path="res://src/ui/themes/base_panel.tres" id="1_fwuss"]
+[ext_resource type="Script" uid="uid://cv6j4d7hp5mij" path="res://src/actors/npcs/blacksmith/ui/esgs_inventory_panel.gd" id="2_8ny1d"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="3_0re8a"]
+[ext_resource type="PackedScene" uid="uid://cvbmrrputn3w6" path="res://src/gameplay/mechanics/inventory/currency/currency_info_ui.tscn" id="4_fwuss"]
+[ext_resource type="PackedScene" uid="uid://csei5wo5mukis" path="res://src/gameplay/mechanics/inventory/inventory_slots/inventory_item_slot_ui.tscn" id="5_fwuss"]
+[ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="6_0re8a"]
+[ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="7_5j8o5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p4wui"]
+atlas = ExtResource("7_5j8o5")
+region = Rect2(50, 20, 24, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4kj7d"]
+atlas = ExtResource("7_5j8o5")
+region = Rect2(22, 19, 24, 26)
+
+[node name="ESGSEquipmentsPanel" type="Panel"]
+custom_minimum_size = Vector2(780, 480)
+anchors_preset = -1
+anchor_right = 0.609375
+anchor_bottom = 0.666667
+offset_bottom = -0.000244141
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_fwuss")
+script = ExtResource("2_8ny1d")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+metadata/_edit_lock_ = true
+
+[node name="MainContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="MarginContainer/MainContainer"]
+custom_minimum_size = Vector2(696, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label" type="Label" parent="MarginContainer/MainContainer/Header"]
+layout_mode = 2
+theme = ExtResource("3_0re8a")
+text = "Inventory"
+
+[node name="CurrencyInfoUI" parent="MarginContainer/MainContainer/Header" instance=ExtResource("4_fwuss")]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="InventorySlots" type="GridContainer" parent="MarginContainer/MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+columns = 7
+
+[node name="InventoryItemSlotUI" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI2" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI3" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI4" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI5" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI6" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI7" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI8" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI9" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI10" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI11" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI12" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI13" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI14" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI15" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI16" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI17" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI18" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI19" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI20" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI21" parent="MarginContainer/MainContainer/InventorySlots" instance=ExtResource("5_fwuss")]
+layout_mode = 2
+
+[node name="InventoryControls" type="HBoxContainer" parent="MarginContainer/MainContainer"]
+custom_minimum_size = Vector2(696, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 16
+alignment = 2
+
+[node name="PageLabel" type="Label" parent="MarginContainer/MainContainer/InventoryControls"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme = ExtResource("3_0re8a")
+text = "1 of 3"
+
+[node name="PrevButton" type="Button" parent="MarginContainer/MainContainer/InventoryControls"]
+custom_minimum_size = Vector2(96, 32)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("6_0re8a")
+icon = SubResource("AtlasTexture_p4wui")
+icon_alignment = 1
+
+[node name="NextButton" type="Button" parent="MarginContainer/MainContainer/InventoryControls"]
+custom_minimum_size = Vector2(96, 32)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("6_0re8a")
+icon = SubResource("AtlasTexture_4kj7d")
+icon_alignment = 1

@@ -1,0 +1,81 @@
+[gd_scene load_steps=6 format=3 uid="uid://doc001pxn5cwu"]
+
+[ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_wl14x"]
+[ext_resource type="Script" uid="uid://b3xr34mrop3wm" path="res://src/actors/npcs/blacksmith/ui/esgs_avalable_gem_panel/esgs_available_gem_item.gd" id="2_eejky"]
+[ext_resource type="Texture2D" uid="uid://ch3hunsu03xej" path="res://assets/sprites/items/gems/gem_common_blue.png" id="2_isfbl"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="3_eejky"]
+[ext_resource type="Texture2D" uid="uid://grrmo7an5bti" path="res://src/ui/themes/items_themes/bg_gradient_item_uncommon.tres" id="3_isfbl"]
+
+[node name="ESGSAvailableGemItem" type="Panel"]
+custom_minimum_size = Vector2(488, 96)
+offset_right = 488.0
+offset_bottom = 96.0
+size_flags_horizontal = 3
+theme_override_styles/panel = ExtResource("1_wl14x")
+script = ExtResource("2_eejky")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+metadata/_edit_lock_ = true
+
+[node name="RarityTexture" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+texture = ExtResource("3_isfbl")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="GemTexture" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 0
+texture = ExtResource("2_isfbl")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Quantity" parent="MarginContainer/HBoxContainer/GemTexture" instance=ExtResource("3_eejky")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.726
+anchor_top = 0.821
+anchor_right = 0.726
+anchor_bottom = 0.821
+offset_left = -3.984
+offset_top = -5.964
+offset_right = 15.016
+offset_bottom = 9.036
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.8, 0.8)
+size_flags_vertical = 8
+text = "x16"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="GemName" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_eejky")]
+layout_mode = 2
+text = "Common Critical Damage Gem"
+
+[node name="GemAttribute" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_eejky")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "+ 15% Critical Damage"
+
+[node name="Level" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_eejky")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Lv. 30"

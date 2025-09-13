@@ -31,11 +31,11 @@ region = Rect2(214, 69, 23, 23)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3tkmh"]
 atlas = ExtResource("4_catel")
-region = Rect2(273, 78, 31, 18)
+region = Rect2(272, 64, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hdk3s"]
 atlas = ExtResource("4_catel")
-region = Rect2(216, 24, 17, 16)
+region = Rect2(208, 16, 32, 32)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_chuoy"]
 texture = ExtResource("1_iwre5")
@@ -46,13 +46,13 @@ texture_margin_bottom = 16.0
 region_rect = Rect2(576, 240, 128, 128)
 
 [node name="InventoryItemInfoUI" type="Control"]
+z_index = 2
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
 script = ExtResource("1_2ld60")
 metadata/_edit_lock_ = true
 
@@ -63,7 +63,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.784314)
+color = Color(0, 0, 0, 0.882353)
 metadata/_edit_lock_ = true
 
 [node name="Panel" type="Panel" parent="."]
@@ -75,9 +75,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -230.0
-offset_top = -230.0
+offset_top = -210.0
 offset_right = 230.0
-offset_bottom = 190.0
+offset_bottom = 210.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
@@ -308,7 +308,6 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_chuoy")
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
-[connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/ContentContainer/Footer/ActionButton" to="." method="_on_use_equip_item_button_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/ContentContainer/Footer/TrashItemButton" to="." method="_on_trash_item_button_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/Buttons/AdvancedViewButton" to="." method="_on_advanced_view_button_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/Buttons/CloseButton" to="." method="_on_close_button_pressed"]

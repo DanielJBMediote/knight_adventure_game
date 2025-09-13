@@ -1,7 +1,7 @@
 class_name Item
 extends Resource
 
-enum RARITY {COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHICAL}
+enum RARITY { COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHICAL }
 const RARITY_KEYS = {
 	RARITY.COMMON: "common",
 	RARITY.UNCOMMON: "uncommon",
@@ -11,7 +11,7 @@ const RARITY_KEYS = {
 	RARITY.MYTHICAL: "mythical",
 }
 
-enum CATEGORY {CONSUMABLES, EQUIPMENTS, LOOTS, QUEST, MISCELLANEOUS}
+enum CATEGORY { CONSUMABLES, EQUIPMENTS, LOOTS, QUEST, MISCELLANEOUS }
 const CATEGORY_KEYS = {
 	CATEGORY.CONSUMABLES: "consumables",
 	CATEGORY.EQUIPMENTS: "equipments",
@@ -20,7 +20,7 @@ const CATEGORY_KEYS = {
 	CATEGORY.MISCELLANEOUS: "miscellaneous",
 }
 
-enum SUBCATEGORY {POTION, WEAPON, ARMOR, ACCESSORY, FOOD, EQUIPMENTS, GEM, RESOURCE}
+enum SUBCATEGORY { POTION, WEAPON, ARMOR, ACCESSORY, FOOD, EQUIPMENTS, GEM, RESOURCE }
 const SUBCATEGORY_KEYS = {
 	SUBCATEGORY.POTION: "potion",
 	SUBCATEGORY.FOOD: "food",
@@ -48,6 +48,9 @@ const SUBCATEGORY_KEYS = {
 @export var current_stack: int = 1
 @export var is_unique: bool = false
 
+## Refencence of Inventory Slots
+var slot_index_ref: int = -1
+
 var _item_action: ItemAction
 @export var item_action: ItemAction:
 	get():
@@ -71,12 +74,14 @@ func setup(_enemy_stats: EnemyStats) -> void:
 func clone() -> Item:
 	var copy = self.duplicate()
 
+	copy.slot_index_ref = self.slot_index_ref
+
 	if self.item_attributes:
 		copy.item_attributes = self.item_attributes
 
 	if self.item_action:
 		copy.item_action = self.item_action.duplicate()
-
+	
 	return copy
 
 
@@ -84,12 +89,12 @@ func get_sort_value() -> int:
 	return self.item_subcategory
 
 
-static func generate_item_id(strings: Array[String]) -> String:
+static func _generate_item_id(strings: Array[String]) -> String:
 	var joined_strings = "_".join(strings)
 	return ("ITEM_ID_" + joined_strings).to_upper()
 
 
-func calculate_item_price(base_value: int = 1) -> int:
+func _calculate_item_price(base_value: int = 1) -> int:
 	var value = base_value * 1000
 
 	# Aplica o multiplicador de raridade
@@ -166,25 +171,27 @@ static func get_quality_level_modifier(player_level: int, map_level: int) -> flo
 	var level_difference = player_level - map_level
 
 	# Jogador em mapa fácil: maior chance de itens de qualidade
-	if level_difference > 10: # +10 níveis acima do mapa
-		return 1.5 # +50% de chance de raridade melhor
+	if level_difference > 10:  # +10 níveis acima do mapa
+		return 1.5  # +50% de chance de raridade melhor
 
-	elif level_difference > 5: # +5 níveis acima
-		return 1.25 # +25%
+	elif level_difference > 5:  # +5 níveis acima
+		return 1.25  # +25%
 
 	# Jogador em mapa difícil: menor chance de itens de qualidade
-	elif level_difference < -10: # -10 níveis abaixo
-		return 0.6 # -40%
+	elif level_difference < -10:  # -10 níveis abaixo
+		return 0.6  # -40%
 
-	elif level_difference < -5: # -5 níveis abaixo
-		return 0.8 # -20%
+	elif level_difference < -5:  # -5 níveis abaixo
+		return 0.8  # -20%
 
 	# Níveis similares: neutro
 	return 1.0
 
 
 ## Calculate the Rarity of Item based on difficulty and player level
-static func get_item_rarity_by_difficult_and_player_level(player_level: int, map_level: int, difficulty: int) -> RARITY:
+static func get_item_rarity_by_difficult_and_player_level(
+	player_level: int, map_level: int, difficulty: int
+) -> RARITY:
 	var rand_val = randf()
 
 	# Ajusta as chances baseado na diferença de nível do jogador
@@ -203,9 +210,9 @@ static func get_item_rarity_by_difficult_and_player_level(player_level: int, map
 	for i in range(base_thresholds[difficulty].size()):
 		var base_chance = base_thresholds[difficulty][i]
 
-		if i == 0: # Common - reduz com bônus de qualidade
+		if i == 0:  # Common - reduz com bônus de qualidade
 			adjusted_thresholds.append(base_chance / quality_modifier)
-		else: # Raridades melhores - aumenta com bônus de qualidade
+		else:  # Raridades melhores - aumenta com bônus de qualidade
 			adjusted_thresholds.append(base_chance * quality_modifier)
 
 	# Normaliza para garantir que a soma seja 1.0
@@ -236,7 +243,7 @@ func get_item_action(_item: Item = self) -> ItemAction:
 func get_item_attributes(_item: Item = self) -> Array[ItemAttribute]:
 	return _item.item_attributes
 
-
+## Return de corresponding Color of item rarity
 func get_item_rarity_text_color() -> Color:
 	match item_rarity:
 		RARITY.COMMON:
@@ -244,9 +251,9 @@ func get_item_rarity_text_color() -> Color:
 		RARITY.UNCOMMON:
 			return Color.WEB_GREEN
 		RARITY.RARE:
-			return Color(0.5, 1.0, 1.0, 1.0) # Cyan claro
+			return Color(0.2, 0.4, 0.6, 1.0)
 		RARITY.EPIC:
-			return Color(0.5, 0.0, 0.85, 1.0) # Roxo
+			return Color(0.5, 0.0, 0.85, 1.0)  # Roxo
 		RARITY.LEGENDARY:
 			return Color.ORANGE_RED
 		RARITY.MYTHICAL:
@@ -321,4 +328,4 @@ static func get_rarity_sufix_text(_rarity: RARITY) -> String:
 
 
 static func get_random_rarity() -> RARITY:
-	return randi() % RARITY.values().size()
+	return RARITY.get(randi() % RARITY.values().size())

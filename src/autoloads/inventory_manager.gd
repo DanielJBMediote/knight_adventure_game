@@ -14,10 +14,10 @@ signal update_inventory_visible(is_open: bool)
 var items: Array[Item] = []
 var slots: Array[Item] = []
 var current_page: int = 0
-var unlocked_slots: int = 54
+var unlocked_slots: int = 21
 
-const MAX_SLOTS: int = 54
-const SLOTS_PER_PAGE: int = 18
+const MAX_SLOTS: int = 63
+const SLOTS_PER_PAGE: int = 21
 
 var is_open: bool = false
 var current_select_item: Item
@@ -35,18 +35,20 @@ func _ready():
 
 
 func create_ramdon_items() -> void:
+	if not GameEvents.current_map:
+		return
 	var enemy_stats = EnemyStats.new()
 	var player_level = PlayerStats.level
 	# var total_itens = 0
-	for i in 18:
-		# enemy_stats.level = randi_range(player_level, player_level)
-		enemy_stats.level = player_level
+	for i in 10:
+		enemy_stats.level = randi_range(player_level - 5, player_level + 5)
+		# enemy_stats.level = player_level
 		# var rune = RuneItem.new()
 		# rune.setup(enemy_stats)
 		# add_item(rune)
-		# var gem = GemItem.new()
-		# gem.setup(enemy_stats)
-		# add_item(gem)
+		var gem = GemItem.new()
+		gem.setup(enemy_stats)
+		add_item(gem)
 		# var potion = PotionItem.new()
 		# potion.setup(enemy_stats)
 		# add_item(potion)
@@ -73,13 +75,13 @@ func unlock_slots(amount: int) -> void:
 	inventory_updated.emit()
 
 
-func add_item(item: Item) -> bool:
+func add_item(item: Item, slot_index: int = -1) -> bool:
 	# Cria uma cópia do item para trabalhar
 	var item_copy = item.clone()
 
 	# Se o item não for stackable, trata como item único
 	if not item_copy.stackable:
-		return add_single_item(item_copy)
+		return add_single_item(item_copy, slot_index)
 
 	# Tenta adicionar a stacks existentes primeiro
 	var remaining_stack = item_copy.current_stack
@@ -94,32 +96,46 @@ func add_item(item: Item) -> bool:
 	return remaining_stack < item_copy.current_stack
 
 
-func add_single_item(item: Item) -> bool:
+func add_single_item(item: Item, slot_index: int = -1) -> bool:
+	if slot_index != -1:
+		# Primeiro, tentar adicionar no slot especifico
+		if (slots[slot_index] == null and is_slot_unlocked(slot_index) and is_valid_slot_index(slot_index)):
+			var item_copy = item.clone()
+			item_copy.slot_index_ref = slot_index
+			item_copy.current_stack = 1  # Garante que itens únicos tenham stack 1
+			slots[slot_index] = item_copy
+			items.append(item_copy)
+			inventory_updated.emit()
+			return true
 	# Procura por um slot vazio para item único
 	for i in range(slots.size()):
 		if slots[i] == null and is_slot_unlocked(i):
 			var item_copy = item.clone()
+			item_copy.slot_index_ref = i
 			item_copy.current_stack = 1  # Garante que itens únicos tenham stack 1
 			slots[i] = item_copy
 			items.append(item_copy)
 			inventory_updated.emit()
 			return true
+
+	var message = LocalizationManager.get_ui_alerts_text("no_space_in_inventory")
+	GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
 	return false
 
 
 func try_add_to_existing_stacks(item: Item, remaining_stack: int) -> int:
+
+	# Tentar adicionar no primeiro stacks de items do mesmo tipo
 	for i in range(slots.size()):
 		if is_slot_unlocked(i) == false:
 			continue
 		if slots[i] == null:
 			continue
 
-		# Verifica se pode adicionar a este stack
-		if (
-			slots[i].item_id == item.item_id
-			and slots[i].item_rarity == item.item_rarity
-			and slots[i].current_stack < slots[i].max_stack
-		):
+		var is_same_id = slots[i].item_id == item.item_id
+		var is_same_rarity = slots[i].item_rarity == item.item_rarity
+		var isnt_overstacked = slots[i].current_stack < slots[i].max_stack  # Verifica se pode adicionar a este stack
+		if is_same_id and is_same_rarity and isnt_overstacked:
 			var available_space = slots[i].max_stack - slots[i].current_stack
 			var amount_to_add = min(available_space, remaining_stack)
 
@@ -137,7 +153,7 @@ func add_to_empty_slots(item: Item, remaining_stack: int) -> int:
 		if slots[i] == null and is_slot_unlocked(i):
 			var item_copy = item.clone()
 			var stack_size = min(remaining_stack, item_copy.max_stack)
-
+			item_copy.slot_index_ref = i
 			item_copy.current_stack = stack_size
 			slots[i] = item_copy
 			items.append(item_copy)
@@ -413,13 +429,15 @@ func swap_items(from_slot: int, to_slot: int) -> void:
 	items_swapped.emit(from_slot, to_slot)
 
 
-# func move_item_to_slot(item: Item, target_slot: int) -> void:
-# 	if drag_item != null and drag_slot_index != -1:
-# 		swap_items(drag_slot_index, target_slot)
-
-
 func is_valid_slot_index(index: int) -> bool:
 	return index >= 0 and index < slots.size()
+
+
+func get_items_by_category(category: Item.CATEGORY) -> Array[Item]:
+	return items.filter(func(item: Item): return item.item_category == category)
+
+func get_items_by_subcategory(subcategory: Item.SUBCATEGORY) -> Array[Item]:
+	return items.filter(func(item: Item): return item.item_subcategory == subcategory)
 
 
 func save_inventory():

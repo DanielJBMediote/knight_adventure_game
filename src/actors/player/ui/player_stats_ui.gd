@@ -53,7 +53,6 @@ func _ready() -> void:
 	PlayerStats.energy_changed.connect(_on_energy_updated)
 	PlayerStats.experience_update.connect(_on_exp_updated)
 	PlayerStats.level_updated.connect(_on_level_update)
-	PlayerEvents.energy_warning.connect(_on_energy_warning_emmited)
 	
 	
 	# Inicializa com os valores atuais
@@ -203,9 +202,6 @@ func _on_exp_tween_finished():
 func _on_level_update(new_level: int):
 	level_label.text = str("Lv.", new_level)
 	_update_exp_bar(PlayerStats.exp_to_next_level, PlayerStats.current_exp)
-
-func _on_energy_warning_emmited():
-	animation_player.play("energy_bar_warning")
 
 func _on_animation_player_finished(anim_name: String):
 	if anim_name.contains("bar_warning"):

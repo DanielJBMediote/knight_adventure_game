@@ -1,12 +1,16 @@
 class_name InteractLabel
 extends Control
 
-@onready var label: Label = $Label
-
-@export var control_size: Vector2 = Vector2(96, 16)
+@onready var label: Label = $MarginContainer/Label
 @export var text: String
 
-
 func _ready() -> void:
-  self.size = control_size
-  label.text = text
+	_on_hide()
+
+func _on_show(new_text: String) -> void:
+	label.text = new_text
+	self.show()
+
+func _on_hide() -> void:
+	label.text = ""
+	self.hide()

@@ -33,7 +33,7 @@ var knockback_resistance: float = 1.0
 var knockback_force: float = 300.0
 var knockback_chance: float = 1.0 # de 0% até 60%
 
-var level: int = 1
+var level: int = 40
 
 var total_exp := 0.0
 var current_exp := 0.0

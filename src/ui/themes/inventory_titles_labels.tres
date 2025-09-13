@@ -3,8 +3,15 @@
 [ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="1_smk5l"]
 
 [resource]
+HeaderLarge/base_type = &"Label"
+HeaderLarge/font_sizes/font_size = 32
+HeaderMedium/base_type = &"Label"
+HeaderMedium/font_sizes/font_size = 24
+HeaderSmall/base_type = &"Label"
+HeaderSmall/font_sizes/font_size = 20
 Label/colors/font_color = Color(0.764706, 0.72549, 0.611765, 1)
-Label/colors/font_outline_color = Color(0.188235, 0.168627, 0.160784, 1)
+Label/colors/font_outline_color = Color(0.290196, 0.235294, 0.227451, 1)
+Label/constants/outline_size = 2
 Label/constants/shadow_outline_size = 12
 Label/font_sizes/font_size = 32
 Label/fonts/font = ExtResource("1_smk5l")

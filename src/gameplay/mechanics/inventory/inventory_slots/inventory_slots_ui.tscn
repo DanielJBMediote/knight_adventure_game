@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://b17ivcxpr6qu2"]
+[gd_scene load_steps=10 format=3 uid="uid://b17ivcxpr6qu2"]
 
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_rjeni"]
 [ext_resource type="Script" uid="uid://j3lb8xdv1clg" path="res://src/gameplay/mechanics/inventory/inventory_slots/inventory_slots_ui.gd" id="2_6ysun"]
 [ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="2_523kl"]
 [ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="3_6ysun"]
-[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="4_ekr0p"]
+[ext_resource type="PackedScene" uid="uid://csei5wo5mukis" path="res://src/gameplay/mechanics/inventory/inventory_slots/inventory_item_slot_ui.tscn" id="5_0gt0j"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="6_0gt0j"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ad3cl"]
 texture = ExtResource("1_rjeni")
@@ -23,8 +24,20 @@ atlas = ExtResource("3_6ysun")
 region = Rect2(145, 68, 30, 26)
 
 [node name="InventorySlotsUI" type="Panel"]
-custom_minimum_size = Vector2(680, 456)
+custom_minimum_size = Vector2(740, 420)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -370.0
+offset_top = -240.0
+offset_right = 370.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxTexture_ad3cl")
 script = ExtResource("2_6ysun")
 
@@ -41,25 +54,88 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 16
 metadata/_edit_use_anchors_ = true
 
 [node name="InventorySlotsGrid" type="GridContainer" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(606, 300)
+custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 6
-theme_override_constants/h_separation = 6
-theme_override_constants/v_separation = 6
-columns = 6
+size_flags_vertical = 2
+columns = 7
 metadata/_edit_use_anchors_ = true
+
+[node name="InventoryItemSlotUI" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI2" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI3" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI4" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI5" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI6" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI7" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI8" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI9" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI10" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI11" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI12" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI13" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI14" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI15" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI16" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI17" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI18" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI19" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI20" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
+
+[node name="InventoryItemSlotUI21" parent="MarginContainer/VBoxContainer/InventorySlotsGrid" instance=ExtResource("5_0gt0j")]
+layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 4
+size_flags_vertical = 10
 
 [node name="OrganizeButtonASC" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(48, 48)
@@ -80,9 +156,5 @@ icon_alignment = 1
 [node name="PageLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
-theme_override_colors/font_color = Color(0.658824, 0.552941, 0.458824, 1)
-theme_override_colors/font_outline_color = Color(0.396078, 0.317647, 0.294118, 1)
-theme_override_constants/outline_size = 6
-theme_override_fonts/font = ExtResource("4_ekr0p")
-theme_override_font_sizes/font_size = 24
-text = "1/3"
+theme = ExtResource("6_0gt0j")
+text = "1 of 3"

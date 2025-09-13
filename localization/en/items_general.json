@@ -1,0 +1,44 @@
+{
+  "rarity": {
+    "common": "Common",
+    "uncommon": "Uncommon",
+    "rare": "Rare",
+    "epic": "Epic",
+    "legendary": "Legendary",
+    "mythical": "Mythical"
+  },
+  "rarity_prefix": {
+    "common": "",
+    "uncommon": "Improved",
+    "rare": "Superior",
+    "epic": "Epic",
+    "legendary": "Legendary",
+    "mythical": "Mythical"
+  },
+  "rarity_sufix": {
+    "common": "",
+    "uncommon": "",
+    "rare": "",
+    "epic": "",
+    "legendary": "",
+    "mythical": ""
+  },
+  "category": {
+    "consumables": "Consumables",
+    "loots": "Loots",
+    "quest": "Quest Item",
+    "equipments": "Equipments",
+    "miscellaneous": "Miscellaneous"
+  },
+  "subcategory": {
+    "potion": "Potion",
+    "weapon": "Weapons",
+    "armor": "Armors",
+    "amulet": "Amulet",
+    "ring": "Ring",
+    "accessory": "Accessory",
+    "food": "Food",
+    "resource": "Resource",
+    "gem": "Gem"
+  }
+}

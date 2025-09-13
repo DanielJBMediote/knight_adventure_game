@@ -1,10 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://cf0qdgwe72vtp"]
+[gd_scene load_steps=9 format=3 uid="uid://cf0qdgwe72vtp"]
 
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_doq6e"]
 [ext_resource type="Script" uid="uid://0dcg17eebqna" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_and_equips_ui.gd" id="2_iqjlt"]
 [ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="2_xven0"]
 [ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="3_iqjlt"]
-[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_d3dn8"]
 [ext_resource type="Texture2D" uid="uid://s5epdhw2o7gb" path="res://assets/sprites/items/icons/Icon300.png" id="6_cxpm7"]
 [ext_resource type="PackedScene" uid="uid://3lxtv3ol7qqs" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipments_content_ui.tscn" id="7_d3dn8"]
 [ext_resource type="PackedScene" uid="uid://bvg01jmtkcafx" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_content_ui.tscn" id="8_d3dn8"]
@@ -18,9 +17,9 @@ texture_margin_bottom = 48.0
 region_rect = Rect2(25, 112, 144, 136)
 
 [node name="StatsAndEquipsUI" type="Panel"]
-custom_minimum_size = Vector2(456, 456)
-offset_right = 416.0
-offset_bottom = 468.0
+custom_minimum_size = Vector2(420, 420)
+offset_right = 420.0
+offset_bottom = 420.0
 theme_override_styles/panel = SubResource("StyleBoxTexture_ad3cl")
 script = ExtResource("2_iqjlt")
 metadata/_edit_lock_ = true
@@ -54,21 +53,20 @@ theme = ExtResource("2_xven0")
 text = "Stats"
 
 [node name="ToggleStatsEquipsButton" type="Button" parent="MarginContainer/MainConteiner/Header"]
+custom_minimum_size = Vector2(132, 0)
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 focus_mode = 0
 theme = ExtResource("3_iqjlt")
-theme_override_colors/font_outline_color = Color(0.396078, 0.317647, 0.294118, 1)
-theme_override_colors/font_color = Color(0.764706, 0.72549, 0.611765, 1)
-theme_override_constants/outline_size = 4
-theme_override_fonts/font = ExtResource("5_d3dn8")
 text = "Equipments"
 icon = ExtResource("6_cxpm7")
 
 [node name="EquipmentContentUI" parent="MarginContainer/MainConteiner" instance=ExtResource("7_d3dn8")]
 layout_mode = 2
 size_flags_horizontal = 6
+size_flags_vertical = 6
 
 [node name="StatsContentUI" parent="MarginContainer/MainConteiner" instance=ExtResource("8_d3dn8")]
+visible = false
 layout_mode = 2

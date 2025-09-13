@@ -1,0 +1,53 @@
+[gd_scene load_steps=5 format=3 uid="uid://1ncexewymhat"]
+
+[ext_resource type="Theme" uid="uid://dc8nwn3fsn3ag" path="res://src/ui/themes/base_panel.tres" id="1_7312d"]
+[ext_resource type="Script" uid="uid://b18ofvev37law" path="res://src/actors/npcs/blacksmith/ui/esgs_gem_panel.gd" id="2_h0hfe"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="2_poiqu"]
+[ext_resource type="PackedScene" uid="uid://brabfg5usfmkm" path="res://src/actors/npcs/blacksmith/ui/esgs_equipment_slot_ui.tscn" id="4_55vq4"]
+
+[node name="ESGSGemPanel" type="Panel"]
+custom_minimum_size = Vector2(420, 480)
+anchors_preset = -1
+anchor_right = 0.328125
+anchor_bottom = 0.666667
+offset_right = -420.0
+offset_bottom = -480.0
+size_flags_horizontal = 4
+theme = ExtResource("1_7312d")
+script = ExtResource("2_h0hfe")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+metadata/_edit_lock_ = true
+
+[node name="Container" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="MarginContainer/Container"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme = ExtResource("2_poiqu")
+theme_override_font_sizes/font_size = 24
+text = "Equipment Gems"
+horizontal_alignment = 1
+
+[node name="ESGSEquipmentSlotUI" parent="MarginContainer/Container" instance=ExtResource("4_55vq4")]
+layout_mode = 2
+
+[node name="SocketsList" type="VBoxContainer" parent="MarginContainer/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 2

@@ -1,10 +1,10 @@
 class_name GemUpgradePreviewUI
 extends Control
 
-@onready var attribute_label: AttributeLabel = $AttributeLabel
+@onready var attribute_label: DefaultLabel = $AttributeLabel
+@onready var gem_name: DefaultLabel = $GemName
 @onready var rarity_texture: TextureRect = $HBoxContainer/RarityTexture
 @onready var icon_texture: TextureRect = $HBoxContainer/IconTexture
-@onready var gem_name: AttributeLabel = $GemName
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var sprite_2d: Sprite2D = $HBoxContainer/Sprite2D
 

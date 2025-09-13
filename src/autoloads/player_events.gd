@@ -3,7 +3,8 @@ extends Node
 
 signal update_equipment(equip: EquipmentItem, is_equipped: bool)
 
-signal energy_warning
+signal interaction_showed(text: String)
+signal interaction_hidded(text: String)
 
 signal add_status_effect(effect: StatusEffectData)
 signal remove_status_effect(effect: StatusEffectData)
@@ -12,7 +13,6 @@ signal clear_status_effects
 
 func _ready() -> void:
 	ItemManager.use_potion.connect(_on_use_potion)
-	ItemManager.use_equipment.connect(_on_use_equipment)
 
 
 func _on_use_potion(potion: PotionItem) -> bool:
@@ -37,13 +37,24 @@ func _on_use_potion(potion: PotionItem) -> bool:
 				return false
 		return true
 
-func _on_use_equipment(item: EquipmentItem) -> void:
+
+func equip_item(equipment_item: EquipmentItem) -> bool:
 	# Verifica se pode equipar
-	if ItemManager.compare_player_level(item.item_level):
-		var is_equipped = PlayerEquipments.is_equipped(item)
-		update_equipment.emit(item, is_equipped)
+	if ItemManager.compare_player_level(equipment_item.item_level):
+		var is_equipped = PlayerEquipments.is_equipped(equipment_item)
+		update_equipment.emit(equipment_item, is_equipped)
+		return true
 	else:
 		var part_1 = LocalizationManager.get_ui_text("insufficient_level")
 		var part_2 = LocalizationManager.get_ui_text("level_required")
-		var message = str(part_1, "! ", part_2, ": ", item.item_level, ".")
+		var message = str(part_1, "! ", part_2, ": ", equipment_item.item_level, ".")
 		GameEvents.show_instant_message(message, InstantMessage.TYPE.DANGER)
+		return false
+
+
+func show_interaction(text: String) -> void:
+	interaction_showed.emit(text)
+
+
+func hide_interaction() -> void:
+	interaction_hidded.emit()

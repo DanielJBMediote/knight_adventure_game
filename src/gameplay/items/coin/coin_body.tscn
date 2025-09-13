@@ -1,8 +1,7 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6jxprwfuu8e8"]
+[gd_scene load_steps=11 format=3 uid="uid://c6jxprwfuu8e8"]
 
 [ext_resource type="Script" uid="uid://bvspsdvis07m8" path="res://src/gameplay/items/coin/coin_body.gd" id="1_26wga"]
 [ext_resource type="Texture2D" uid="uid://5iorjr58n6di" path="res://assets/sprites/items/icons/coin_effect.png" id="2_s4nfn"]
-[ext_resource type="PackedScene" uid="uid://byr2mw2xosb8c" path="res://src/ui/interact_label/interact_label.tscn" id="3_oxlrq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c7qms"]
 radius = 32.0
@@ -142,11 +141,6 @@ debug_color = Color(0.621362, 0.353166, 1, 0.42)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_c7qms")
-
-[node name="InteractLabel" parent="." instance=ExtResource("3_oxlrq")]
-offset_top = -64.0
-offset_bottom = -52.0
-control_size = Vector2(72, 16)
 
 [connection signal="body_entered" from="CollectZone" to="." method="_on_collect_zone_body_entered"]
 [connection signal="body_exited" from="CollectZone" to="." method="_on_collect_zone_body_exited"]

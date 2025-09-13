@@ -1,0 +1,91 @@
+[gd_scene load_steps=6 format=3 uid="uid://brabfg5usfmkm"]
+
+[ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_sv47q"]
+[ext_resource type="Script" uid="uid://de8aq0xqttvnr" path="res://src/actors/npcs/blacksmith/ui/esgs_equipment_slot_ui.gd" id="2_gdbi8"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="4_4hntj"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_ntv7s"]
+[ext_resource type="Theme" uid="uid://k0ll6m3w6kk3" path="res://src/ui/themes/items_themes/unique_border.tres" id="6_fvoil"]
+
+[node name="ESGSEquipmentSlotUI" type="Panel" node_paths=PackedStringArray("rarity_texture", "item_texture", "unique_border", "info", "preview_gems_attached")]
+custom_minimum_size = Vector2(96, 96)
+size_flags_horizontal = 4
+theme_override_styles/panel = ExtResource("1_sv47q")
+script = ExtResource("2_gdbi8")
+rarity_texture = NodePath("MarginContainer/RarityTexture")
+item_texture = NodePath("MarginContainer/EquipmentTexture")
+unique_border = NodePath("UniqueBorder")
+info = NodePath("MarginContainer/MarginContainer/Footer/Info")
+preview_gems_attached = NodePath("MarginContainer/MarginContainer/PreviewGemsAttatched")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="RarityTexture" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="EquipmentTexture" type="TextureRect" parent="MarginContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="PreviewGemsAttatched" type="VBoxContainer" parent="MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 1
+
+[node name="Footer" type="HBoxContainer" parent="MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Level" parent="MarginContainer/MarginContainer/Footer" instance=ExtResource("4_4hntj")]
+layout_mode = 2
+text = "Lv.100"
+
+[node name="Info" type="Label" parent="MarginContainer/MarginContainer/Footer"]
+layout_mode = 2
+size_flags_horizontal = 10
+size_flags_vertical = 8
+theme_override_fonts/font = ExtResource("5_ntv7s")
+
+[node name="UniqueBorder" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.0
+offset_top = -46.0
+offset_right = 46.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("6_fvoil")
+metadata/_edit_lock_ = true

@@ -1,0 +1,137 @@
+[gd_scene load_steps=13 format=3 uid="uid://ckp8uqvqt67hx"]
+
+[ext_resource type="StyleBox" uid="uid://bel6u03loird0" path="res://src/ui/themes/base_inventory_slot.tres" id="1_6yby1"]
+[ext_resource type="Script" uid="uid://6vjemybd6n7m" path="res://src/actors/npcs/blacksmith/ui/esgs_ep_equipment_item_ui.gd" id="2_vvttf"]
+[ext_resource type="Texture2D" uid="uid://clukmo1ygr08m" path="res://src/ui/themes/items_themes/bg_gradient_item_epic.tres" id="3_jm1yg"]
+[ext_resource type="Texture2D" uid="uid://qqyke7qqoabw" path="res://assets/sprites/items/equipments/amulet/demons_bane.png" id="4_i6n2e"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_tpjcc"]
+[ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="6_h4j6y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbk1s"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.784314)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0lydb"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.784314)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e33ir"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0nqag"]
+content_margin_left = 16.0
+content_margin_top = 4.0
+content_margin_right = 16.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0, 0, 0.784314)
+
+[sub_resource type="Theme" id="Theme_0lydb"]
+Button/colors/font_outline_color = Color(0, 0, 0, 1)
+Button/constants/outline_size = 2
+Button/fonts/font = ExtResource("5_tpjcc")
+Button/styles/focus = SubResource("StyleBoxFlat_mbk1s")
+Button/styles/hover = SubResource("StyleBoxFlat_0lydb")
+Button/styles/normal = SubResource("StyleBoxFlat_e33ir")
+Button/styles/pressed = SubResource("StyleBoxFlat_0nqag")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0nqag"]
+atlas = ExtResource("6_h4j6y")
+region = Rect2(310, 22, 22, 20)
+
+[node name="ESGSystemEquipmentItemUI" type="Panel"]
+custom_minimum_size = Vector2(0, 96)
+anchors_preset = -1
+anchor_right = 0.559375
+anchor_bottom = 0.133333
+grow_horizontal = 2
+size_flags_vertical = 0
+theme_override_styles/panel = ExtResource("1_6yby1")
+script = ExtResource("2_vvttf")
+metadata/_edit_use_anchors_ = true
+
+[node name="RarityTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0027933
+anchor_top = 0.0208333
+anchor_right = 0.997207
+anchor_bottom = 0.979167
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_jm1yg")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 96.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+metadata/_edit_lock_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="EquipmentTexture" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_i6n2e")
+stretch_mode = 5
+
+[node name="Labels" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="EquipmentName" type="Label" parent="MarginContainer/HBoxContainer/Labels"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("5_tpjcc")
+theme_override_font_sizes/font_size = 20
+text = "Equipment Name"
+
+[node name="EquipmentLevel" type="Label" parent="MarginContainer/HBoxContainer/Labels"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("5_tpjcc")
+text = "Lv. 00"
+
+[node name="EquipmentRarity" type="Label" parent="MarginContainer/HBoxContainer/Labels"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("5_tpjcc")
+text = "Equipemt Rarity"
+
+[node name="GemList" type="HBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+
+[node name="ChooseButton" type="Button" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(96, 48)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme = SubResource("Theme_0lydb")
+text = "Socket gem"
+icon = SubResource("AtlasTexture_0nqag")
+alignment = 2

@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://m58oo4qhmrxd"]
+
+[ext_resource type="Script" uid="uid://dqj0itxvlgpso" path="res://src/world/props/plants/wheat.gd" id="1_lgl8m"]
+[ext_resource type="Texture2D" uid="uid://clppl7iu66bha" path="res://assets/sprites/tilesets/Texture/TX Village Props.png" id="1_s4me1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lgl8m"]
+size = Vector2(4, 19)
+
+[node name="Wheat" type="Area2D"]
+collision_mask = 1024
+script = ExtResource("1_lgl8m")
+shake_intensity = 1.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_s4me1")
+offset = Vector2(-2.5, -29.5)
+region_enabled = true
+region_rect = Rect2(545, 485, 28, 59)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -9.5)
+shape = SubResource("RectangleShape2D_lgl8m")
+
+[connection signal="area_entered" from="." to="." method="_on_player_area_entered"]

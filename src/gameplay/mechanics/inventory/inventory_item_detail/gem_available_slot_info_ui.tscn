@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bhgraytntqqmu"]
 
 [ext_resource type="Script" uid="uid://pu4ymwld734u" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/gem_available_slot_info_ui.gd" id="1_emxk0"]
-[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/attribute_label.tscn" id="2_lr5sr"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="2_lr5sr"]
 
 [node name="GemAvailableSlotInfoUI" type="VBoxContainer"]
 script = ExtResource("1_emxk0")

@@ -19,7 +19,7 @@ extends Control
 # @onready var rarity_texture_next: TextureRect = $Panel/RarityTextureNext
 
 @onready var quantity_label: Label = $Panel/MarginContainer/Content/QuantityContainer/QuantityLabel
-@onready var quantity_value: AttributeLabel = $Panel/MarginContainer/Content/QuantityContainer/Quantity
+@onready var quantity_value: DefaultLabel = $Panel/MarginContainer/Content/QuantityContainer/Quantity
 @onready var remove_button: Button = $Panel/MarginContainer/Content/QuantityContainer/RemoveButton
 @onready var add_button: Button = $Panel/MarginContainer/Content/QuantityContainer/AddButton
 
@@ -32,8 +32,8 @@ var amount_gem_to_upgrade: int = 1
 
 
 func _ready() -> void:
-	title.text = LocalizationManager.get_ui_text("gem_upgrade_ui_title")
-	requeriment_label.text = LocalizationManager.get_ui_text("gem_upgrade_ui_requeriments_label")
+	title.text = LocalizationManager.get_ui_text("gem_upgrade_ui.title")
+	requeriment_label.text = LocalizationManager.get_ui_text("gem_upgrade_ui.requeriments_label")
 	close.pressed.connect(_on_close_button_pressed)
 	upgrade_button.text = LocalizationManager.get_ui_text("confirm")
 	upgrade_button.pressed.connect(_on_upgrade_button_pressed)
@@ -53,7 +53,7 @@ func setup(gem: GemItem) -> void:
 		prev_gem_preview.setup(gem)
 		next_gem_prview.setup(next_gem)
 
-		var subtitle_text = LocalizationManager.get_ui_text("gem_upgrade_ui_subtitle")
+		var subtitle_text = LocalizationManager.get_ui_text("gem_upgrade_ui.subtitle")
 		subtitle_text = LocalizationManager.format_text_with_params(
 			subtitle_text, {"gem": gem.item_name, "next_gem": next_gem.item_name}
 		)

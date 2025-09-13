@@ -4,7 +4,6 @@ extends RigidBody2D
 @onready var coin_texture: Sprite2D = $CoinTexture
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var collect_zone: Area2D = $CollectZone
-@onready var interact_label: Control = $InteractLabel
 
 @export var bounce_factor: float = 0.3
 @export var friction: float = 0.1
@@ -17,6 +16,8 @@ extends RigidBody2D
 @export var coin: Coin
 @export var lifespan: float = 60.0  # Tempo até desaparecer
 @export var bounce_duration: float = 0.5  # Duração de cada bounce
+
+var interact_text = LocalizationManager.get_ui_text("collect")
 
 var player: Player = null
 var float_tween: Tween
@@ -42,7 +43,6 @@ func _ready():
 	floor_check_timer.wait_time = 0.5
 	floor_check_timer.timeout.connect(_check_if_on_floor)
 	floor_check_timer.start()
-	interact_label.hide()
 
 	# Some após um tempo se não for coletada
 	await get_tree().create_timer(lifespan).timeout
@@ -50,12 +50,6 @@ func _ready():
 		float_tween.kill()
 	queue_free()
 
-
-#func _physics_process(delta: float) -> void:
-	## Se ainda não está no chão, verifica se a velocidade está baixa o suficiente
-	#if not is_on_floor and linear_velocity.length() < 5.0 and abs(angular_velocity) < 0.1:
-		##_check_if_on_floor()
-		#pass
 
 func set_coin(new_coin: Coin) -> void:
 	self.coin = new_coin
@@ -152,10 +146,10 @@ func collect():
 func _on_collect_zone_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		player = body
-		interact_label.visible = true
+		PlayerEvents.show_interaction(interact_text)
 
 
 func _on_collect_zone_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player") and player:
 		player = null
-		interact_label.visible = false
+		PlayerEvents.hide_interaction()

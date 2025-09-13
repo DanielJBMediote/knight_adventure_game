@@ -1,5 +1,7 @@
 class_name EquipmentConsts
 
+const GEM_POWER_MULTIPLIER = 1.8
+
 const EQUIPMENT_SPAWN_WEIGHTS = {
 	EquipmentItem.TYPE.HELMET: 20,
 	EquipmentItem.TYPE.ARMOR: 20,

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cvgr82r8tmr3o" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/equipment_sockets_slots/equip_gem_socket_slot_ui.gd" id="1_pgx8a"]
 [ext_resource type="Texture2D" uid="uid://dlso2c8kqgjnn" path="res://assets/sprites/items/gems/gem_common_silver.png" id="2_pgx8a"]
-[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/attribute_label.tscn" id="3_u5gwb"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="3_u5gwb"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_0rsjk"]
 

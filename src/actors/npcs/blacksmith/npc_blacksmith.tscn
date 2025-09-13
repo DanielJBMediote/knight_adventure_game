@@ -1,10 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://cjuc0cljmt5pw"]
+[gd_scene load_steps=12 format=3 uid="uid://cjuc0cljmt5pw"]
 
 [ext_resource type="Script" uid="uid://d1gvkky78icag" path="res://src/actors/npcs/blacksmith/npc_blacksmith.gd" id="1_355hk"]
 [ext_resource type="Texture2D" uid="uid://6ejmhlf7ese0" path="res://assets/sprites/entities/npcs/blacksmith_portrait.png" id="2_fvauq"]
-[ext_resource type="PackedScene" uid="uid://byr2mw2xosb8c" path="res://src/ui/interact_label/interact_label.tscn" id="3_blonl"]
 [ext_resource type="Texture2D" uid="uid://82ccspfrp55u" path="res://assets/sprites/entities/npcs/blacksmith_spritesheet.png" id="3_fvauq"]
-[ext_resource type="PackedScene" uid="uid://uyf6ebm3ykmf" path="res://src/actors/npcs/ui/npc_interface.tscn" id="5_fvauq"]
 [ext_resource type="PackedScene" uid="uid://duy21k5fasp13" path="res://src/actors/npcs/dialog_ballon.tscn" id="5_gbyye"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_boa78"]
@@ -42,14 +40,17 @@ size = Vector2(192, 112)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_riww4"]
 size = Vector2(352, 128)
 
-[node name="NPC_Blacksmith" type="Node2D" node_paths=PackedStringArray("interact_area", "player_detection_area", "interact_label", "dialog_ballon", "npc_interface")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fvauq"]
+size = Vector2(16, 48)
+
+[node name="NPC_Blacksmith" type="CharacterBody2D" node_paths=PackedStringArray("interact_area", "player_detection_area", "dialog_ballon")]
+collision_layer = 128
+collision_mask = 0
 script = ExtResource("1_355hk")
 npc_name = "Blacksmith"
 interact_area = NodePath("InteractArea")
 player_detection_area = NodePath("PlayerDetectionArea")
-interact_label = NodePath("InteractLabel")
 dialog_ballon = NodePath("DialogBallon")
-npc_interface = NodePath("NPCInterface")
 npc_texture_portrait = ExtResource("2_fvauq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -69,11 +70,6 @@ position = Vector2(0, -40)
 shape = SubResource("RectangleShape2D_355hk")
 debug_color = Color(0, 0.273505, 0.323658, 0.42)
 
-[node name="InteractLabel" parent="." instance=ExtResource("3_blonl")]
-offset_top = -144.0
-offset_bottom = -132.0
-text = "Interact"
-
 [node name="PlayerDetectionArea" type="Area2D" parent="."]
 visible = false
 collision_layer = 128
@@ -91,5 +87,7 @@ offset_bottom = -157.0
 grow_vertical = 1
 timer_before_exit = 1.0
 
-[node name="NPCInterface" parent="." instance=ExtResource("5_fvauq")]
-visible = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(8, -8)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_fvauq")

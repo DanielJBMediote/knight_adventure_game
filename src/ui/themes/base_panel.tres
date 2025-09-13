@@ -4,10 +4,10 @@
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_orf51"]
 texture = ExtResource("1_jta0a")
-texture_margin_left = 24.0
-texture_margin_top = 24.0
-texture_margin_right = 24.0
-texture_margin_bottom = 24.0
+texture_margin_left = 52.0
+texture_margin_top = 44.0
+texture_margin_right = 56.0
+texture_margin_bottom = 48.0
 region_rect = Rect2(25, 112, 144, 136)
 
 [resource]

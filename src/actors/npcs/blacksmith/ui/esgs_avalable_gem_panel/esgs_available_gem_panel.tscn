@@ -1,0 +1,100 @@
+[gd_scene load_steps=9 format=3 uid="uid://cml4qe2ykru6p"]
+
+[ext_resource type="Theme" uid="uid://dc8nwn3fsn3ag" path="res://src/ui/themes/base_panel.tres" id="1_cwxph"]
+[ext_resource type="Script" uid="uid://c22v7aacujltr" path="res://src/actors/npcs/blacksmith/ui/esgs_avalable_gem_panel/esgs_available_gem_panel.gd" id="2_fa2rg"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="2_ojt3n"]
+[ext_resource type="Theme" uid="uid://cplm3n583p8ad" path="res://src/ui/themes/v_scroll_without_bar.tres" id="3_fa2rg"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="5_bg5a4"]
+[ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="8_j2d5x"]
+[ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="9_50vxn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_clu36"]
+atlas = ExtResource("9_50vxn")
+region = Rect2(216, 24, 16, 17)
+
+[node name="ESGSAvailableGemPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_cwxph")
+script = ExtResource("2_fa2rg")
+metadata/_edit_lock_ = true
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.784314)
+metadata/_edit_lock_ = true
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(520, 320)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -160.0
+offset_right = 260.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+metadata/_edit_lock_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_ojt3n")
+theme_type_variation = &"HeaderMedium"
+text = "Avalable Gems"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("3_fa2rg")
+
+[node name="GemList" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Defaultlabel" parent="Panel/MarginContainer/VBoxContainer" instance=ExtResource("5_bg5a4")]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "No Gem Founded"
+
+[node name="CloseButton" type="Button" parent="Panel/MarginContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+focus_mode = 0
+theme = ExtResource("8_j2d5x")
+icon = SubResource("AtlasTexture_clu36")
+icon_alignment = 1
+expand_icon = true

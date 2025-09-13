@@ -1,0 +1,26 @@
+{
+  "names": {
+    "vitality": "Vitality Rune",
+    "essence": "Essence Rune",
+    "vigor": "Vigor Rune",
+    "protection": "Protection Rune",
+    "strength": "Strength Rune",
+    "precision": "Precision Rune",
+    "fury": "Fury Rune",
+    "swiftness": "Swiftness Rune",
+    "agility": "Agility Rune",
+    "special": "Special Rune"
+  },
+  "base_descriptions": {
+    "vitality": "Forged from the heart of ancient forest guardians. A rune that use to upgrade {gem_quality} Health Gems to {next_gem_quality}.",
+    "essence": "Crystallized from the tears of moon goddesses. A rune that use to upgrade {gem_quality} Mana Gems to {next_gem_quality}.",
+    "vigor": "Born from the first lightning of creation. A rune that use to upgrade {gem_quality} Energy Gems to {next_gem_quality}.",
+    "protection": "Tempered in the scales of mountain dragons. A rune that use to upgrade {gem_quality} Defense Gems to {next_gem_quality}.",
+    "strength": "Carved from the bones of fallen titans. A rune that use to upgrade {gem_quality} Damage Gems to {next_gem_quality}.",
+    "precision": "Polished by wind spirits over millennia. A rune that use to upgrade {gem_quality} Critical Rate gems to {next_gem_quality}.",
+    "fury": "Infused with the rage of volcanic eruptions. A rune that use to upgrade {gem_quality} Critical Damage gems to {next_gem_quality}.",
+    "swiftness": "Weaved from the threads of time itself. A rune that use to upgrade {gem_quality} Attack Speed gems to {next_gem_quality}.",
+    "agility": "Harvested from zephyr winds at dawn. A rune that use to upgrade {gem_quality} Move Speed gems to {next_gem_quality}.",
+    "special": "Crafted by forgotten star-smiths. A rune that use to upgrade {gem_quality} unique gems to {next_gem_quality}."
+  }
+}

@@ -1,0 +1,105 @@
+[gd_scene load_steps=11 format=3 uid="uid://uqp1njgd8hw4"]
+
+[ext_resource type="Script" uid="uid://i2qtnpt64pbq" path="res://src/actors/npcs/blacksmith/ui/esgs_gem_socket_ui.gd" id="1_ox0ni"]
+[ext_resource type="Texture2D" uid="uid://ch3hunsu03xej" path="res://assets/sprites/items/gems/gem_common_blue.png" id="1_tjmr8"]
+[ext_resource type="Texture2D" uid="uid://grrmo7an5bti" path="res://src/ui/themes/items_themes/bg_gradient_item_uncommon.tres" id="2_aq3rc"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="2_ox0ni"]
+[ext_resource type="PackedScene" uid="uid://ugixsawwxtkd" path="res://src/actors/npcs/blacksmith/ui/socket_button.tscn" id="3_p5glw"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="6_aq3rc"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ox0ni"]
+bg_color = Color(0.0941176, 0.0941176, 0.105882, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.39, 0.31, 0.29, 1)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aq3rc"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+bg_color = Color(0.14902, 0.137255, 0.141176, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cmnx4"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+
+[sub_resource type="Theme" id="Theme_e3l3v"]
+Button/colors/font_outline_color = Color(0, 0, 0, 1)
+Button/constants/outline_size = 2
+Button/font_sizes/font_size = 16
+Button/fonts/font = ExtResource("6_aq3rc")
+Button/styles/focus = SubResource("StyleBoxFlat_aq3rc")
+Button/styles/hover = SubResource("StyleBoxFlat_aq3rc")
+Button/styles/normal = SubResource("StyleBoxEmpty_cmnx4")
+Button/styles/pressed = SubResource("StyleBoxFlat_aq3rc")
+
+[node name="ESGSGemSocketUI" type="Panel"]
+custom_minimum_size = Vector2(388, 64)
+offset_right = 388.0
+offset_bottom = 64.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_ox0ni")
+script = ExtResource("1_ox0ni")
+
+[node name="RarityTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_aq3rc")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="GemTexture" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("1_tjmr8")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Names" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+
+[node name="AttributeValue" parent="MarginContainer/HBoxContainer/Names" instance=ExtResource("2_ox0ni")]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "+ 34% Critical Rate"
+
+[node name="GemName" parent="MarginContainer/HBoxContainer/Names" instance=ExtResource("2_ox0ni")]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Fragmented Critical damage Gem"
+horizontal_alignment = 0
+
+[node name="SocketButton" parent="MarginContainer/HBoxContainer" instance=ExtResource("3_p5glw")]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme = SubResource("Theme_e3l3v")

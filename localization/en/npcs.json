@@ -1,0 +1,31 @@
+{
+  "blacksmith": {
+    "name": "Blacksmith",
+    "dialogs": {
+      "questing": [],
+      "greetings": [
+        "“So... another adventurer seeking the perfect blade to face the darkness? Or did you just come to warm yourself by the fire?”",
+        "“Be careful what you touch. Everything here burns... or cuts.”",
+        "“I don't have time to waste. Speak up. What brings you to my forge?”"
+      ],
+      "exiting": [
+        "“Don't linger at the door. The night wind brings things that even my fire cannot drive away.”",
+        "“Whatever you need, come back. My forge will always be hot.”",
+        "“Beware of the shadows outside. They chew steel... and bones.”"
+      ],
+      "buying_selling": [
+        "“Let's get down to business. My blades cut through flesh and soul. Choose wisely.”",
+        "“Iron bleeds, steel screams... every piece here has its price. And its story. What interests you?”",
+        "“I can sell you what I have, or buy the junk you carry... if it's worth anything.”"
+      ],
+      "after_buying": [
+        "“That one... she's already drunk demon blood. I hope you're up to the task.”",
+        "“A good choice. May she keep you alive long enough to pay me the rest.”"
+      ],
+      "after_selling": [
+        "“Hmm. Weak iron. But it can be melted down and turned into something better... maybe.”",
+        "*Chuckling* “You stole that from a corpse, didn't you? Don't answer me. I don't want to know.”"
+      ]
+    }
+  }
+}

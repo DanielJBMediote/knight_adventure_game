@@ -1,0 +1,75 @@
+[gd_scene load_steps=8 format=3 uid="uid://v16len3j8x3"]
+
+[ext_resource type="Script" uid="uid://deafds22hosqt" path="res://src/world/props/lamp_post/lamp_post.gd" id="1_mfwgo"]
+[ext_resource type="Texture2D" uid="uid://clppl7iu66bha" path="res://assets/sprites/tilesets/Texture/TX Village Props.png" id="2_6i4ea"]
+[ext_resource type="PackedScene" uid="uid://bmin4lwm86usw" path="res://src/world/props/lamp_post/lamp_chain_segment.tscn" id="3_xxode"]
+[ext_resource type="PackedScene" uid="uid://b64jl4vpebhu5" path="res://src/world/props/lamp_post/lamp.tscn" id="4_6i4ea"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lhhrk"]
+size = Vector2(32, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rbodu"]
+atlas = ExtResource("2_6i4ea")
+region = Rect2(976, 37, 33, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5x2wh"]
+size = Vector2(6, 18)
+
+[node name="LampPostRight" type="StaticBody2D"]
+script = ExtResource("1_mfwgo")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -21)
+scale = Vector2(2, 2.5)
+texture = ExtResource("2_6i4ea")
+offset = Vector2(0, -43)
+region_enabled = true
+region_rect = Rect2(945, 32, 8, 86)
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(0, 1)
+scale = Vector2(2, 2)
+texture = ExtResource("2_6i4ea")
+offset = Vector2(0, -5.5)
+region_enabled = true
+region_rect = Rect2(941, 118, 16, 11)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -10.5)
+shape = SubResource("RectangleShape2D_lhhrk")
+
+[node name="LanterHolder" type="StaticBody2D" parent="."]
+position = Vector2(39, -210)
+
+[node name="Sprite2D" type="Sprite2D" parent="LanterHolder"]
+scale = Vector2(2, 2)
+texture = SubResource("AtlasTexture_rbodu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LanterHolder"]
+position = Vector2(20, -17)
+shape = SubResource("RectangleShape2D_5x2wh")
+
+[node name="LampGroup" type="Node2D" parent="."]
+position = Vector2(59, -218)
+
+[node name="PinJoin2D_1" type="PinJoint2D" parent="LampGroup"]
+node_a = NodePath("../../LanterHolder")
+node_b = NodePath("../ChainSegment")
+
+[node name="ChainSegment" parent="LampGroup" instance=ExtResource("3_xxode")]
+
+[node name="PinJoin2D_2" type="PinJoint2D" parent="LampGroup"]
+position = Vector2(0, 32)
+node_a = NodePath("../ChainSegment")
+node_b = NodePath("../ChainSegment2")
+
+[node name="ChainSegment2" parent="LampGroup" instance=ExtResource("3_xxode")]
+position = Vector2(0, 32)
+
+[node name="PinJoint2D_3" type="PinJoint2D" parent="LampGroup"]
+position = Vector2(0, 64)
+node_a = NodePath("../ChainSegment2")
+node_b = NodePath("../Lamp")
+
+[node name="Lamp" parent="LampGroup" instance=ExtResource("4_6i4ea")]
+position = Vector2(0, 64)

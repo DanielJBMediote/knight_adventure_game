@@ -1,0 +1,115 @@
+[gd_scene load_steps=8 format=3 uid="uid://cncd8freqndft"]
+
+[ext_resource type="Script" uid="uid://dh6dqd0jb2a0f" path="res://src/actors/npcs/ui/npc_interaction_ui.gd" id="1_2g2ep"]
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="2_5mmw1"]
+[ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="3_cclc0"]
+[ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="4_bxgp8"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_1d3lv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_024eq"]
+atlas = ExtResource("4_bxgp8")
+region = Rect2(50, 20, 25, 23)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3adie"]
+bg_color = Color(0.0941176, 0.0941176, 0.105882, 1)
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="NPCInteractionUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2g2ep")
+metadata/_edit_lock_ = true
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.980392)
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+metadata/_edit_lock_ = true
+
+[node name="MainContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="MarginContainer/MainContainer"]
+layout_mode = 2
+
+[node name="NPCNameLabel" type="Label" parent="MarginContainer/MainContainer/Header"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme = ExtResource("2_5mmw1")
+text = "NPC Name"
+
+[node name="BackButton" type="Button" parent="MarginContainer/MainContainer/Header"]
+custom_minimum_size = Vector2(96, 64)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme = ExtResource("3_cclc0")
+icon = SubResource("AtlasTexture_024eq")
+icon_alignment = 1
+
+[node name="DialogContainer" type="HBoxContainer" parent="MarginContainer/MainContainer"]
+visible = false
+layout_mode = 2
+
+[node name="NPCPortrait" type="TextureRect" parent="MarginContainer/MainContainer/DialogContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_vertical = 0
+expand_mode = 3
+stretch_mode = 5
+
+[node name="DialogPanel" type="Panel" parent="MarginContainer/MainContainer/DialogContainer"]
+custom_minimum_size = Vector2(420, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_3adie")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/MainContainer/DialogContainer/DialogPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+metadata/_edit_lock_ = true
+
+[node name="DialogText" type="Label" parent="MarginContainer/MainContainer/DialogContainer/DialogPanel/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("5_1d3lv")
+text = "Test"
+
+[node name="OptionsList" type="VBoxContainer" parent="MarginContainer/MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16

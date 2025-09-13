@@ -29,7 +29,7 @@ func _initialize_slot_map() -> void:
 
 func _update_equipment(equipment: EquipmentItem, is_uneqquip: bool = false) -> void:
 	if equipment and equipment.equipment_type in slot_map:
-		var target_slot = slot_map[equipment.equipment_type]
+		var target_slot: EquipmentItemSlotUI = slot_map[equipment.equipment_type]
 		if is_uneqquip:
 			target_slot.setup_equipment(null)
 		else:

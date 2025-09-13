@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmin4lwm86usw"]
+
+[ext_resource type="Script" uid="uid://dkndsx6hui6bj" path="res://src/world/props/lamp_post/lamp_chain_segment.gd" id="1_114de"]
+[ext_resource type="Texture2D" uid="uid://cld8s134dasjj" path="res://assets/sprites/tilesets/Texture/TX Village Props_v2_0.png" id="2_hybn7"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dnfll"]
+radius = 3.0
+height = 32.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yf47w"]
+radius = 3.0
+height = 32.0
+
+[node name="ChainSegment" type="RigidBody2D"]
+collision_layer = 0
+collision_mask = 2
+mass = 0.1
+script = ExtResource("1_114de")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("2_hybn7")
+offset = Vector2(0, 8)
+region_enabled = true
+region_rect = Rect2(232, 336, 3, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 16)
+shape = SubResource("CapsuleShape2D_dnfll")
+
+[node name="VulnerableZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 512
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="VulnerableZone"]
+position = Vector2(0, 16)
+shape = SubResource("CapsuleShape2D_yf47w")
+debug_color = Color(0.967459, 0, 0.474123, 0.42)
+
+[connection signal="area_entered" from="VulnerableZone" to="." method="_on_vulnerable_zone_area_entered"]

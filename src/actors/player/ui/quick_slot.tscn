@@ -2,79 +2,72 @@
 
 [ext_resource type="Theme" uid="uid://i3eq7e3dpcry" path="res://src/ui/themes/quick_slotbar.tres" id="1_3r6ej"]
 [ext_resource type="Script" uid="uid://c5wg6tpiop0n0" path="res://src/actors/player/ui/quick_slot.gd" id="2_a7re2"]
-[ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="3_a7re2"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a7re2"]
+[ext_resource type="Theme" uid="uid://k0ll6m3w6kk3" path="res://src/ui/themes/items_themes/unique_border.tres" id="3_0m3in"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="5_506v0"]
 
 [node name="QuickSlot" type="Panel"]
 clip_children = 2
-custom_minimum_size = Vector2(80, 108)
-offset_right = 80.0
-offset_bottom = 108.0
+custom_minimum_size = Vector2(96, 96)
+anchors_preset = -1
+anchor_right = 0.075
+anchor_bottom = 0.133
+offset_right = -64.0
+offset_bottom = -63.76
 theme = ExtResource("1_3r6ej")
 script = ExtResource("2_a7re2")
+metadata/_edit_lock_ = true
 
-[node name="ItemTexture" type="TextureRect" parent="."]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -32.0
-offset_top = 8.0
-offset_right = 32.0
-offset_bottom = 72.0
+[node name="RarityTexture" type="TextureRect" parent="."]
+layout_mode = 2
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 91.0
+offset_bottom = 91.0
 grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UniqueBorder" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3_0m3in")
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+metadata/_edit_lock_ = true
+
+[node name="ButtonUI" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+
+[node name="ItemTexture" type="TextureRect" parent="MarginContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 metadata/_edit_lock_ = true
 
-[node name="BGTexture" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 2
-metadata/_edit_lock_ = true
-
-[node name="Stacks" type="Label" parent="."]
-clip_contents = true
-custom_minimum_size = Vector2(20, 24)
+[node name="Statcks" parent="MarginContainer" instance=ExtResource("5_506v0")]
 layout_mode = 2
-anchor_left = 0.8
-anchor_top = 0.777963
-anchor_right = 0.8
-anchor_bottom = 0.777963
-offset_left = -20.0
-offset_top = -12.02
-offset_bottom = 11.98
-grow_horizontal = 0
-grow_vertical = 0
 size_flags_horizontal = 8
 size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.658824, 0.552941, 0.458824, 1)
-theme_override_colors/font_outline_color = Color(0.188235, 0.168627, 0.160784, 1)
-theme_override_constants/outline_size = 6
-theme_override_fonts/font = ExtResource("3_a7re2")
-theme_override_font_sizes/font_size = 18
-horizontal_alignment = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="UniqueBorder" type="Panel" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_a7re2")
-metadata/_edit_lock_ = true
+text = "99"

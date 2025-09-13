@@ -246,9 +246,6 @@ func handle_actions_when_on_floor() -> void:
 		if can_roll and PlayerStats.has_energy_to_roll():
 			is_rolling = true
 			PlayerStats.update_energy(PlayerStats.energy_cost_to_roll * -1)
-		else:
-			if not PlayerStats.has_energy_to_roll():
-				PlayerEvents.energy_warning.emit()
 	if can_attack:
 		is_attacking = Input.get_action_strength("attack")
 		handle_attack_combo_count()

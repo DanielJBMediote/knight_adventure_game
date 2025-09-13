@@ -1,0 +1,203 @@
+{
+  "commons": {
+    "traveler": {
+      "set_name": "Traveler's Set",
+      "description": "\"Lightweight and flexible armor made from durable materials, offering essential protection for novice explorers venturing into unknown lands.\"",
+      "helmet": "Traveler's Hat",
+      "armor": "Traveler's Tunic",
+      "boots": "Traveler's Boots",
+      "gloves": "Traveler's Gloves",
+      "weapon": "Apprentice's Sword"
+    },
+    "leather": {
+      "set_name": "Leather Set",
+      "description": "\"Treated leather armor that enhances durability while maintaining flexibility, offering moderate defense for those who prefer speed and cunning over direct confrontation.\"",
+      "helmet": "Leather Cap",
+      "armor": "Leather Jerkin",
+      "boots": "Leather Boots",
+      "gloves": "Leather Gloves",
+      "weapon": "Long Sword"
+    },
+    "hunter": {
+      "set_name": "Hunter's Set",
+      "description": "\"Leather and reinforced fabric armor with camouflage patterns, providing excellent mobility and protection for hunting and reconnaissance missions.\"",
+      "helmet": "Hunter's Hood",
+      "armor": "Hunter's Vest",
+      "boots": "Hunter's Boots",
+      "gloves": "Hunter's Gloves",
+      "weapon": "Hunter's Dagger"
+    },
+    "bronze": {
+      "set_name": "Bronze Set",
+      "description": "\"Sturdy bronze plate armor reinforced with leather, offering reliable protection and mobility for various combat situations.\"",
+      "helmet": "Bronze Helm",
+      "armor": "Bronze Chestplate",
+      "boots": "Bronze Greaves",
+      "gloves": "Bronze Gauntlets",
+      "weapon": "Bronze Mace",
+      "ring": "Bronze Ring"
+    },
+    "iron": {
+      "set_name": "Iron Set",
+      "description": "\"Solid iron plate armor that withstands heavy blows, providing robust protection for frontline warriors and knights.\"",
+      "helmet": "Iron Helm",
+      "armor": "Iron Chestplate",
+      "boots": "Iron Greaves",
+      "gloves": "Iron Gauntlets",
+      "weapon": "Iron Double Axe"
+    },
+    "heavy": {
+      "set_name": "Heavy Set",
+      "description": "\"Reinforced steel armor offering maximum protection against powerful attacks, ideal for elite warriors facing overwhelming odds.\"",
+      "helmet": "Heavy Helm",
+      "armor": "Heavy Chestplate",
+      "boots": "Heavy Greaves",
+      "gloves": "Heavy Gauntlets",
+      "ring": "Silver Ring",
+      "weapon": "Heavy Sword",
+      "amulet": "Amulet of Fortitude"
+    },
+    "guardian": {
+      "set_name": "Guardian Set",
+      "description": "\"Enchanted steel and leather armor offering exceptional protection against physical and magical attacks for elite defenders.\"",
+      "helmet": "Guardian Helm",
+      "armor": "Guardian Chestplate",
+      "boots": "Guardian Greaves",
+      "gloves": "Guardian Gauntlets",
+      "weapon": "Guardian Sword",
+      "ring": "Ring of the Guardian",
+      "amulet": "Guardian's Amulet"
+    },
+    "noble_platinum": {
+      "set_name": "Noble Platinum Set",
+      "description": "\"Rare platinum alloy armor with brilliant polish, offering superior protection and symbolizing high status for noble warriors.\"",
+      "helmet": "Noble Platinum Helm",
+      "armor": "Noble Platinum Chestplate",
+      "boots": "Noble Platinum Sabatons",
+      "gloves": "Noble Platinum Gauntlets",
+      "weapon": "Gracefull Platinum Longsword",
+      "ring": "Ring of the Platinum Order",
+      "amulet": "Commander's Medallion"
+    },
+    "shadow_ebony": {
+      "set_name": "Shadow Ebony Set",
+      "description": "\"Dark ebony wood and steel armor designed for stealth and agility, favored by shadow warriors and assassins.\"",
+      "helmet": "Shadow Ebony Helm",
+      "armor": "Shadow Ebony Chestplate",
+      "boots": "Shadow Ebony Greaves",
+      "gloves": "Shadow Ebony Gauntlets",
+      "weapon": "Shadow Ebony Sword",
+      "ring": "Ring of the Hidden Passage",
+      "amulet": "Black Signet"
+    }
+  },
+  "uniques": {
+    "juggernout": {
+      "set_name": "Juggernaut's Judgments",
+      "description": "\"Massive armor and weaponry designed for unstoppable force and overwhelming power in combat.\"",
+      "weapon": "Juggernaut's Greatsword"
+    },
+    "samurai": {
+      "set_name": "Samurai's Set",
+      "description": "\"Traditional eastern warrior armor emphasizing precision, honor, and deadly efficiency in battle.\"",
+      "weapon": "Katana"
+    },
+    "silver_moon": {
+      "set_name": "Moonlight's Set",
+      "description": "\"Mystical armor imbued with moonlight essence, offering both elegance and magical protection to its wearer.\"",
+      "armor": "Moonlight Scale Mail",
+      "boots": "Moonlight Boots",
+      "weapon": "Whisper of the Silver Moon"
+    },
+    "windcutter": {
+      "set_name": "Windcutter's Set",
+      "description": "\"Lightweight armor designed for incredible speed and precision strikes, harnessing the power of the wind.\"",
+      "helmet": "Gale Visor Helm",
+      "gloves": "Cyclone Strike Gauntlets",
+      "weapon": "Windcutter"
+    },
+    "elemental_powerfull": {
+      "set_name": "Elemental Power's Set",
+      "description": "\"Magical accessories imbued with the raw power of the elements, enhancing the wearer's connection to natural forces.\"",
+      "ring": "Elemental Powerfull Ring",
+      "amulet": "Elemental Powerfull Amulet"
+    },
+    "serpent_embrace": {
+      "set_name": "Serpent's Embrace Set",
+      "description": "\"Legendary armor crafted from ancient serpent scales, granting enhanced agility and mystical resilience.\"",
+      "helmet": "Helmet of the Constricting Serpent",
+      "armor": "Breastplate of Viper Scales",
+      "boots": "Silent Slither of the Snake",
+      "gloves": "Venomous Fang Gauntlets",
+      "weapon": "Serpent's Poison Tongue"
+    },
+    "frostbear_wrath": {
+      "set_name": "Frostbear's Wrath Set",
+      "description": "\"Arctic armor imbued with freezing power, capable of freezing anything it touches and enduring extreme cold.\"",
+      "helmet": "Glacier Bear Snout",
+      "armor": "Eternal Winter Fur",
+      "boots": "Freezing Roar Paws",
+      "gloves": "Cutting Ice Claws",
+      "amulet": "Silverfang Amulet"
+    },
+    "lost_king": {
+      "set_name": "Lost King's Regalia's Set",
+      "description": "\"Magnificent armor once belonging to a legendary ruler, imbued with ancient magic and unparalleled strength.\"",
+      "helmet": "Crown of the Forgotten Monarch",
+      "armor": "Torn Tunic of Lost Heritage",
+      "gloves": "Gauntlets of the Vanished Empire",
+      "boots": "Steps of Fallen King",
+      "weapon": "Blade of the Silent Throne",
+      "ring": "Signet of the Forgotten Kingdom",
+      "amulet": "Embalmed Heart of the Last King"
+    },
+    "demons_bane": {
+      "set_name": "Demon's Bane Set",
+      "description": "\"Celestial metal armor enchanted with holy runes, radiating divine light to vanquish demonic forces.\"",
+      "helmet": "Halo of the Divine Protector",
+      "armor": "Breastplate of Sacred Light",
+      "boots": "Greaves of Divine Protection",
+      "gloves": "Gauntlets of Righteous Fury",
+      "weapon": "Sword of the Celestial Guardian"
+    },
+    "sacred_crusader": {
+      "set_name": "Sacred Crusader's Set",
+      "description": "\"Blessed armor worn by holy warriors, radiating divine aura to protect the innocent and vanquish evil.\"",
+      "helmet": "Helm of the Holy Sentinel",
+      "armor": "Breastplate of Divine Justice",
+      "boots": "Greaves of Sacred Duty",
+      "amulet": "Pendant of the Faithful"
+    },
+    "solaris": {
+      "set_name": "Solaris Set",
+      "description": "\"Radiant golden armor capturing the sun's power, illuminating darkness and imbuing warmth and vitality.\"",
+      "helmet": "Mask of the Radiant Sun",
+      "armor": "Breastplate of Solar Flare",
+      "boots": "Greaves of Blazing Speed",
+      "gloves": "Gauntlets of Sunlit Fury",
+      "weapon": "Axe of the Eternal Dawn",
+      "ring": "Ring of the Sun's Core",
+      "amulet": "Amulet of the Sun Core"
+    },
+    "death_reaper": {
+      "set_name": "Death Reaper's Set",
+      "description": "\"Dark otherworldly armor embodying mortality, granting dominion over life and death itself.\"",
+      "helmet": "Reaper's Bone Helmet",
+      "armor": "Cloak of Lost Souls",
+      "boots": "Whispers of the Grave",
+      "gloves": "Herald's Bony Fingers",
+      "weapon": "Bone's Skull Mace",
+      "ring": "Death Ring"
+    }
+  },
+  "base_set_description": "A powerful piece of equipment from the {set_name} set.",
+  "types": {
+    "weapon": "Weapon",
+    "helmet": "Helmet",
+    "gloves": "Gloves",
+    "boots": "Boots",
+    "armor": "Armor",
+    "amulet": "Amulet",
+    "ring": "Ring"
+  }
+}

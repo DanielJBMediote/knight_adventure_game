@@ -1,0 +1,208 @@
+[gd_scene load_steps=8 format=3 uid="uid://336j7dqwckmx"]
+
+[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_v3jc1"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="3_5qtu8"]
+[ext_resource type="Theme" uid="uid://k0ll6m3w6kk3" path="res://src/ui/themes/items_themes/unique_border.tres" id="4_rp0sb"]
+[ext_resource type="Texture2D" uid="uid://fw8pt13xflfx" path="res://assets/sprites/items/equipments/armor/_1.png" id="5_xwib8"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qlwbu"]
+texture = ExtResource("1_v3jc1")
+texture_margin_left = 48.0
+texture_margin_top = 44.0
+texture_margin_right = 48.0
+texture_margin_bottom = 44.0
+region_rect = Rect2(293, 120, 52, 48)
+
+[sub_resource type="GDScript" id="GDScript_a504v"]
+script/source = "## ESGS (Equipment Socket Gem System) GemPanelEquipmentSlotUI
+class_name ESGSGemPanelEquipmentSlotUI
+extends Panel
+
+@onready var rarity_texture: TextureRect = $MarginContainer/RarityTexture
+@onready var equipment_texture: TextureRect = $MarginContainer/EquipmentTexture
+@onready var equipment_level: Label = $MarginContainer/MarginContainer/LevelPanel/EquipmentLevel
+@onready var unique_border: Panel = $UniqueBorder
+@onready var background_item: TextureRect = $BackgroundItem
+
+var target_mouse := false
+
+func setup_equipment(new_equipment: EquipmentItem) -> void:
+	if new_equipment:
+		equipment_texture.texture = new_equipment.item_texture
+		background_item.visible = false
+		equipment_level.visible = true
+		update_equipment_level(new_equipment.item_level)
+		set_item_rarity_texture(new_equipment.item_rarity)
+		update_border_style(new_equipment.is_unique)
+	else:
+		equipment_texture.texture = null
+		background_item.visible = true
+		equipment_level.text = \"\"
+		equipment_level.visible = false
+		rarity_texture.texture = null
+		update_border_style(false)
+
+func update_equipment_level(level: int) -> void:
+	equipment_level.text = str(level)
+	var player_level = PlayerStats.level
+	var difference = player_level - level
+
+	if difference >= 20:
+		equipment_level.add_theme_color_override(\"font_color\", Color.RED)
+	elif difference >= 5:
+		equipment_level.add_theme_color_override(\"font_color\", Color.YELLOW)
+	elif difference == 0:
+		equipment_level.add_theme_color_override(\"font_color\", Color.GREEN)
+	else:
+		equipment_level.add_theme_color_override(\"font_color\", Color.WHITE)
+
+func _input(event: InputEvent) -> void:
+	if target_mouse and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		pass
+
+
+func set_item_rarity_texture(rarity: Item.RARITY) -> void:
+	match rarity:
+		Item.RARITY.COMMON:
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_COMMOM
+		Item.RARITY.UNCOMMON:
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_UNCOMMON
+		Item.RARITY.RARE:
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_RARE
+		Item.RARITY.EPIC:
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_EPIC
+		Item.RARITY.LEGENDARY:
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_LEGENDARY
+		Item.RARITY.MYTHICAL:
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_MITICAL
+		_:
+			rarity_texture.texture = null
+
+
+func update_border_style(is_unique: bool = false):
+	unique_border.visible = is_unique
+
+
+func _on_mouse_entered() -> void:
+	target_mouse = true
+	pass # Replace with function body.
+
+
+func _on_mouse_exited() -> void:
+	target_mouse = false
+	pass # Replace with function body.
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fub5i"]
+bg_color = Color(0.0596392, 0.0596389, 0.0687134, 1)
+
+[node name="ESGSystemEquipmentSlotUI" type="Panel"]
+custom_minimum_size = Vector2(96, 96)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxTexture_qlwbu")
+script = SubResource("GDScript_a504v")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="RarityTexture" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="EquipmentTexture" type="TextureRect" parent="MarginContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="LevelPanel" type="Panel" parent="MarginContainer/MarginContainer"]
+custom_minimum_size = Vector2(24, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_fub5i")
+
+[node name="EquipmentLevel" type="Label" parent="MarginContainer/MarginContainer/LevelPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -9.0
+offset_top = -7.5
+offset_right = 9.0
+offset_bottom = 7.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 8
+size_flags_vertical = 8
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("3_5qtu8")
+text = "98"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="UniqueBorder" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(92, 92)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -46.0
+offset_top = -46.0
+offset_right = 46.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("4_rp0sb")
+metadata/_edit_lock_ = true
+
+[node name="BackgroundItem" type="TextureRect" parent="."]
+modulate = Color(0, 0, 0, 1)
+self_modulate = Color(1, 1, 1, 0.392157)
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -24.0
+offset_top = -24.0
+offset_right = 24.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_xwib8")
+expand_mode = 3
+stretch_mode = 5
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

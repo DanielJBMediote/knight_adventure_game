@@ -13,6 +13,8 @@ var equipment_slots: Array[EquipmentItem.TYPE] = [
 	EquipmentItem.TYPE.BOOTS
 ]
 
+var active_attributes: Array[ItemAttribute]
+
 
 func _ready() -> void:
 	PlayerEvents.update_equipment.connect(_update_equipment)
@@ -36,12 +38,12 @@ func can_equip(equipment: EquipmentItem) -> bool:
 	var item_level = equipment.item_level
 	# Verifica nível requerido
 	if not ItemManager.compare_player_level(item_level):
-		print("Nível insuficiente para equipar: ", equipment.item_name)
+		# print("Nível insuficiente para equipar: ", equipment.item_name)
 		return false
 
 	# Verifica se o slot está disponível
 	if equipment.equipment_type not in equipment_slots:
-		print("Tipo de equipamento inválido: ", equipment.equipment_type)
+		# print("Tipo de equipamento inválido: ", equipment.equipment_type)
 		return false
 
 	return true
@@ -59,8 +61,11 @@ func swap_equipment(new_equipment: EquipmentItem) -> bool:
 
 	# Tenta adicionar o item atual de volta ao inventário se existir
 	if current_equipped:
-		if not InventoryManager.add_item(current_equipped):
+		var new_equipment_temp = new_equipment.clone()
+		InventoryManager.remove_item(new_equipment)
+		if not InventoryManager.add_item(current_equipped, new_equipment_temp.slot_index_ref):
 			# Não tem espaço no inventário - cancela a operação
+			InventoryManager.add_item(new_equipment_temp)
 			return false
 		remove_equipment_stats(current_equipped)
 
@@ -95,21 +100,23 @@ func equip(new_equipment: EquipmentItem) -> void:
 
 	# Remove do inventário
 	InventoryManager.remove_item(new_equipment)
+	InventoryManager.inventory_updated.emit()
 	equipment_updated.emit(slot_type, new_equipment)
-
+	print("Equipped: ", new_equipment.item_name)
 
 # Retornar bool para sucesso
-func unequip(equipment: EquipmentItem) -> bool:
+func unequip(equipment: EquipmentItem, slot_index: int = -1) -> bool:
 	var slot_type = equipment.equipment_type
 	if equipped_items[slot_type] == equipment:
 		# Verifica se tem espaço no inventário primeiro
-		if InventoryManager.add_item(equipment):
+		var is_added = InventoryManager.add_item(equipment, slot_index)
+		if is_added:
 			remove_equipment_stats(equipment)
 			equipped_items[slot_type] = null
 			equipment_updated.emit(slot_type, null)
+			InventoryManager.inventory_updated.emit()
 			return true
 		else:
-			# print("Inventário cheio! Não foi possível desequipar.")
 			return false
 	return false
 
@@ -118,14 +125,17 @@ func apply_equipment_stats(equipment: EquipmentItem) -> void:
 	if not equipment:
 		return
 
-	# Remove todos os atributos (incluindo bônus de set que serão recalculados)
+	# 1. Primeiro remove TODOS os bônus de set atuais
 	remove_all_set_bonuses()
-	remove_base_equipment_stats(equipment)
 
-	# Reaplica os bônus de set (recalculados após a remoção do equipamento)
+	# 2. Aplica os atributos base do equipamento
+	#apply_base_equipment_stats(equipment, 1.0)
+
+	# 3. Aplica os atributos adicionais do equipamento
 	var all_attributes = equipment.get_all_attributes()
 	apply_attributes_to_stats(all_attributes, 1.0)
-	apply_base_equipment_stats(equipment)
+
+	# 4. Recalcula e aplica os bônus de set (agora incluindo o novo equipamento)
 	apply_all_set_bonuses()
 
 	PlayerStats.emit_attributes_changed()
@@ -135,35 +145,28 @@ func remove_equipment_stats(equipment: EquipmentItem) -> void:
 	if not equipment:
 		return
 
-	# Remove todos os atributos (incluindo bônus de set que serão recalculados)
+	# 1. Primeiro remove TODOS os bônus de set atuais
 	remove_all_set_bonuses()
-	remove_base_equipment_stats(equipment)
 
-	# Reaplica os bônus de set (recalculados após a remoção do equipamento)
+	# 2. Remove os atributos base do equipamento
+	#apply_base_equipment_stats(equipment, -1.0)
+
+	# 3. Remove os atributos adicionais do equipamento
 	var all_attributes = equipment.get_all_attributes()
 	apply_attributes_to_stats(all_attributes, -1.0)
-	apply_base_equipment_stats(equipment)
+
+	# 4. Recalcula e aplica os bônus de set (agora sem o equipamento removido)
 	apply_all_set_bonuses()
 
 	PlayerStats.emit_attributes_changed()
 
 
-# Método auxiliar para aplicar stats base do equipamento
-func apply_base_equipment_stats(equipment: EquipmentItem) -> void:
+func apply_base_equipment_stats(equipment: EquipmentItem, multiplier: float) -> void:
 	if equipment.equipment_type == EquipmentItem.TYPE.WEAPON:
-		PlayerStats.update_min_damage(equipment.damage.min_value)
-		PlayerStats.update_max_damage(equipment.damage.max_value)
+		PlayerStats.update_min_damage(equipment.damage.min_value * multiplier)
+		PlayerStats.update_max_damage(equipment.damage.max_value * multiplier)
 	else:
-		PlayerStats.update_defense_points(equipment.defense.value)
-
-
-# Método auxiliar para remover stats base do equipamento
-func remove_base_equipment_stats(equipment: EquipmentItem) -> void:
-	if equipment.equipment_type == EquipmentItem.TYPE.WEAPON:
-		PlayerStats.update_min_damage(-equipment.damage.min_value)
-		PlayerStats.update_max_damage(-equipment.damage.max_value)
-	else:
-		PlayerStats.update_defense_points(-equipment.defense.value)
+		PlayerStats.update_defense_points(equipment.defense.value * multiplier)
 
 
 func apply_all_set_bonuses() -> void:
@@ -294,17 +297,5 @@ func get_all_unique_sets_equipped_items() -> Dictionary:
 	return unique_sets
 
 
-func get_total_equipment_bonuses() -> Dictionary:
-	var bonuses = {
-		"health": 0.0,
-		"mana": 0.0,
-		"energy": 0.0,
-		"min_damage": 0.0,
-		"max_damage": 0.0,
-		"defense": 0.0,
-		"critical_rate": 0.0,
-		"critical_damage": 0.0,
-		"attack_speed": 0.0,
-		"move_speed": 0.0
-	}
-	return bonuses
+func get_total_equipment_bonuses() -> Array[ItemAttribute]:
+	return active_attributes

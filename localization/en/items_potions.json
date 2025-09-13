@@ -1,0 +1,24 @@
+{
+  "names": {
+    "health": "Health Potion",
+    "mana": "Mana Potion",
+    "energy": "Energy Potion",
+    "defense": "Defense Potion",
+    "damage": "Damage Potion",
+    "critical_rate": "Critical Rate Potion",
+    "critical_damage": "Critical Damage Potion",
+    "attack_speed": "Attack Speed Potion",
+    "move_speed": "Speed Potion"
+  },
+  "base_descriptions": {
+    "health": "A red potion that instantly restores {amount} of health.",
+    "mana": "A blue potion that instantly restores {amount} of mana.",
+    "energy": "A green potion that instantly restores {amount} of energy.",
+    "defense": "A gray potion that increases defense by {amount}% for {duration} seconds.",
+    "damage": "An orange potion that increases damage by {amount}% for {duration} seconds.",
+    "critical_rate": "A purple potion that increases critical rate by {amount}% for {duration} seconds.",
+    "critical_damage": "A dark red potion that increases critical damage by {amount}% for {duration} seconds.",
+    "attack_speed": "A yellow potion that increases attack speed by {amount}% for {duration} seconds.",
+    "move_speed": "A light blue potion that increases movement speed by {amount}% for {duration} seconds."
+  }
+}

@@ -41,7 +41,7 @@ func setup(enemy_stats: EnemyStats) -> void:
 	self.item_name = set_potion_name()
 	self.item_descriptions = setup_potion_description()
 	self.item_id = generate_potion_id()
-	self.item_price = calculate_item_price(BASE_POTION_VALUE)
+	self.item_price = _calculate_item_price(BASE_POTION_VALUE)
 
 	setup_texture()
 
@@ -91,7 +91,7 @@ func generate_potion_id() -> String:
 	var potion_resource_name = ItemAttribute.ATTRIBUTE_NAMES.get(potion_type, "UNKNOWN")
 	var rarity_name = Item.get_rarity_text(self.item_rarity)
 	var level_str = str("L", self.item_level)
-	return generate_item_id(["POTION", potion_resource_name, rarity_name, level_str])
+	return Item._generate_item_id(["POTION", potion_resource_name, rarity_name, level_str])
 
 
 func get_random_potion_type() -> ItemAttribute.TYPE:

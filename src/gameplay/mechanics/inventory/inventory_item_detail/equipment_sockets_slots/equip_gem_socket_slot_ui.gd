@@ -6,8 +6,8 @@ const EMPTY_GEM_SOCKET = preload("res://src/ui/themes/empty_gem_socket_panel_sty
 @onready var panel: Panel = $Panel
 @onready var gem_texture: TextureRect = $Panel/GemTexture
 
-@onready var attribute_label: AttributeLabel = $VBoxContainer/AttributeLabel
-@onready var gem_name_label: AttributeLabel = $VBoxContainer/GemNameLabel
+@onready var attribute_label: DefaultLabel = $VBoxContainer/AttributeLabel
+@onready var gem_name_label: DefaultLabel = $VBoxContainer/GemNameLabel
 
 @export var gem: GemItem
 
@@ -17,8 +17,8 @@ func _ready() -> void:
 		gem_texture.texture = gem.item_texture
 		for attribute in gem.item_attributes:
 			var value_str = ItemAttribute.format_value(attribute.type, attribute.value)
-			var attrib_name = ItemAttribute.get_attribute_type_name(gem.attribute.type)
-			attribute_label.custom_text = "+ %s %s" % [value_str, attrib_name]
+			var attrib_name = ItemAttribute.get_attribute_type_name(attribute.type)
+			attribute_label.text = "+ %s %s" % [value_str, attrib_name]
 			gem_name_label.text = gem.item_name
 			gem_name_label.add_theme_color_override("font_color", gem.get_item_rarity_text_color())
 	else:
