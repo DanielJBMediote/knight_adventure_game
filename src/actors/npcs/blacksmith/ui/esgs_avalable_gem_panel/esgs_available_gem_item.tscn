@@ -1,10 +1,35 @@
-[gd_scene load_steps=6 format=3 uid="uid://doc001pxn5cwu"]
+[gd_scene load_steps=11 format=3 uid="uid://doc001pxn5cwu"]
 
 [ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_wl14x"]
 [ext_resource type="Script" uid="uid://b3xr34mrop3wm" path="res://src/actors/npcs/blacksmith/ui/esgs_avalable_gem_panel/esgs_available_gem_item.gd" id="2_eejky"]
 [ext_resource type="Texture2D" uid="uid://ch3hunsu03xej" path="res://assets/sprites/items/gems/gem_common_blue.png" id="2_isfbl"]
 [ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="3_eejky"]
 [ext_resource type="Texture2D" uid="uid://grrmo7an5bti" path="res://src/ui/themes/items_themes/bg_gradient_item_uncommon.tres" id="3_isfbl"]
+[ext_resource type="PackedScene" uid="uid://ugixsawwxtkd" path="res://src/actors/npcs/blacksmith/ui/socket_button.tscn" id="6_0msvm"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="7_1rdfj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aq3rc"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+bg_color = Color(0.14902, 0.137255, 0.141176, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cmnx4"]
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+
+[sub_resource type="Theme" id="Theme_hvj0t"]
+Button/colors/font_outline_color = Color(0, 0, 0, 1)
+Button/constants/outline_size = 2
+Button/font_sizes/font_size = 16
+Button/fonts/font = ExtResource("7_1rdfj")
+Button/styles/focus = SubResource("StyleBoxFlat_aq3rc")
+Button/styles/hover = SubResource("StyleBoxFlat_aq3rc")
+Button/styles/normal = SubResource("StyleBoxEmpty_cmnx4")
+Button/styles/pressed = SubResource("StyleBoxFlat_aq3rc")
 
 [node name="ESGSAvailableGemItem" type="Panel"]
 custom_minimum_size = Vector2(488, 96)
@@ -35,6 +60,7 @@ texture = ExtResource("3_isfbl")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="GemTexture" type="TextureRect" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(32, 32)
@@ -63,7 +89,7 @@ text = "x16"
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 0
+size_flags_horizontal = 2
 size_flags_vertical = 4
 
 [node name="GemName" parent="MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("3_eejky")]
@@ -79,3 +105,15 @@ text = "+ 15% Critical Damage"
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "Lv. 30"
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_constants/margin_right = 32
+
+[node name="SocketButton" parent="MarginContainer/HBoxContainer/MarginContainer" instance=ExtResource("6_0msvm")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = SubResource("Theme_hvj0t")

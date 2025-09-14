@@ -1,9 +1,9 @@
 class_name CurrencyInfoUI
 extends HBoxContainer
 
-@onready var gold_value: Label = $ValueGold
-@onready var silver_value: Label = $ValueSilver
-@onready var bronze_value: Label = $ValueBronze
+@onready var gold_value: Label = $GoldSection/ValueGold
+@onready var silver_value: Label = $SilverSection/ValueSilver
+@onready var bronze_value: Label = $BronzeSection/ValueBronze
 
 
 func _ready() -> void:

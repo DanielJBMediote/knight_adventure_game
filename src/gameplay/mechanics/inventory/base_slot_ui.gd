@@ -8,7 +8,7 @@ const ITEM_SLOT_STYLEBOX_NORMAL = preload("res://src/ui/themes/item_slot_stylebo
 @export var rarity_texture: TextureRect
 @export var item_texture: TextureRect
 @export var unique_border: Panel
-@export var info: Label
+@export var info_label: DefaultLabel
 @export var preview_gems_attached: VBoxContainer
 
 # Variáveis comuns
@@ -69,13 +69,14 @@ func _update_lock_status() -> void:
 
 func _update_item_info() -> void:
 	if not current_item:
-		info.hide()
+		info_label.hide()
 	else:
-		info.show()
+		info_label.show()
 		if current_item.stackable:
-			info.text = str(current_item.current_stack)
+			info_label.text = str(current_item.current_stack)
 			return
-		info.hide()
+		info_label.hide()
+	
 
 func _update_gems_attached() -> void:
 	if not preview_gems_attached:
@@ -97,7 +98,7 @@ func _update_gems_attached() -> void:
 	for slot_key in attached_gems:
 		var gem = attached_gems.get(slot_key)
 		if gem:
-			var tx_rect =  TextureRect.new()
+			var tx_rect = TextureRect.new()
 			tx_rect.texture = gem.item_texture
 			tx_rect.custom_minimum_size = Vector2(12, 12)
 			tx_rect.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
@@ -135,7 +136,7 @@ func _on_gui_input(event: InputEvent) -> void:
 func _input(event: InputEvent) -> void:
 	# Detecta movimento do mouse para iniciar drag mais cedo
 	if event is InputEventMouseMotion and is_click:
-		if event.relative.length() > 3:  # Sensibilidade do movimento
+		if event.relative.length() > 3: # Sensibilidade do movimento
 			is_click = false
 			if can_drag and not is_drag_started:
 				is_drag_started = true
@@ -153,7 +154,7 @@ func start_drag() -> void:
 
 	# Configuração visual do drag
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hide_item_visuals()  # Esconde o current_item visualmente
+	_hide_item_visuals() # Esconde o current_item visualmente
 
 	# Emite sinal para o manager
 	InventoryManager.start_item_drag(current_item, slot_index)
@@ -222,7 +223,6 @@ func _show_item_visuals() -> void:
 	if current_item.item_category == Item.CATEGORY.EQUIPMENTS:
 		preview_gems_attached.show()
 		
-
 
 # FUNÇÕES DE MOUSE COMUNS
 func _on_mouse_entered() -> void:

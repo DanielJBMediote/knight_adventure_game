@@ -2,20 +2,20 @@ class_name EnemyStats
 extends Node
 
 signal health_changed(health: float)
-signal trigged_dead(exp_amount: float)
+signal died(exp_amount: float)
 
-enum ENEMY_TYPE { MOB, MINIBOSS, BOSS }
-enum RACE { BATS, SKELETONS, ORCS }
+enum ENEMY_TYPE {MOB, MINIBOSS, BOSS}
+enum RACE {BATS, SKELETONS, ORCS}
 
-const MAX_CRITICAL_RATE := 100.0  # 100% máximo
-const MAX_CRITICAL_DAMAGE := 300.0  # 300% máximo
-const MAX_STATUS_CHANCE := 100.0  # 100% máximo
+const MAX_CRITICAL_RATE := 100.0 # 100% máximo
+const MAX_CRITICAL_DAMAGE := 300.0 # 300% máximo
+const MAX_STATUS_CHANCE := 100.0 # 100% máximo
 const SPEED := 100.0
 
 ## Define the name of Entity
 @export var enemy_name := ""
 ## Define the Level of Entity (Based on game difficult and map levels)
-@export var level := 0
+@export var level: int = 0
 ## Enemy type: Mobs Miniboss or Boss
 @export var enemy_type: ENEMY_TYPE = ENEMY_TYPE.MOB
 
@@ -53,7 +53,7 @@ const SPEED := 100.0
 @export var base_bleed_damage := 0.0
 
 ## Chance to apply Poison Status. Percentage Values: 0.0 - 1.0.
-@export var base_poison_chance := 0.0  # Chance de aplicar veneno
+@export var base_poison_chance := 0.0 # Chance de aplicar veneno
 ## Duration of Poison Status in seconds.
 @export var base_poison_duration := 0.0
 ## Base Poison Damage = Damage * Poison Damage. Values: 0.0 - 1.0
@@ -100,43 +100,43 @@ func _ready() -> void:
 	var min_map_level = GameEvents.current_map.get_min_mob_level()
 	var max_map_level = GameEvents.current_map.get_max_mob_level()
 
-	var stats_mod_factor = GameEvents.get_stats_modificator_by_difficult(difficultty)
-	var level_increment = GameEvents.get_additional_levels_modificator_by_difficult(difficultty)
+	var status_modificator = GameEvents.get_stats_modificator_by_difficult(difficultty)
+	var additional_level = GameEvents.get_additional_levels_modificator_by_difficult(difficultty)
 
-	level = randi_range(min_map_level, max_map_level) + level_increment
+	level = randi_range(min_map_level, max_map_level) + additional_level
 
 	var base_factor: float = generate_base_factor()
 
 	# Fatores de escalonamento
-	var level_factor := base_factor + (level - 1) * 0.10  # +10% de atributos por level
-	var health_factor := base_factor + (level - 1) * 1.0  # +100% de atributos por level
-	var damage_factor := base_factor + (level - 1) * 0.50  # +50% de atributos por level
-	var exp_factor := base_factor + (level - 1) * 0.65  # +65% de atributos por level
+	var level_factor := base_factor + (level - 1) * 0.10 # +10% de atributos por level
+	var health_factor := base_factor + (level - 1) * 1.0 # +100% de atributos por level
+	var damage_factor := base_factor + (level - 1) * 0.50 # +50% de atributos por level
+	var exp_factor := base_factor + (level - 1) * 0.65 # +65% de atributos por level
 
 	# Calcula stats de vida
-	self.health_points = base_health_points * (health_factor * stats_mod_factor)
-	self.health_regen_per_seconds = base_health_points_regen * (level_factor * stats_mod_factor)
+	self.health_points = base_health_points * (health_factor * status_modificator)
+	self.health_regen_per_seconds = base_health_points_regen * (level_factor * status_modificator)
 
 	# Calcula stats de dano
-	self.min_attack_damage = max(base_min_damage * (damage_factor * stats_mod_factor), 1)
-	self.max_attack_damage = max(base_max_damage * (damage_factor * stats_mod_factor), 1)
+	self.min_attack_damage = max(base_min_damage * (damage_factor * status_modificator), 1)
+	self.max_attack_damage = max(base_max_damage * (damage_factor * status_modificator), 1)
 
 	# Calcula stats de velocidade
-	self.attack_speed = clamp(base_attack_speed * stats_mod_factor * level_factor * 0.02, 1.0, 2.0)
-	self.move_speed = SPEED * clamp(base_move_speed * stats_mod_factor * level_factor * 0.02, base_move_speed, base_move_speed * 2.0)
+	self.attack_speed = clamp(base_attack_speed * status_modificator * level_factor * 0.02, 1.0, 2.0)
+	self.move_speed = SPEED * clamp(base_move_speed * status_modificator * level_factor * 0.02, base_move_speed, base_move_speed * 2.0)
 
 	# Fórmulas balanceadas para CRITICAL RATE e CRITICAL DAMAGE
-	calculate_critical_stats(level_factor, stats_mod_factor)
+	calculate_critical_stats(level_factor, status_modificator)
 
 	# Fórmulas balanceadas para STATUS EFFECTS
-	calculate_status_effects_stats(level_factor, stats_mod_factor)
+	calculate_status_effects_stats(level_factor, status_modificator)
 
 	# Inicializa a vida atual
 	self.current_health_points = health_points
 	self.health_changed.emit(current_health_points)
 
 	# Experiência
-	self.experience = max(1, base_experience * exp_factor * stats_mod_factor)
+	self.experience = max(1, base_experience * exp_factor * status_modificator)
 
 	# Número Drops
 	self.num_drops = calculate_amount_drops()
@@ -157,7 +157,7 @@ func generate_base_factor() -> float:
 
 func calculate_amount_drops() -> int:
 	var difficulty_multiply: float = GameEvents.get_drop_modificator_by_difficult()
-	var level_factor = clampi(level / 10, 1, 10)
+	var level_factor = clampi(ceili(float(level * 0.1)), 1, 10)
 	var amount_drops = base_num_drops + maxi(difficulty_multiply * level_factor, 1)
 	return amount_drops
 
@@ -170,10 +170,10 @@ func calculate_num_of_coins() -> int:
 	var _amount_coins = base_amount + ceili(level_factor * type_factor * difficulty_factor)
 	return _amount_coins
 
-func calculate_critical_stats(level_factor: float, difficulty_factor: float) -> void:
+func calculate_critical_stats(_level_factor: float, difficulty_factor: float) -> void:
 	# Critical Rate - escala suavemente até o máximo
-	var crit_rate_growth = 0.25  # Taxa de crescimento (ajuste conforme necessário)
-	var max_crit_level = 90  # Nível onde atinge o máximo
+	var crit_rate_growth = 0.25 # Taxa de crescimento (ajuste conforme necessário)
+	var max_crit_level = 90 # Nível onde atinge o máximo
 
 	if level >= max_crit_level:
 		self.crit_rate = MAX_CRITICAL_RATE
@@ -183,8 +183,8 @@ func calculate_critical_stats(level_factor: float, difficulty_factor: float) -> 
 		self.crit_rate = min(base_crit_rate * crit_rate_factor * difficulty_factor, MAX_CRITICAL_RATE)
 
 	# Critical Damage - escala gradualmente até 300%
-	var crit_damage_growth = 0.15  # % adicional por nível (ajuste conforme necessário)
-	var max_crit_damage_level = 90  # Nível onde atinge 300%
+	var crit_damage_growth = 0.15 # % adicional por nível (ajuste conforme necessário)
+	var max_crit_damage_level = 90 # Nível onde atinge 300%
 
 	if level >= max_crit_damage_level:
 		self.crit_damage = MAX_CRITICAL_DAMAGE
@@ -197,44 +197,43 @@ func calculate_critical_stats(level_factor: float, difficulty_factor: float) -> 
 
 func calculate_status_effects_stats(_level_factor: float, difficulty_factor: float) -> void:
 	# Bleed Chance - escala até máximo de 100%
-	var bleed_chance_growth = 1.5  # Multiplicador de crescimento
+	var bleed_chance_growth = 1.5 # Multiplicador de crescimento
 
-	if base_bleed_chance > 0:  # Só escala se tiver chance base
+	if base_bleed_chance > 0: # Só escala se tiver chance base
 		var bleed_chance_factor = 1.0 + (level - 1) * 0.08
 		self.bleed_chance = min(
 			base_bleed_chance * bleed_chance_factor * bleed_chance_growth * difficulty_factor, MAX_STATUS_CHANCE
 		)
 
 	# Bleed Damage - escala percentual do dano
-	var bleed_damage_growth = 0.15  # 15% mais dano por nível
+	var bleed_damage_growth = 0.15 # 15% mais dano por nível
 	if base_bleed_damage > 0:
 		self.bleed_damage = base_bleed_damage * (1.0 + ((level - 1) * bleed_damage_growth) * difficulty_factor)
-		self.bleed_damage = min(bleed_damage, 0.5)  # Máximo de 50% do dano como bleed
+		self.bleed_damage = min(bleed_damage, 0.5) # Máximo de 50% do dano como bleed
 
 	# Bleed Duration - escala leve
 	self.bleed_duration = base_bleed_duration * (1.0 + ((level - 1) * 0.05) * difficulty_factor)
 
 	# Poison Chance - escala até máximo de 100%
-	var poison_chance_growth = 1.4  # Multiplicador de crescimento
+	var poison_chance_growth = 1.4 # Multiplicador de crescimento
 
-	if base_poison_chance > 0:  # Só escala se tiver chance base
+	if base_poison_chance > 0: # Só escala se tiver chance base
 		var poison_chance_factor = 1.0 + (level - 1) * 0.07
 		self.poison_chance = min(
 			base_poison_chance * poison_chance_factor * poison_chance_growth * difficulty_factor, MAX_STATUS_CHANCE
 		)
 
 	# Poison Damage - escala percentual do dano
-	var poison_damage_growth = 0.12  # 12% mais dano por nível
+	var poison_damage_growth = 0.12 # 12% mais dano por nível
 	if base_poison_damage > 0:
 		self.poison_damage = base_poison_damage * (1.0 + ((level - 1) * poison_damage_growth) * difficulty_factor)
-		self.poison_damage = min(poison_damage, 0.3)  # Máximo de 30% do dano como poison
+		self.poison_damage = min(poison_damage, 0.3) # Máximo de 30% do dano como poison
 
 	# Poison Duration - escala leve
 	self.poison_duration = base_poison_duration * (1.0 + ((level - 1) * 0.06) * difficulty_factor)
 
 
 func calculate_base_attack_damage() -> DamageData:
-	var player_defense = PlayerStats.get("defense")
 	var damage_data = DamageData.new()
 
 	var damage = randf_range(min_attack_damage, max_attack_damage)
@@ -268,4 +267,4 @@ func on_take_damage(damage: float):
 	self.current_health_points = max(current_health_points - damage, 0)
 	self.health_changed.emit(self.current_health_points)
 	if current_health_points <= 0:
-		trigged_dead.emit(self.experience)
+		died.emit(self.experience)

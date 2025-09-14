@@ -54,7 +54,7 @@ dialog_ballon = NodePath("DialogBallon")
 npc_texture_portrait = ExtResource("2_fvauq")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.45, 0.45)
 sprite_frames = SubResource("SpriteFrames_lwaum")
 animation = &"speaking"
 offset = Vector2(0, -106)

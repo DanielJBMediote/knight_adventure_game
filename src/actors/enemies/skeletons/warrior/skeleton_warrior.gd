@@ -22,7 +22,7 @@ const SPRITE_OFFSET_FIX := 10
 const HITBOX_POSITION := Vector2(72, -60)
 const HITBOX_OFFSET := Vector2(72, -60)
 
-enum STATES { IDLE, WANDER, CHASE, ATTACKING }
+enum STATES {IDLE, WANDER, CHASE, ATTACKING}
 var state: STATES = STATES.IDLE
 
 var is_first_attack_after_chase := false
@@ -37,7 +37,7 @@ func _ready() -> void:
 	attack_names = ["attack_1", "attack_2", "attack_3"]
 	update_attack_speed()
 
-	enemy_stats.trigged_dead.connect(_on_enemy_stats_trigged_dead)
+	enemy_stats.died.connect(_on_enemy_died)
 
 	navigation_agent.path_desired_distance = 10.0
 	navigation_agent.target_desired_distance = 10.0
@@ -68,7 +68,7 @@ func _physics_process(delta: float) -> void:
 	if is_in_knockback:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta * 0.5)
 		move_and_slide()
-		return  # Sai do physics process durante knockback
+		return # Sai do physics process durante knockback
 
 	# Verifica se é hora de mudar de estado
 	if wander_controller.is_timeout and not is_in_knockback:
@@ -163,7 +163,7 @@ func update_sprite_direction(is_right: bool) -> void:
 	animated_sprite_2d.flip_h = !is_right
 	if animated_sprite_2d.animation == "run":
 		if !is_right:
-			animated_sprite_2d.offset.x = -SPRITE_OFFSET_FIX
+			animated_sprite_2d.offset.x = - SPRITE_OFFSET_FIX
 		else:
 			animated_sprite_2d.offset.x = SPRITE_OFFSET_FIX
 	else:
@@ -183,7 +183,7 @@ func handle_idle_state(_delta: float) -> void:
 	position.y += sin(wander_controller.timer.time_left * 2) * 0.1
 
 
-func handle_chase_state(delta: float) -> void:
+func handle_chase_state(_delta: float) -> void:
 	if is_in_knockback:
 		return
 
@@ -206,7 +206,7 @@ func handle_chase_state(delta: float) -> void:
 			raycast.force_raycast_update()
 			if super.is_colliding_with_wall(raycast):
 				is_near_wall = true
-				wall_direction = sign(raycast.target_position.x)  # 1 para direita, -1 para esquerda
+				wall_direction = sign(raycast.target_position.x) # 1 para direita, -1 para esquerda
 				break
 
 		# Pulo na parede se estiver perto de uma e movendo na mesma direção
@@ -217,7 +217,7 @@ func handle_chase_state(delta: float) -> void:
 
 		# Lógica de ataque
 		if distance_to_player <= min_attack_distance:
-			velocity.x = 0  # Mantém apenas o movimento vertical
+			velocity.x = 0 # Mantém apenas o movimento vertical
 
 			if can_attack and attack_timer.time_left <= 0:
 				start_attack()
@@ -236,7 +236,7 @@ func handle_attacking_state(_delta: float) -> void:
 	update_enemy_hitbox_position(move_direction == Vector2.RIGHT)
 
 
-func handle_wander_state(delta: float) -> void:
+func handle_wander_state(_delta: float) -> void:
 	# Atualiza o caminho de navegação
 	update_navigation_path()
 
@@ -255,7 +255,7 @@ func handle_wander_state(delta: float) -> void:
 		raycast.force_raycast_update()
 		if super.is_colliding_with_wall(raycast):
 			is_near_wall = true
-			wall_direction = sign(raycast.target_position.x)  # 1 para direita, -1 para esquerda
+			wall_direction = sign(raycast.target_position.x) # 1 para direita, -1 para esquerda
 			break
 
 	# Se houver parede, inverte a direção
@@ -265,7 +265,7 @@ func handle_wander_state(delta: float) -> void:
 			super.perform_wall_jump(move_direction, enemy_stats.move_speed * 2)
 
 	# Atualiza direção do sprite
-	var next_pos = navigation_agent.get_next_path_position()
+	# var next_pos = navigation_agent.get_next_path_position()
 	#update_sprite_direction(next_pos.x > global_position.x)
 
 
@@ -334,23 +334,24 @@ func _on_player_hitbox_area_entered() -> void:
 
 
 func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
-	if target_player:
+	if target_player and area.collision_layer == 512:
 		target_in_attack_range = true
 		can_attack = true
 
 
 func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
-	if target_player:
+	if target_player and area.collision_layer == 512:
 		target_in_attack_range = false
 		can_attack = false
 
 
-func _on_enemy_stats_trigged_dead(exp_amount: float) -> void:
+func _on_enemy_died(exp_amount: float) -> void:
 	animated_sprite_2d.play("dead")
 	super._on_dead(exp_amount)
 
 
 func _on_hit_flash_animation_animation_finished(anim_name: StringName) -> void:
-	is_hurting = false
-	is_invulnerable = false
+	if anim_name == "hit_flash":
+		is_hurting = false
+		is_invulnerable = false
 #endregion

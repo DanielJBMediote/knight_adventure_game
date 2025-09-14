@@ -10,7 +10,6 @@ signal add_status_effect(effect: StatusEffectData)
 signal remove_status_effect(effect: StatusEffectData)
 signal clear_status_effects
 
-
 func _ready() -> void:
 	ItemManager.use_potion.connect(_on_use_potion)
 
@@ -41,8 +40,7 @@ func _on_use_potion(potion: PotionItem) -> bool:
 func equip_item(equipment_item: EquipmentItem) -> bool:
 	# Verifica se pode equipar
 	if ItemManager.compare_player_level(equipment_item.item_level):
-		var is_equipped = PlayerEquipments.is_equipped(equipment_item)
-		update_equipment.emit(equipment_item, is_equipped)
+		update_equipment.emit(equipment_item)
 		return true
 	else:
 		var part_1 = LocalizationManager.get_ui_text("insufficient_level")

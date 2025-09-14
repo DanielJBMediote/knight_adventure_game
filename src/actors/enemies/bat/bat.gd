@@ -16,8 +16,8 @@ extends FlyingEnemy
 
 @export var min_time_state: float = 5.0
 @export var max_time_state: float = 10.0
-@export var close_range_hitbox_size := Vector2(80, 80)  # Tamanho maior para quando o jogador está muito perto
-@export var close_range_offset := Vector2(0, 0)  # Centralizado quando muito perto
+@export var close_range_hitbox_size := Vector2(80, 80) # Tamanho maior para quando o jogador está muito perto
+@export var close_range_offset := Vector2(0, 0) # Centralizado quando muito perto
 
 @export var navigation_update_interval := 0.2
 var navigation_timer := 0.0
@@ -27,7 +27,7 @@ const SLASH_HITBOX_SIZE := Vector2(96, 112)
 const HITBOX_OFFSET := Vector2(48, 24)
 const MAX_WALL_RETRIES := 3
 
-enum STATES { IDLE, WANDER, CHASE, SLEEPING, AWAKING, ATTACKING }
+enum STATES {IDLE, WANDER, CHASE, SLEEPING, AWAKING, ATTACKING}
 var state: STATES = STATES.IDLE
 var wall_retry_count := 0
 
@@ -43,7 +43,7 @@ func _ready() -> void:
 	navigation_agent.target_desired_distance = 10.0
 	navigation_agent.avoidance_enabled = true
 	
-	enemy_stats.trigged_dead.connect(_on_enemy_stats_trigged_dead)
+	enemy_stats.died.connect(_on_enemy_died)
 	enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
 	enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
 	enemy_hurtbox.player_hitbox_entered.connect(_on_player_hurtbox_entered)
@@ -61,7 +61,7 @@ func _physics_process(delta: float) -> void:
 	if is_in_knockback:
 		velocity = velocity.move_toward(Vector2.ZERO, FRICTION * delta * 0.5)
 		move_and_slide()
-		return  # Sai do physics process durante knockback
+		return # Sai do physics process durante knockback
 	
 	# Verifica se é hora de mudar de estado
 	if wander_controller.is_timeout and not is_in_knockback:
@@ -92,7 +92,7 @@ func _physics_process(delta: float) -> void:
 # Atualização do caminho em intervalos regulares
 func update_navigation_path() -> void:
 	if navigation_timer <= 0:
-		var target_pos = (target_player.global_position if state == STATES.CHASE 
+		var target_pos = (target_player.global_position if state == STATES.CHASE
 						else wander_controller.target_position)
 		navigation_agent.target_position = target_pos
 		navigation_timer = navigation_update_interval
@@ -149,7 +149,7 @@ func handle_sleeping_state(_delta: float) -> void:
 func handle_awaking_state(_delta: float) -> void:
 	velocity = Vector2.ZERO
 	position.y += sin(wander_controller.timer.time_left * 2) * 0.1
-func handle_attacking_state(delta: float) -> void:    
+func handle_attacking_state(delta: float) -> void:
 	if is_in_knockback or not is_attacking:
 		state = STATES.CHASE
 		return
@@ -187,7 +187,7 @@ func handle_wander_state(delta: float) -> void:
 	
 	# Ajuste de altura para wander (flutuação suave)
 	var target_height = wander_controller.start_position.y - ideal_flying_height
-	var height_variation = sin(Time.get_ticks_msec() * 0.001) * 20.0  + 10.0
+	var height_variation = sin(Time.get_ticks_msec() * 0.001) * 20.0 + 10.0
 	global_position.y = lerp(global_position.y, target_height + height_variation, delta * height_smoothing)
 	
 	var current_target = wander_controller.target_position if wander_controller.is_moving_to_target else wander_controller.start_position
@@ -253,7 +253,7 @@ func update_enemy_hitbox_shape() -> void:
 func update_sprite_direction(moving_right: bool) -> void:
 	animated_sprite_2d.flip_h = moving_right
 
-func play_animations()-> void:
+func play_animations() -> void:
 	if is_in_knockback or is_hurting:
 		#animated_sprite_2d.play("hurt")
 		return
@@ -279,7 +279,7 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		is_invulnerable = false
 	if animated_sprite_2d.animation.begins_with("attack"):
 		finish_attack()
-		if target_in_attack_range:  # Só ataca se ainda estiver no alcance
+		if target_in_attack_range: # Só ataca se ainda estiver no alcance
 			super.hit_player()
 			can_attack = true
 		else:
@@ -292,14 +292,14 @@ func _on_target_player_entered(body: Node2D) -> void:
 	target_player = body
 	state = STATES.CHASE
 	can_attack = true
-	wander_controller.pause_timer()  # Pausa o temporizador de wander
+	wander_controller.pause_timer() # Pausa o temporizador de wander
 func _on_target_player_exited(body: Node2D) -> void:
 	if body == target_player:
 		target_player = null
 		# Volta para um estado aleatório (idle ou wander)
 		var active_states = [STATES.IDLE, STATES.WANDER]
 		state = pick_random_state(active_states)
-		wander_controller.resume_timer()  # Retoma o temporizador
+		wander_controller.resume_timer() # Retoma o temporizador
 		
 		# Configura o novo estado
 		if state == STATES.WANDER:
@@ -308,12 +308,12 @@ func _on_target_player_exited(body: Node2D) -> void:
 			state = STATES.IDLE
 
 func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
-	if target_player:
+	if target_player and area.collision_layer == 512:
 		target_in_attack_range = true
 		can_attack = true
 
 func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
-	if target_player:
+	if target_player and area.collision_layer == 512:
 		target_in_attack_range = false
 		can_attack = false
 
@@ -323,7 +323,7 @@ func _on_player_hurtbox_entered() -> void:
 		animated_sprite_2d.play("hurt")
 		take_knockback(target_player.knockback_force, target_player.global_position)
 
-func _on_enemy_stats_trigged_dead(exp_amount: float) -> void:
+func _on_enemy_died(exp_amount: float) -> void:
 	animated_sprite_2d.play("dying")
 	super._on_dead(exp_amount)
 

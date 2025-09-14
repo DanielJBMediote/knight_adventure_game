@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://nxgqn7u057kw"]
+[gd_scene load_steps=16 format=4 uid="uid://nxgqn7u057kw"]
 
 [ext_resource type="Script" uid="uid://dirkxfg16rje0" path="res://src/world/maps/_configs/map_data.gd" id="1_id7sn"]
 [ext_resource type="PackedScene" uid="uid://bgtrneqf6i4of" path="res://src/world/maps/_configs/smart_camera_controller.tscn" id="2_0wnlr"]
@@ -12,13 +12,22 @@
 [ext_resource type="PackedScene" uid="uid://m58oo4qhmrxd" path="res://src/world/props/plants/wheat.tscn" id="7_ks8s1"]
 [ext_resource type="PackedScene" uid="uid://bmqja38h84vuw" path="res://src/actors/player/ui/player_ui.tscn" id="9_5ivhs"]
 [ext_resource type="PackedScene" uid="uid://dt7jdj04ndxo7" path="res://src/world/tilesets/props.tscn" id="10_635wq"]
+[ext_resource type="PackedScene" uid="uid://bm3d45tncritm" path="res://src/actors/enemies/skeletons/warrior/skeleton_warrior.tscn" id="10_e0syh"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1cow1"]
 size = Vector2(37, 576)
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_e0syh"]
+vertices = PackedVector2Array(3973.35, 522, 4438, 522, 4438, 598, 4118, 598, 4118, 758, 3114, 758, 3909.35, 618, 3114, 662, 2634, 662, 2634, 522, 3450.65, 522, 3514.65, 618)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(3, 4, 5, 6), PackedInt32Array(7, 8, 9, 10, 11), PackedInt32Array(6, 0, 3), PackedInt32Array(11, 6, 5, 7)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(2624, 512, 2624, 672, 3104, 672, 3104, 768, 4128, 768, 4128, 608, 4448, 608, 4448, 512, 3968, 512, 3904, 608, 3520, 608, 3456, 512)])
+
 [node name="MapVillage" type="Node2D" groups=["maps"]]
 script = ExtResource("1_id7sn")
 map_name = "Village"
+level_mob_min = 1
+level_mob_max = 5
+boss_level = 5
 
 [node name="CameraMapController" parent="." instance=ExtResource("2_0wnlr")]
 right_marker_position = Vector2(4480, 360)
@@ -218,7 +227,10 @@ tile_map_data = PackedByteArray("AADOAHkAAwAQAAIAAADhAGwAAwASAAIAAACeAHwAAwADACA
 position = Vector2(1408, 512)
 
 [node name="Player" parent="Entities" instance=ExtResource("4_p7nqb")]
-position = Vector2(1341, 471)
+position = Vector2(1790, 477)
+
+[node name="SkeletonWarrior" parent="Entities" instance=ExtResource("10_e0syh")]
+position = Vector2(3718, 732)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
@@ -247,3 +259,7 @@ metadata/_edit_lock_ = true
 blend_mode = 1
 
 [node name="PlayerUI" parent="." instance=ExtResource("9_5ivhs")]
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_e0syh")
+metadata/_edit_lock_ = true

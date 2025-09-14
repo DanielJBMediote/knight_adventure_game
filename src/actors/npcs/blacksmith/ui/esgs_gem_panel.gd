@@ -16,9 +16,9 @@ func _ready() -> void:
 	_update_sockets_display()
 	title.text = LocalizationManager.get_ui_text("gem_socket_system_ui.desc")
 	esgs_equipment_slot_ui.equipment_updated.connect(_on_selected_equipment_updated)
-	PlayerEquipments.equipment_updated.connect(_on_equip_item_updated)
+	PlayerEquipments.player_equipment_updated.connect(_on_unequip_item_updated)
 
-func _on_equip_item_updated(_slot_type: EquipmentItem.TYPE, equipment: EquipmentItem) -> void:
+func _on_unequip_item_updated(_slot_type: EquipmentItem.TYPE, equipment: EquipmentItem) -> void:
 	if equipment == current_equipment:
 		esgs_equipment_slot_ui.setup_equipment(null)
 
@@ -61,3 +61,4 @@ func _on_socket_button_pressed(socket_index: int) -> void:
 func attach_gem_on_equipment(new_gem: GemItem) -> void:
 	EquipmentSocketManager.add_gem_to_socket(current_equipment, new_gem, current_socket_managing)
 	_update_sockets_display()
+	esgs_equipment_slot_ui.setup_equipment(current_equipment)

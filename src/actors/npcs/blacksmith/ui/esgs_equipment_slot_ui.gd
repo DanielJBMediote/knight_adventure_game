@@ -27,17 +27,17 @@ func _update_equipment_level() -> void:
 	if not current_item:
 		item_level.hide()
 		return
+	
 	item_level.show()
-	var level = current_item.item_level
-	item_level.text = "Lv.%d" % level
-	var player_level = PlayerStats.level
-	var difference = player_level - level
+	item_level.text = "Lv.%d" % current_item.item_level
+	
+	var difference = PlayerStats.level - current_item.item_level
 
 	if difference >= 20:
 		item_level.add_theme_color_override("font_color", Color.RED)
 	elif difference >= 5:
 		item_level.add_theme_color_override("font_color", Color.YELLOW)
-	elif difference == 0:
+	elif difference >= 0:
 		item_level.add_theme_color_override("font_color", Color.GREEN)
 	else:
 		item_level.add_theme_color_override("font_color", Color.WHITE)

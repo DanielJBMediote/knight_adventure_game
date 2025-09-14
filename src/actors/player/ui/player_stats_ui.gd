@@ -2,38 +2,36 @@
 class_name PlayerStatsUI
 extends Control
 
-@onready var player_status_effect_list_ui: PlayerStatusEffectListUI = $MarginContainer/VBoxContainer/PlayerStatusEffectListUI
+# @onready var player_status_effect_list_ui: PlayerStatusEffectListUI = $MarginContainer/VBoxContainer/PlayerStatusEffectListUI
 
-@onready var health_control: Control = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/HealthControl
-@onready var health_bar: ProgressBar = health_control.get_node("ProgressBar")
-@onready var health_bar_bg: ProgressBar = health_control.get_node("ProgressBarBG")
-@onready var health_points_label: Label = health_control.get_node("Points")
+@onready var health_control: Control = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/HealthControl
+@onready var health_bar: ProgressBar = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/HealthControl/ProgressBar
+@onready var health_bar_bg: ProgressBar = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/HealthControl/ProgressBarBG
+@onready var health_points_label: Label = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/HealthControl/Points
 
-@onready var mana_control: Control = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/ManaControl
-@onready var mana_bar: ProgressBar = mana_control.get_node("ProgressBar")
-@onready var mana_bar_bg: ProgressBar = mana_control.get_node("ProgressBarBG")
-@onready var mana_points_label: Label = mana_control.get_node("Points")
+@onready var mana_control: Control = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/ManaControl
+@onready var mana_bar: ProgressBar = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/ManaControl/ProgressBar
+@onready var mana_bar_bg: ProgressBar = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/ManaControl/ProgressBarBG
+@onready var mana_points_label: Label = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/ManaControl/Points
 
-@onready var energy_control: Control = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer/EnergyControl
-@onready var energy_bar: ProgressBar = energy_control.get_node("ProgressBar")
-@onready var energy_bar_bg: ProgressBar = energy_control.get_node("ProgressBarBG")
+@onready var energy_control: Control = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/EnergyControl
+@onready var energy_bar: ProgressBar = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/EnergyControl/ProgressBar
+@onready var energy_bar_bg: ProgressBar = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/EnergyControl/ProgressBarBG
 
 @onready var exp_control: Control = $MarginContainer/VBoxContainer/HBoxContainer/ExpControl
-@onready var exp_bar: TextureProgressBar = exp_control.get_node("TextureProgressBar")
+@onready var exp_bar: TextureProgressBar = $MarginContainer/VBoxContainer/HBoxContainer/ExpControl/TextureProgressBar
 
-@onready var level_label: Label = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/LevelLabel
-
-@onready var animation_player: AnimationPlayer = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/AnimationPlayer
+@onready var level_label: DefaultLabel = $MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/LevelLabel
 
 const BAR_ANIM_DURATION := 0.5
 const BG_BAR_DELAY := 0.3
 const BG_BAR_DURATION := 0.8
 
-const DEFAULT_CONTROL_SIZE := Vector2(400, 16)
-const DEFAULT_BAR_SIZE := Vector2(400, 16)
-const DEFAULT_POINTS_VALUE := 100.0
-const MAX_BAR_WIDTH := 800  # Largura máxima absoluta para as barras
-const MIN_BAR_WIDTH := 200  # Largura mínima absoluta para as barras
+const DEFAULT_CONTROL_SIZE := Vector2(360, 16)
+const DEFAULT_BAR_SIZE := Vector2(200, 16)
+# const DEFAULT_POINTS_VALUE := 100.0
+const MAX_BAR_WIDTH := 800 # Largura máxima absoluta para as barras
+const MIN_BAR_WIDTH := 400 # Largura mínima absoluta para as barras
 
 var timer_tick: Timer
 var health_tween: Tween
@@ -45,12 +43,13 @@ func _ready() -> void:
 	setup_timer()
 	add_to_group("player_stats_ui")
 	
-	animation_player.connect("animation_finished", _on_animation_player_finished)
-	
 	 # Conecta aos sinais do PlayerEvents
 	PlayerStats.health_changed.connect(_on_health_updated)
+	PlayerStats.max_health_changed.connect(_update_health_bar)
 	PlayerStats.mana_changed.connect(_on_mana_updated)
+	PlayerStats.max_mana_changed.connect(_update_mana_bar)
 	PlayerStats.energy_changed.connect(_on_energy_updated)
+	PlayerStats.max_energy_changed.connect(_update_energy_bar)
 	PlayerStats.experience_update.connect(_on_exp_updated)
 	PlayerStats.level_updated.connect(_on_level_update)
 	
@@ -115,7 +114,7 @@ func _update_health_bar(max_value: float, value: float) -> void:
 	health_bar_bg.value = value
 	
 	# Ajusta o tamanho do container e das barras
-	var new_width = _calculate_bar_width(max_value)
+	var new_width = _calculate_bar_width(max_value, PlayerStats.MAX_TARGET_HEALTH)
 	_apply_bar_widths(health_control, health_bar, health_bar_bg, new_width)
 	update_health_points_label(value)
 
@@ -124,9 +123,9 @@ func _update_mana_bar(max_value: float, value: float) -> void:
 	mana_bar.value = value
 	mana_bar_bg.max_value = max_value
 	mana_bar_bg.value = value
-	
+
 	# Ajusta o tamanho do container e das barras
-	var new_width = _calculate_bar_width(max_value)
+	var new_width = _calculate_bar_width(max_value, PlayerStats.MAX_TARGET_MANA)
 	_apply_bar_widths(mana_control, mana_bar, mana_bar_bg, new_width)
 	update_mana_points_label(value)
 
@@ -137,44 +136,46 @@ func _update_energy_bar(max_value: float, value: float) -> void:
 	energy_bar_bg.value = value
 	
 	# Ajusta o tamanho do container e das barras
-	var new_width = _calculate_bar_width(max_value)
+	var new_width = _calculate_bar_width(max_value, PlayerStats.MAX_TARGET_ENERGY)
 	_apply_bar_widths(energy_control, energy_bar, energy_bar_bg, new_width)
 
 func _update_exp_bar(max_value: float, value: float) -> void:
 	exp_bar.max_value = max_value
 	exp_bar.value = value
 
-func _calculate_bar_width(max_value: float, base_value: float = DEFAULT_POINTS_VALUE, base_width: float = DEFAULT_BAR_SIZE.x) -> float:
-	var scale_factor = max_value / base_value
-	var desired_width = base_width * scale_factor
+func _calculate_bar_width(current_max_value: float, max_target_value: float) -> float:
+	# Calcula o percentual do valor atual em relação ao valor máximo esperado
+	var percentage = current_max_value / max_target_value
 	
-	# Aplica os limites mínimo e máximo
+	# Aplica o percentual ao range de tamanho da barra (200px a 800px)
+	var desired_width = MIN_BAR_WIDTH + (percentage * (MAX_BAR_WIDTH - MIN_BAR_WIDTH))
+	
+	# Garante que não ultrapasse os limites
 	var clamped_width = clamp(desired_width, MIN_BAR_WIDTH, MAX_BAR_WIDTH)
 	
 	# Arredonda para evitar problemas de subpixel
 	return round(clamped_width)
 
 # Função para aplicar os tamanhos de forma consistente
-func _apply_bar_widths(control: Control, bar: ProgressBar, bg_bar: ProgressBar, width: float):
-	return
+func _apply_bar_widths(_control: Control, bar: ProgressBar, bg_bar: ProgressBar, width: float):
 	# Ajusta o container
-	#control.custom_minimum_size.x = width
-	#control.size.x = width
-	
+	# control.custom_minimum_size.x = width
+	# control.size.x = width
 	# Ajusta as barras
-	#bar.size.x = width
-	#bg_bar.size.x = width
+	bar.size.x = width
+	bg_bar.size.x = width
 	
 	# Garante que as barras herdem o mesmo tamanho do container
-	#bar.custom_minimum_size.x = width
-	#bg_bar.custom_minimum_size.x = width
+	bar.custom_minimum_size.x = width
+	bg_bar.custom_minimum_size.x = width
 
 func update_health_points_label(value: float):
 	var max_value = PlayerStats.max_health_points
-	health_points_label.text = str( roundi(value), "/", roundi(max_value))
+	health_points_label.text = str(roundi(value), "/", roundi(max_value))
+
 func update_mana_points_label(value: float):
 	var max_value = PlayerStats.max_mana_points
-	mana_points_label.text = str( roundi(value), "/", roundi(max_value))
+	mana_points_label.text = str(roundi(value), "/", roundi(max_value))
 
 func _on_health_updated(new_value: float):
 	var is_increasing = new_value > health_bar.value
@@ -197,12 +198,8 @@ func _on_exp_updated(new_value: float):
 
 func _on_exp_tween_finished():
 	if exp_bar.value >= exp_bar.max_value:
-		PlayerStats.level_updated.emit(PlayerStats.level)
+		PlayerStats.emit_level_updated()
 
 func _on_level_update(new_level: int):
 	level_label.text = str("Lv.", new_level)
 	_update_exp_bar(PlayerStats.exp_to_next_level, PlayerStats.current_exp)
-
-func _on_animation_player_finished(anim_name: String):
-	if anim_name.contains("bar_warning"):
-		animation_player.stop()

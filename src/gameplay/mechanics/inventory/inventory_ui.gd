@@ -1,7 +1,7 @@
 class_name InventoryUI
 extends Control
 
-@onready var invenory_item_detail_scene: PackedScene = preload("res://src/gameplay/mechanics/inventory/inventory_item_detail/inventory_item_detail_ui.tscn")
+# @onready var invenory_item_detail_scene: PackedScene = preload("res://src/gameplay/mechanics/inventory/inventory_item_detail/inventory_item_detail_ui.tscn")
 @onready var item_drag_display_scene: PackedScene = preload("res://src/gameplay/mechanics/inventory/inventory_slots/inventory_item_dragging_ui.tscn")
 
 @onready var inventory_slots_panel: InventorySlotsUI = $MarginContainer/VBoxContainer/Panel/MarginContainer/MainConteiner/InventoryContainer/InventorySlotsUI
@@ -19,10 +19,9 @@ func _ready() -> void:
 	inventory_slots_panel._update_inventory()
 	update_inventory_actions_buttons()
 
-	ItemManager.selected_item_updated.connect(_show_item_detail_modal)
-	PlayerEquipments.equipment_updated.connect(_on_equipment_updated)
+	# ItemManager.selected_item_updated.connect(_show_item_detail_modal)
+	# PlayerEquipments.equipment_updated.connect(_on_equipment_updated)
 
-	InventoryManager.update_inventory_visible.connect(_on_inventory_open_close)
 	InventoryManager.item_drag_started.connect(_on_item_drag_started)
 	InventoryManager.item_drag_ended.connect(_on_item_drag_ended)
 
@@ -44,11 +43,10 @@ func _on_item_drag_ended(_success: bool):
 		item_drag_display = null
 
 
-func _on_equipment_updated(slot_type: EquipmentItem.TYPE, equipment: EquipmentItem):
-	# Encontra o slot correspondente e atualiza
-	for slot in get_tree().get_nodes_in_group("equipment_slots"):
-		if slot is EquipmentItemSlotUI and slot.slot_type == slot_type:
-			slot.setup_equipment(equipment)
+# func _on_equipment_updated(slot_type: EquipmentItem.TYPE, equipment: EquipmentItem):
+# 	for slot in get_tree().get_nodes_in_group(EquipmentItemSlotUI.GROUP_NAME):
+# 		if slot is EquipmentItemSlotUI and slot.slot_type == slot_type:
+# 			slot.setup_equipment(equipment)
 
 
 func _input(event: InputEvent) -> void:
@@ -69,11 +67,11 @@ func _find_dragging_slot():
 	return null
 
 
-func _show_item_detail_modal(item: Item) -> void:
-	if item:
-		var item_info_modal = invenory_item_detail_scene.instantiate() as InventoryItemDetailUI
-		GameEvents.get_player_ui().add_child(item_info_modal)
-		item_info_modal.setup(item)
+# func _show_item_detail_modal(item: Item) -> void:
+# 	if item:
+# 		var item_info_modal = invenory_item_detail_scene.instantiate() as InventoryItemDetailUI
+# 		GameEvents.get_player_ui().add_child(item_info_modal)
+# 		item_info_modal.setup(item)
 
 
 func _on_prev_page_pressed():
@@ -94,12 +92,4 @@ func update_inventory_actions_buttons() -> void:
 func _on_close_inventory_button_pressed():
 	self.hide()
 	InventoryManager.is_open = false
-	InventoryManager.update_inventory_visible.emit(false)
-
-
-func _on_inventory_open_close(is_open: bool) -> void:
-	if is_open:
-		self.show()
-		InventoryManager.inventory_updated.emit()
-	else:
-		self.hide()
+	InventoryManager.inventory_oppened.emit(false)

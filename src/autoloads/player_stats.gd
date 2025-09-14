@@ -2,8 +2,14 @@
 extends Node
 
 signal health_changed(health: float)
+signal max_health_changed(max_health: float, health: float)
+
 signal mana_changed(mana: float)
-signal energy_changed(mana: float)
+signal max_mana_changed(max_mana: float, mana: float)
+
+signal energy_changed(energy: float)
+signal max_energy_changed(max_energy: float, energy: float)
+
 signal experiance_added(amount: float)
 signal experience_update(exp: float)
 signal level_updated(level: float)
@@ -27,6 +33,10 @@ const CRITICAL_GROWTH_FACTOR_PER_LEVEL = (MAX_CRITICAL_POINTS_FOR_MAX - BASE_CRI
 
 const GROWTH_DEFENSE_FACTOR_PER_LEVEL = 0.045 # 4.5%
 const REDUCT_DEFENSE_FACTOR_PER_LEVEL = 0.03 # 3%
+
+const MAX_TARGET_HEALTH = 120000.0
+const MAX_TARGET_MANA = 600.0
+const MAX_TARGET_ENERGY = 300
 
 ## 1 = normal, <1 = menos knockback, >1 = mais knockback
 var knockback_resistance: float = 1.0
@@ -138,6 +148,7 @@ func update_health(value: float) -> void:
 
 func update_max_health(value: float) -> void:
 	self.max_health_points += value
+	max_health_changed.emit(self.max_health_points, self.health_points)
 
 
 func update_mana(value: float) -> void:
@@ -147,7 +158,7 @@ func update_mana(value: float) -> void:
 
 func update_max_mana(value: float) -> void:
 	self.max_mana_points += value
-
+	max_mana_changed.emit(self.max_mana_points, self.mana_points)
 
 func update_energy(value: float) -> void:
 	self.energy_points = clampf(self.energy_points + value, 0.0, self.max_energy_points)
@@ -156,6 +167,7 @@ func update_energy(value: float) -> void:
 
 func update_max_energy(value: float) -> void:
 	self.max_energy_points += value
+	max_energy_changed.emit(self.max_energy_points, self.energy_points)
 
 
 func update_defense_points(value: float) -> void:
@@ -349,24 +361,20 @@ func get_defense_effectiveness_percentage_for_current_level() -> float:
 
 
 func calculate_health_at_level(target_level: int) -> float:
-	# Health: 800-1200 no nível 1, 80k-85k no nível 100
-	# var target_min = 80000.0
-	var target_max = 85000.0
-	
-	var growth_factor = pow(target_max / base_max_health, 1.0 / 99.0)
+	var growth_factor = pow(MAX_TARGET_HEALTH / base_max_health, 1.0 / 99.0)
 	return base_max_health * pow(growth_factor, target_level - 1)
 
 
 func calculate_mana_at_level(target_level: int) -> float:
 	# Mana: 25-50 no nível 1, 450-500 no nível 100
-	var target_mana = 475.0 # Valor médio
-	var growth_factor = pow(target_mana / base_max_mana, 1.0 / 99.0)
+	var growth_factor = pow(MAX_TARGET_MANA / base_max_mana, 1.0 / 99.0)
 	return base_max_mana * pow(growth_factor, target_level - 1)
 
 
 func calculate_energy_at_level(target_level: int) -> float:
-	# Energy: 100 no nível 1, 150 no nível 100
-	return base_max_energy + (target_level - 1) * 0.5 # +0.5 por nível
+	# +1.5 a cada nível par (níveis ímpares mantêm o valor do nível anterior)
+	var bonus_levels = floor(float(target_level) / 2)
+	return base_max_energy + bonus_levels * 1.5
 
 
 func calculate_damage_at_level(target_level: int) -> DamageStats:
@@ -434,11 +442,11 @@ func add_level() -> int:
 
 	# Recalcula para o próximo nível
 	calculate_exp_to_next_level()
-
-	#level_updated.emit(level)
 	emit_attributes_changed()
 	return level
 
+func emit_level_updated() -> void:
+	level_updated.emit(level)
 
 func emit_attributes_changed() -> void:
 	attributes_changed.emit(get_attributes())

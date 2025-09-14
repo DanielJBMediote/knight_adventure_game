@@ -9,7 +9,7 @@ signal item_drag_started(item: Item, slot_index: int)
 signal item_drag_ended(success: bool)
 signal items_swapped(slot_index_a: int, slot_index_b: int)
 
-signal update_inventory_visible(is_open: bool)
+signal inventory_oppened(is_open: bool)
 
 var items: Array[Item] = []
 var slots: Array[Item] = []
@@ -28,7 +28,7 @@ var drag_slot_index: int = -1
 
 func _ready():
 	# Inicializa slots vazios
-	for i in range(MAX_SLOTS):  # Número de slots
+	for i in range(MAX_SLOTS): # Número de slots
 		slots.append(null)
 
 	create_ramdon_items()
@@ -39,10 +39,9 @@ func create_ramdon_items() -> void:
 		return
 	var enemy_stats = EnemyStats.new()
 	var player_level = PlayerStats.level
+	enemy_stats.level = player_level
 	# var total_itens = 0
-	for i in 10:
-		enemy_stats.level = randi_range(player_level - 5, player_level + 5)
-		# enemy_stats.level = player_level
+	for i in 20:
 		# var rune = RuneItem.new()
 		# rune.setup(enemy_stats)
 		# add_item(rune)
@@ -55,6 +54,8 @@ func create_ramdon_items() -> void:
 
 		# if is_addded:
 		# 	total_itens += 1
+	for i in 10:
+		enemy_stats.level = randi_range(player_level - 5, player_level + 5)
 		var equip = EquipmentItem.new()
 		equip.setup(enemy_stats)
 		add_item(equip)
@@ -63,7 +64,7 @@ func create_ramdon_items() -> void:
 
 func handle_inventory_visibility() -> void:
 	is_open = !is_open
-	update_inventory_visible.emit(is_open)
+	inventory_oppened.emit(is_open)
 
 
 func is_slot_unlocked(slot_index: int) -> bool:
@@ -102,7 +103,7 @@ func add_single_item(item: Item, slot_index: int = -1) -> bool:
 		if (slots[slot_index] == null and is_slot_unlocked(slot_index) and is_valid_slot_index(slot_index)):
 			var item_copy = item.clone()
 			item_copy.slot_index_ref = slot_index
-			item_copy.current_stack = 1  # Garante que itens únicos tenham stack 1
+			item_copy.current_stack = 1 # Garante que itens únicos tenham stack 1
 			slots[slot_index] = item_copy
 			items.append(item_copy)
 			inventory_updated.emit()
@@ -112,7 +113,7 @@ func add_single_item(item: Item, slot_index: int = -1) -> bool:
 		if slots[i] == null and is_slot_unlocked(i):
 			var item_copy = item.clone()
 			item_copy.slot_index_ref = i
-			item_copy.current_stack = 1  # Garante que itens únicos tenham stack 1
+			item_copy.current_stack = 1 # Garante que itens únicos tenham stack 1
 			slots[i] = item_copy
 			items.append(item_copy)
 			inventory_updated.emit()
@@ -124,7 +125,6 @@ func add_single_item(item: Item, slot_index: int = -1) -> bool:
 
 
 func try_add_to_existing_stacks(item: Item, remaining_stack: int) -> int:
-
 	# Tentar adicionar no primeiro stacks de items do mesmo tipo
 	for i in range(slots.size()):
 		if is_slot_unlocked(i) == false:
@@ -134,7 +134,7 @@ func try_add_to_existing_stacks(item: Item, remaining_stack: int) -> int:
 
 		var is_same_id = slots[i].item_id == item.item_id
 		var is_same_rarity = slots[i].item_rarity == item.item_rarity
-		var isnt_overstacked = slots[i].current_stack < slots[i].max_stack  # Verifica se pode adicionar a este stack
+		var isnt_overstacked = slots[i].current_stack < slots[i].max_stack # Verifica se pode adicionar a este stack
 		if is_same_id and is_same_rarity and isnt_overstacked:
 			var available_space = slots[i].max_stack - slots[i].current_stack
 			var amount_to_add = min(available_space, remaining_stack)
@@ -176,6 +176,8 @@ func remove_item(item: Item, amount: int = 1) -> bool:
 
 	# If the stack is depleted, remove the item completely
 	if item.current_stack <= 0:
+		if not item.stackable:
+			item.current_stack = 1
 		var slot_index = slots.find(item)
 		if slot_index != -1:
 			slots[slot_index] = null
@@ -227,7 +229,7 @@ func sort_inventory(mode: String = "ASC"):
 			unlocked_items.append(slots[i])
 			unlocked_indices.append(i)
 		elif is_slot_unlocked(i):
-			unlocked_indices.append(i)  # Mantém registro dos slots vazios desbloqueados
+			unlocked_indices.append(i) # Mantém registro dos slots vazios desbloqueados
 
 	# Ordena os itens
 	unlocked_items.sort_custom(_sort_items.bind(mode))
@@ -389,9 +391,10 @@ func swap_items(from_slot: int, to_slot: int) -> void:
 	var from_item = slots[from_slot]
 	var to_item = slots[to_slot]
 
-	# Caso 1: Slot destino vazio - move o item
+	# Caso 1: Slot destino esteja vazio - move o item
 	if to_item == null:
 		slots[to_slot] = from_item
+		slots[to_slot].slot_index_ref = to_slot
 		slots[from_slot] = null
 
 	# Caso 2: Mesmo item e stackable - tenta juntar stacks
@@ -420,7 +423,9 @@ func swap_items(from_slot: int, to_slot: int) -> void:
 	# Caso 3: Itens diferentes - troca de posição
 	else:
 		slots[from_slot] = to_item
+		slots[from_slot].slot_index_ref = to_item
 		slots[to_slot] = from_item
+		slots[to_slot].slot_index_ref = from_item
 
 	drag_item = null
 	drag_slot_index = -1

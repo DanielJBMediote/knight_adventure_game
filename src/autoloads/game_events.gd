@@ -96,5 +96,5 @@ func get_stats_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
 	return STATS_DIFFICULT_MODIFICATOR.get(_difficult, 1.0)
 
 
-func get_additional_levels_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
+func get_additional_levels_modificator_by_difficult(_difficult: DIFFICULTY) -> int:
 	return ENEMY_LEVEL_INCREMENT.get(_difficult, 0)

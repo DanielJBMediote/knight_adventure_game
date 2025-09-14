@@ -1,12 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://m0vqy4aot5xa"]
+[gd_scene load_steps=5 format=3 uid="uid://m0vqy4aot5xa"]
 
 [ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_77mcc"]
 [ext_resource type="Script" uid="uid://b7whyubgh2rmn" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipment_item_slot_ui.gd" id="2_77mcc"]
-[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="3_ma1xh"]
 [ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="4_ma1xh"]
 [ext_resource type="Theme" uid="uid://k0ll6m3w6kk3" path="res://src/ui/themes/items_themes/unique_border.tres" id="4_mmiub"]
 
-[node name="EquipmentSlotUI" type="Panel" node_paths=PackedStringArray("rarity_texture", "item_texture", "unique_border", "info", "preview_gems_attached")]
+[node name="EquipmentSlotUI" type="Panel" node_paths=PackedStringArray("rarity_texture", "item_texture", "unique_border", "info_label", "preview_gems_attached")]
 custom_minimum_size = Vector2(96, 96)
 anchors_preset = -1
 anchor_right = 0.075
@@ -18,8 +17,8 @@ script = ExtResource("2_77mcc")
 rarity_texture = NodePath("MarginContainer/RarityTexture")
 item_texture = NodePath("MarginContainer/EquipmentTexture")
 unique_border = NodePath("UniqueBorder")
-info = NodePath("MarginContainer/MarginContainer/Footer/Info")
-preview_gems_attached = NodePath("MarginContainer/MarginContainer/PreviewGemsAttatched")
+info_label = NodePath("MarginContainer/MarginContainer/Footer/Info")
+preview_gems_attached = NodePath("MarginContainer/MarginContainer/PreviewGemsAttached")
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
@@ -55,7 +54,7 @@ theme_override_constants/margin_left = 1
 theme_override_constants/margin_right = 1
 theme_override_constants/margin_bottom = 1
 
-[node name="PreviewGemsAttatched" type="VBoxContainer" parent="MarginContainer/MarginContainer"]
+[node name="PreviewGemsAttached" type="VBoxContainer" parent="MarginContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -69,11 +68,9 @@ size_flags_vertical = 8
 layout_mode = 2
 text = "Lv.100"
 
-[node name="Info" type="Label" parent="MarginContainer/MarginContainer/Footer"]
+[node name="Info" parent="MarginContainer/MarginContainer/Footer" instance=ExtResource("4_ma1xh")]
 layout_mode = 2
 size_flags_horizontal = 10
-size_flags_vertical = 8
-theme_override_fonts/font = ExtResource("3_ma1xh")
 
 [node name="UniqueBorder" type="Panel" parent="."]
 visible = false

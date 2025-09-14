@@ -2462,6 +2462,7 @@ metadata/_edit_lock_ = true
 [node name="CharacterCollisionShape" type="CollisionShape2D" parent="."]
 position = Vector2(0, -16)
 shape = SubResource("RectangleShape2D_244u8")
+metadata/_edit_lock_ = true
 
 [node name="PlayerHitbox" type="Area2D" parent="."]
 collision_layer = 512
@@ -2484,6 +2485,7 @@ metadata/_edit_lock_ = true
 position = Vector2(0, -16)
 shape = SubResource("RectangleShape2D_wlj80")
 debug_color = Color(0.567545, 0.072939, 0.0843144, 0.42)
+metadata/_edit_lock_ = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -2517,6 +2519,10 @@ grow_vertical = 1
 energy = 0.05
 texture = SubResource("GradientTexture2D_dmu6e")
 metadata/_edit_lock_ = true
+
+[node name="CoyoteTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
 
 [connection signal="area_entered" from="PlayerHurtbox" to="." method="_on_player_hurtbox_area_entered"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animatioan_finished"]

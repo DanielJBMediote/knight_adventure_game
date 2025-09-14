@@ -13,8 +13,16 @@ extends GridContainer
 var slot_map: Dictionary
 
 func _ready() -> void:
-	PlayerEvents.update_equipment.connect(_update_equipment)
+	PlayerEquipments.player_equipment_updated.connect(_on_update_player_equipment)
 	_initialize_slot_map()
+	_initialize_equipments()
+
+func _initialize_equipments() -> void:
+	for equipment in PlayerEquipments.get_all_equipped_items():
+		var target_slot = slot_map[equipment.equipment_type]
+		if equipment and target_slot != null:
+			target_slot.setup_equipment(equipment)
+			
 
 func _initialize_slot_map() -> void:
 	slot_map = {
@@ -27,13 +35,10 @@ func _initialize_slot_map() -> void:
 		EquipmentItem.TYPE.BOOTS: boots_slot
 	}
 
-func _update_equipment(equipment: EquipmentItem, is_uneqquip: bool = false) -> void:
-	if equipment and equipment.equipment_type in slot_map:
-		var target_slot: EquipmentItemSlotUI = slot_map[equipment.equipment_type]
-		if is_uneqquip:
-			target_slot.setup_equipment(null)
-		else:
-			target_slot.setup_equipment(equipment)
+func _on_update_player_equipment(slot_type: EquipmentItem.TYPE, equipment: EquipmentItem) -> void:
+	if slot_type in slot_map:
+		var target_slot: EquipmentItemSlotUI = slot_map[slot_type]
+		target_slot.setup_equipment(equipment)
 
 # Método alternativo se você quiser limpar todos os slots
 func clear_all_equipment() -> void:

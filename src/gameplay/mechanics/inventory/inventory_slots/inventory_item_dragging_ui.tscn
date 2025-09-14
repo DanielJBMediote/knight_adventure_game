@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://d3qydgnch1lu3"]
+[gd_scene load_steps=5 format=3 uid="uid://d3qydgnch1lu3"]
 
 [ext_resource type="StyleBox" uid="uid://cpv4c0djtobb4" path="res://src/ui/themes/item_slot_stylebox_normal.tres" id="1_3871s"]
 [ext_resource type="Script" uid="uid://b8qvjmc5mba5a" path="res://src/gameplay/mechanics/inventory/inventory_slots/inventory_item_dragging_ui.gd" id="1_bbff4"]
 [ext_resource type="Theme" uid="uid://k0ll6m3w6kk3" path="res://src/ui/themes/items_themes/unique_border.tres" id="3_q2dcp"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="3_yqqqn"]
 
 [node name="ItemDragDisplay" type="Control"]
 z_index = 100
@@ -14,6 +15,7 @@ offset_bottom = 96.0
 size_flags_horizontal = 0
 size_flags_vertical = 0
 script = ExtResource("1_bbff4")
+metadata/_edit_lock_ = true
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
@@ -45,10 +47,30 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Stacks" type="Label" parent="Panel/MarginContainer"]
+[node name="DetailContainer" type="MarginContainer" parent="Panel/MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
+theme_override_constants/margin_left = 1
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 1
+theme_override_constants/margin_bottom = 1
+
+[node name="PreviewGemsAttached" type="VBoxContainer" parent="Panel/MarginContainer/DetailContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="Footer" type="HBoxContainer" parent="Panel/MarginContainer/DetailContainer"]
+layout_mode = 2
 size_flags_vertical = 8
+
+[node name="Level" parent="Panel/MarginContainer/DetailContainer/Footer" instance=ExtResource("3_yqqqn")]
+layout_mode = 2
+text = "Lv.100"
+
+[node name="Stacks" parent="Panel/MarginContainer/DetailContainer/Footer" instance=ExtResource("3_yqqqn")]
+layout_mode = 2
+size_flags_horizontal = 10
 
 [node name="UniqueBorder" type="Panel" parent="."]
 visible = false

@@ -14,52 +14,75 @@ anchor_right = 0.2
 anchor_bottom = 0.022
 offset_left = -256.0
 offset_top = -15.84
+offset_right = 32.0
 offset_bottom = 16.16
 size_flags_horizontal = 0
+theme_override_constants/separation = 0
 script = ExtResource("1_u1fj6")
 
-[node name="ValueGold" type="Label" parent="."]
+[node name="GoldSection" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(96, 0)
 layout_mode = 2
-size_flags_horizontal = 10
+theme_override_constants/separation = 0
+
+[node name="ValueGold" type="Label" parent="GoldSection"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
 theme = ExtResource("1_oaowg")
 theme_override_colors/font_color = Color(0.976471, 0.639216, 0.105882, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 24
-text = "999"
+text = "99b"
 horizontal_alignment = 2
+vertical_alignment = 2
 
-[node name="GoldCoin" type="TextureRect" parent="."]
+[node name="GoldCoin" type="TextureRect" parent="GoldSection"]
 layout_mode = 2
 texture = ExtResource("2_u1fj6")
-stretch_mode = 5
 
-[node name="ValueSilver" type="Label" parent="."]
+[node name="SilverSection" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ValueSilver" type="Label" parent="SilverSection"]
+custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 size_flags_horizontal = 8
+size_flags_vertical = 1
 theme = ExtResource("1_oaowg")
 theme_override_colors/font_color = Color(0.545098, 0.576471, 0.686275, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 24
 text = "999"
+horizontal_alignment = 2
+vertical_alignment = 2
 
-[node name="SilverCoin" type="TextureRect" parent="."]
+[node name="SilverCoin" type="TextureRect" parent="SilverSection"]
 layout_mode = 2
 texture = ExtResource("3_su513")
 stretch_mode = 5
 
-[node name="ValueBronze" type="Label" parent="."]
+[node name="BronzeSection" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(96, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ValueBronze" type="Label" parent="BronzeSection"]
+custom_minimum_size = Vector2(64, 0)
 layout_mode = 2
 size_flags_horizontal = 8
+size_flags_vertical = 1
 theme = ExtResource("1_oaowg")
 theme_override_colors/font_color = Color(0.533333, 0.298039, 0.243137, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 24
 text = "999"
+horizontal_alignment = 2
+vertical_alignment = 2
 
-[node name="BronzeCoin" type="TextureRect" parent="."]
+[node name="BronzeCoin" type="TextureRect" parent="BronzeSection"]
 layout_mode = 2
 texture = ExtResource("4_y8ugc")
 stretch_mode = 5

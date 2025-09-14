@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://bmqja38h84vuw"]
+[gd_scene load_steps=5 format=3 uid="uid://bmqja38h84vuw"]
 
 [ext_resource type="Script" uid="uid://coxwptfofftby" path="res://src/actors/player/ui/player_ui.gd" id="1_7bq4i"]
 [ext_resource type="PackedScene" uid="uid://cg3d3oyimla3v" path="res://src/actors/player/ui/player_stats_ui.tscn" id="1_b3mhi"]
-[ext_resource type="PackedScene" uid="uid://bpeprk4yd5f6t" path="res://src/gameplay/mechanics/inventory/inventory_ui.tscn" id="2_7bq4i"]
 [ext_resource type="PackedScene" uid="uid://b0x137mh7f8dt" path="res://src/actors/player/ui/player_quick_slotbar.tscn" id="4_s50b6"]
 [ext_resource type="PackedScene" uid="uid://byr2mw2xosb8c" path="res://src/ui/interact_label/interact_label.tscn" id="5_ybxe1"]
 
@@ -36,6 +35,3 @@ offset_right = 0.0
 offset_bottom = 15.76
 grow_horizontal = 0
 grow_vertical = 2
-
-[node name="InventoryUI" parent="." instance=ExtResource("2_7bq4i")]
-visible = false

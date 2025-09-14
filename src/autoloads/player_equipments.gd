@@ -1,16 +1,16 @@
 extends Node
 
-signal equipment_updated(slot_type: EquipmentItem.TYPE, equipment: EquipmentItem)
+signal player_equipment_updated(slot_type: EquipmentItem.TYPE, equipment: EquipmentItem)
 
-var equipped_items: Dictionary = {}  # Dicionário por tipo de equipamento
+var equipped_items: Dictionary = {} # Dicionário por tipo de equipamento
 var equipment_slots: Array[EquipmentItem.TYPE] = [
 	EquipmentItem.TYPE.HELMET,
-	EquipmentItem.TYPE.AMULET,
-	EquipmentItem.TYPE.RING,
-	EquipmentItem.TYPE.GLOVES,
 	EquipmentItem.TYPE.ARMOR,
-	EquipmentItem.TYPE.WEAPON,
-	EquipmentItem.TYPE.BOOTS
+	EquipmentItem.TYPE.BOOTS,
+	EquipmentItem.TYPE.GLOVES,
+	EquipmentItem.TYPE.RING,
+	EquipmentItem.TYPE.AMULET,
+	EquipmentItem.TYPE.WEAPON
 ]
 
 var active_attributes: Array[ItemAttribute]
@@ -23,13 +23,16 @@ func _ready() -> void:
 		equipped_items[slot] = null
 
 
-func _update_equipment(equipment: EquipmentItem, equipped_status: bool = false) -> void:
+func _update_equipment(equipment: EquipmentItem) -> void:
 	if equipment:
-		if equipped_status:
-			unequip(equipment)
-		elif can_equip(equipment):
+		var equipped_slot = get_equipped_item_type(equipment.equipment_type)
+		if equipped_slot == null:
 			equip(equipment)
-
+		elif equipped_slot.equipment_type == equipment.equipment_type:
+			if equipped_slot == equipment:
+				unequip(equipment)
+			else:
+				swap_equipment(equipment)
 
 func can_equip(equipment: EquipmentItem) -> bool:
 	if not equipment:
@@ -38,7 +41,10 @@ func can_equip(equipment: EquipmentItem) -> bool:
 	var item_level = equipment.item_level
 	# Verifica nível requerido
 	if not ItemManager.compare_player_level(item_level):
-		# print("Nível insuficiente para equipar: ", equipment.item_name)
+		var part_1 = LocalizationManager.get_ui_text("insufficient_level")
+		var part_2 = LocalizationManager.get_ui_text("level_required")
+		var message = str(part_1, "! ", part_2, ": ", equipment.item_level, ".")
+		GameEvents.show_instant_message(message, InstantMessage.TYPE.DANGER)
 		return false
 
 	# Verifica se o slot está disponível
@@ -61,11 +67,13 @@ func swap_equipment(new_equipment: EquipmentItem) -> bool:
 
 	# Tenta adicionar o item atual de volta ao inventário se existir
 	if current_equipped:
-		var new_equipment_temp = new_equipment.clone()
+		var slot_index = new_equipment.slot_index_ref
+		# Rremover o itme do inventário
 		InventoryManager.remove_item(new_equipment)
-		if not InventoryManager.add_item(current_equipped, new_equipment_temp.slot_index_ref):
+		# Tentar adicionar o item equipado para o inventário
+		if not InventoryManager.add_item(current_equipped, slot_index):
 			# Não tem espaço no inventário - cancela a operação
-			InventoryManager.add_item(new_equipment_temp)
+			printerr("No space in inventory to unequip item or swap equipments.")
 			return false
 		remove_equipment_stats(current_equipped)
 
@@ -75,24 +83,24 @@ func swap_equipment(new_equipment: EquipmentItem) -> bool:
 
 	# Remove o novo item do inventário
 	InventoryManager.remove_item(new_equipment)
-
-	equipment_updated.emit(slot_type, new_equipment)
+	InventoryManager.inventory_updated.emit()
+	player_equipment_updated.emit(slot_type, new_equipment)
 	return true
 
 
-func equip(new_equipment: EquipmentItem) -> void:
+func equip(new_equipment: EquipmentItem) -> bool:
 	var slot_type = new_equipment.equipment_type
 
 	# Verifica se pode equipar
 	if not can_equip(new_equipment):
-		return
+		return false
 
 	# Se já tem item equipado, tenta desequipar primeiro
 	if equipped_items[slot_type] != null:
 		var current_equipped = equipped_items[slot_type]
-		if not unequip(current_equipped):
+		if not unequip(current_equipped, new_equipment.slot_index_ref):
 			# Não foi possível desequipar (inventário cheio)
-			return
+			return false
 
 	# Equipa novo item
 	equipped_items[slot_type] = new_equipment
@@ -101,19 +109,21 @@ func equip(new_equipment: EquipmentItem) -> void:
 	# Remove do inventário
 	InventoryManager.remove_item(new_equipment)
 	InventoryManager.inventory_updated.emit()
-	equipment_updated.emit(slot_type, new_equipment)
-	print("Equipped: ", new_equipment.item_name)
+	player_equipment_updated.emit(slot_type, new_equipment)
+	# print("Equipped: ", new_equipment.item_name)
+	return true
 
 # Retornar bool para sucesso
 func unequip(equipment: EquipmentItem, slot_index: int = -1) -> bool:
 	var slot_type = equipment.equipment_type
-	if equipped_items[slot_type] == equipment:
+	var equipped = equipped_items[slot_type]
+	if equipped == equipment:
 		# Verifica se tem espaço no inventário primeiro
 		var is_added = InventoryManager.add_item(equipment, slot_index)
 		if is_added:
 			remove_equipment_stats(equipment)
 			equipped_items[slot_type] = null
-			equipment_updated.emit(slot_type, null)
+			player_equipment_updated.emit(slot_type, null)
 			InventoryManager.inventory_updated.emit()
 			return true
 		else:

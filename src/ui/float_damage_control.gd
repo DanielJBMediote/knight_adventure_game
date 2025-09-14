@@ -1,7 +1,7 @@
 class_name FloatDamageControl
 extends Control
 
-signal trigged_hit(damage: float)
+signal hitted(damage: float)
 
 @onready var custom_font = preload("res://assets/fonts/deltarune.ttf")
 @onready var float_label_scene: PackedScene = preload("res://src/ui/float_label.tscn")
@@ -37,7 +37,6 @@ func set_damage(data: DamageData) -> void:
 			_start_status_effect(effect)
 
 func _start_status_effect(effect: StatusEffectData) -> void:
-	
 	# Cria um timer para o efeito se não existir
 	if not active_status_effects.has(effect.effect):
 		var timer = Timer.new()
@@ -77,7 +76,7 @@ func _show_damage(damage: float, is_critical: bool = false) -> void:
 		float_label.add_theme_font_size_override("font_size", CRIT_DAMAGE_SIZE)
 	
 	add_child(float_label)
-	trigged_hit.emit(damage)
+	hitted.emit(damage)
 
 func _show_status_damage(damage: float, effect_type: StatusEffectData.EFFECT) -> void:
 	float_label = float_label_scene.instantiate()
@@ -88,4 +87,4 @@ func _show_status_damage(damage: float, effect_type: StatusEffectData.EFFECT) ->
 		float_label.modulate = STATUS_EFFECT_COLORS[effect_type]
 	
 	add_child(float_label)
-	trigged_hit.emit(damage)
+	hitted.emit(damage)
