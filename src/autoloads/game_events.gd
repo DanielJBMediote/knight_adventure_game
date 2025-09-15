@@ -88,13 +88,13 @@ func show_instant_message(message: String, type: InstantMessage.TYPE = InstantMe
 
 ## Returns the modificator factor of drop rate by difficulty.
 ## More difficulty, more factor
-func get_drop_modificator_by_difficult(_difficult: DIFFICULTY = GameEvents.current_map.difficulty) -> float:
+func get_drop_modificator_by_difficult(_difficult: DIFFICULTY = current_map.get_difficulty()) -> float:
 	return DROP_DIFFICULT_MODIFICATOR.get(_difficult, 0.8)
 
 
-func get_stats_modificator_by_difficult(_difficult: DIFFICULTY) -> float:
+func get_stats_modificator_by_difficult(_difficult: DIFFICULTY = current_map.get_difficulty()) -> float:
 	return STATS_DIFFICULT_MODIFICATOR.get(_difficult, 1.0)
 
 
-func get_additional_levels_modificator_by_difficult(_difficult: DIFFICULTY) -> int:
+func get_additional_levels_modificator_by_difficult(_difficult: DIFFICULTY = current_map.get_difficulty()) -> int:
 	return ENEMY_LEVEL_INCREMENT.get(_difficult, 0)

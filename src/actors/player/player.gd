@@ -115,12 +115,11 @@ func _ready() -> void:
 
 func apply_damage_on_player(damage_data: DamageData, enemy_stats: EnemyStats):
 	damage_data = PlayerStats.calculate_damage_taken(damage_data, enemy_stats.level)
-	float_damage_control.set_damage(damage_data)
+	float_damage_control.update_damage(damage_data)
 
 	# Processa cada status effect
-	for effect in damage_data.status_effects:
-		if effect.active:
-			PlayerEvents.add_status_effect.emit(effect)
+	for effect in damage_data.get_active_status_effects():
+		PlayerEvents.add_new_status_effect(effect)
 
 
 func _physics_process(delta) -> void:

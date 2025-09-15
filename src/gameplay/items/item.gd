@@ -1,7 +1,7 @@
 class_name Item
 extends Resource
 
-enum RARITY { COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHICAL }
+enum RARITY {COMMON, UNCOMMON, RARE, EPIC, LEGENDARY, MYTHICAL}
 const RARITY_KEYS = {
 	RARITY.COMMON: "common",
 	RARITY.UNCOMMON: "uncommon",
@@ -11,7 +11,7 @@ const RARITY_KEYS = {
 	RARITY.MYTHICAL: "mythical",
 }
 
-enum CATEGORY { CONSUMABLES, EQUIPMENTS, LOOTS, QUEST, MISCELLANEOUS }
+enum CATEGORY {CONSUMABLES, EQUIPMENTS, LOOTS, QUEST, MISCELLANEOUS}
 const CATEGORY_KEYS = {
 	CATEGORY.CONSUMABLES: "consumables",
 	CATEGORY.EQUIPMENTS: "equipments",
@@ -20,7 +20,7 @@ const CATEGORY_KEYS = {
 	CATEGORY.MISCELLANEOUS: "miscellaneous",
 }
 
-enum SUBCATEGORY { POTION, WEAPON, ARMOR, ACCESSORY, FOOD, EQUIPMENTS, GEM, RESOURCE }
+enum SUBCATEGORY {POTION, WEAPON, ARMOR, ACCESSORY, FOOD, EQUIPMENTS, GEM, RESOURCE}
 const SUBCATEGORY_KEYS = {
 	SUBCATEGORY.POTION: "potion",
 	SUBCATEGORY.FOOD: "food",
@@ -117,7 +117,7 @@ func _calculate_item_price(base_value: int = 1) -> int:
 		ItemAttribute.TYPE.HEALTH_REGEN: 3.0,
 		ItemAttribute.TYPE.MANA_REGEN: 2.8,
 		ItemAttribute.TYPE.ENERGY_REGEN: 2.9,
-		ItemAttribute.TYPE.EXP_BUFF: 4.0,
+		ItemAttribute.TYPE.EXP_BOOST: 4.0,
 	}
 
 	if is_unique:
@@ -171,18 +171,18 @@ static func get_quality_level_modifier(player_level: int, map_level: int) -> flo
 	var level_difference = player_level - map_level
 
 	# Jogador em mapa fácil: maior chance de itens de qualidade
-	if level_difference > 10:  # +10 níveis acima do mapa
-		return 1.5  # +50% de chance de raridade melhor
+	if level_difference > 10: # +10 níveis acima do mapa
+		return 1.5 # +50% de chance de raridade melhor
 
-	elif level_difference > 5:  # +5 níveis acima
-		return 1.25  # +25%
+	elif level_difference > 5: # +5 níveis acima
+		return 1.25 # +25%
 
 	# Jogador em mapa difícil: menor chance de itens de qualidade
-	elif level_difference < -10:  # -10 níveis abaixo
-		return 0.6  # -40%
+	elif level_difference < -10: # -10 níveis abaixo
+		return 0.6 # -40%
 
-	elif level_difference < -5:  # -5 níveis abaixo
-		return 0.8  # -20%
+	elif level_difference < -5: # -5 níveis abaixo
+		return 0.8 # -20%
 
 	# Níveis similares: neutro
 	return 1.0
@@ -210,9 +210,9 @@ static func get_item_rarity_by_difficult_and_player_level(
 	for i in range(base_thresholds[difficulty].size()):
 		var base_chance = base_thresholds[difficulty][i]
 
-		if i == 0:  # Common - reduz com bônus de qualidade
+		if i == 0: # Common - reduz com bônus de qualidade
 			adjusted_thresholds.append(base_chance / quality_modifier)
-		else:  # Raridades melhores - aumenta com bônus de qualidade
+		else: # Raridades melhores - aumenta com bônus de qualidade
 			adjusted_thresholds.append(base_chance * quality_modifier)
 
 	# Normaliza para garantir que a soma seja 1.0
@@ -253,7 +253,7 @@ func get_item_rarity_text_color() -> Color:
 		RARITY.RARE:
 			return Color(0.2, 0.4, 0.6, 1.0)
 		RARITY.EPIC:
-			return Color(0.5, 0.0, 0.85, 1.0)  # Roxo
+			return Color(0.5, 0.0, 0.85, 1.0) # Roxo
 		RARITY.LEGENDARY:
 			return Color.ORANGE_RED
 		RARITY.MYTHICAL:

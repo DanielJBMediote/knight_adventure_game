@@ -227,7 +227,7 @@ tile_map_data = PackedByteArray("AADOAHkAAwAQAAIAAADhAGwAAwASAAIAAACeAHwAAwADACA
 position = Vector2(1408, 512)
 
 [node name="Player" parent="Entities" instance=ExtResource("4_p7nqb")]
-position = Vector2(1790, 477)
+position = Vector2(3322, 725)
 
 [node name="SkeletonWarrior" parent="Entities" instance=ExtResource("10_e0syh")]
 position = Vector2(3718, 732)

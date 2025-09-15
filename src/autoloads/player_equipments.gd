@@ -224,12 +224,13 @@ func apply_single_attribute(attribute_type: ItemAttribute.TYPE, value: float) ->
 			PlayerStats.update_health_regen(value)
 		ItemAttribute.TYPE.MANA_REGEN:
 			PlayerStats.update_mana_regen(value)
+
 		ItemAttribute.TYPE.POISON_HIT_RATE:
 			PlayerStats.update_poison_rate(value)
 		ItemAttribute.TYPE.BLEED_HIT_RATE:
 			PlayerStats.update_bleed_rate(value)
-		ItemAttribute.TYPE.EXP_BUFF:
-			PlayerStats.update_exp_buff(value)
+		# ItemAttribute.TYPE.EXP_BOOST:
+		# 	PlayerStats.update_exp_boost(value)
 		# ItemAttribute.TYPE.GOLD_FIND:
 		# 	PlayerStats.update_gold_find(value)
 		# ItemAttribute.TYPE.ITEM_FIND:

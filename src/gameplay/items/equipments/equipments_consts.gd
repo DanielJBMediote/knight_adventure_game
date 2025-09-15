@@ -315,7 +315,7 @@ const ALLOWED_ATTRIBUTES_PER_TYPE: Dictionary[EquipmentItem.TYPE, Array] = {
 		ItemAttribute.TYPE.MANA_REGEN,
 		ItemAttribute.TYPE.CRITICAL_RATE,
 		ItemAttribute.TYPE.CRITICAL_DAMAGE,
-		ItemAttribute.TYPE.EXP_BUFF,
+		ItemAttribute.TYPE.EXP_BOOST,
 	]
 }
 

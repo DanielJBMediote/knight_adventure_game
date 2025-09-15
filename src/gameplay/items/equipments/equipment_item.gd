@@ -298,7 +298,7 @@ func calculate_balanced_value(min_val: float, max_val: float, multiplier: float)
 
 func get_allowed_attributes_for_type() -> Array:
 	var allowed_attributes: Array = EquipmentConsts.ALLOWED_ATTRIBUTES_PER_TYPE.get(self.equipment_type, [])
-	var excluded_attributes: Array = [ItemAttribute.TYPE.HEALTH_REGEN, ItemAttribute.TYPE.MANA_REGEN, ItemAttribute.TYPE.ENERGY_REGEN, ItemAttribute.TYPE.EXP_BUFF]
+	var excluded_attributes: Array = [ItemAttribute.TYPE.HEALTH_REGEN, ItemAttribute.TYPE.MANA_REGEN, ItemAttribute.TYPE.ENERGY_REGEN, ItemAttribute.TYPE.EXP_BOOST]
 	
 	var attributes = []
 	for attrib in allowed_attributes:

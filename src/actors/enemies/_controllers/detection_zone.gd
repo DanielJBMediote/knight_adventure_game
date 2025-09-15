@@ -1,11 +1,11 @@
 class_name EntityDetectionZone
 extends Area2D
 
-signal trigger_player_entered(player: CharacterBody2D)
-signal trigger_player_exited(player: CharacterBody2D)
+signal player_entered(player: CharacterBody2D)
+signal player_exited(player: CharacterBody2D)
 
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
-@export var radius_range := 200.0 # Default 200.0 
+@export var radius_range := 200.0 # Default 200.0
 
 func _ready() -> void:
 	collision_shape_2d.shape = CircleShape2D.new()
@@ -13,8 +13,8 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
-		trigger_player_entered.emit(body)
+		player_entered.emit(body)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
-		trigger_player_exited.emit(body)
+		player_exited.emit(body)

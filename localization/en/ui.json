@@ -69,7 +69,7 @@
   "move_speed": "Speed",
   "bleed_hit_rate": "Bleed Hit Rate",
   "poison_hit_rate": "Posion Hit Rate",
-  "exp_buff": "Additional Experience",
+  "exp_boost": "Additional Experience",
   "experience": "Experience",
   "effects": "Effects",
   "poison": "Poison",

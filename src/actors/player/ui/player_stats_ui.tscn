@@ -185,7 +185,7 @@ offset_right = 40.0
 grow_vertical = 2
 theme_override_styles/background = SubResource("StyleBoxTexture_s1y2j")
 theme_override_styles/fill = SubResource("StyleBoxTexture_j4jm5")
-value = 60.0
+value = 100.0
 show_percentage = false
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
@@ -199,7 +199,7 @@ offset_right = 40.0
 grow_vertical = 2
 theme_override_styles/background = SubResource("StyleBoxEmpty_s1y2j")
 theme_override_styles/fill = SubResource("StyleBoxTexture_qd2a2")
-value = 50.0
+value = 100.0
 show_percentage = false
 metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
@@ -251,7 +251,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="ProgressBarBG" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/ManaControl"]
-custom_minimum_size = Vector2(360, 16)
+custom_minimum_size = Vector2(400, 16)
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -265,7 +265,7 @@ metadata/_edit_use_anchors_ = true
 metadata/_edit_lock_ = true
 
 [node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/ManaControl"]
-custom_minimum_size = Vector2(360, 16)
+custom_minimum_size = Vector2(400, 16)
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -326,7 +326,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="ProgressBarBG" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/EnergyControl"]
-custom_minimum_size = Vector2(360, 16)
+custom_minimum_size = Vector2(400, 16)
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -341,7 +341,7 @@ metadata/_edit_lock_ = true
 
 [node name="ProgressBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ControlBars/EnergyControl"]
 material = SubResource("ShaderMaterial_65wfi")
-custom_minimum_size = Vector2(360, 16)
+custom_minimum_size = Vector2(400, 16)
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -353,6 +353,6 @@ value = 100.0
 show_percentage = false
 metadata/_edit_lock_ = true
 
-[node name="PlayerStatusEffectListUI" parent="MarginContainer/VBoxContainer" instance=ExtResource("6_squ0m")]
+[node name="PlayerStatusEffectListUI" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" instance=ExtResource("6_squ0m")]
 layout_mode = 2
-size_flags_horizontal = 8
+size_flags_horizontal = 0

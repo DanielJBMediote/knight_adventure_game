@@ -17,7 +17,15 @@ signal level_updated(level: float)
 signal attributes_changed(attributes)
 signal player_dead
 
-var player_ref: Player
+class DamageStats:
+	var min_damage: float
+	var max_damage: float
+
+	func _init(_min: float, _max: float):
+		min_damage = _min
+		max_damage = _max
+
+static var player_ref: Player
 
 const BASE_EXP = 1000
 const EXP_SCALE_FACTOR = 1.15
@@ -43,12 +51,12 @@ var knockback_resistance: float = 1.0
 var knockback_force: float = 300.0
 var knockback_chance: float = 1.0 # de 0% até 60%
 
-var level: int = 40
+var level: int = 1
 
 var total_exp := 0.0
 var current_exp := 0.0
 var exp_to_next_level := 0.0
-var exp_buff := 1.0 # 100% de Experincia
+var exp_boost := 1.0 # 100% de Experincia
 
 # Valores base no nível 1
 var base_max_health: float = 1200.0
@@ -64,15 +72,15 @@ var base_max_damage: float = 250.0
 # Valores atuais
 var max_health_points: float = 1000.0
 var health_points: float = 1000.0
-var health_regen_per_seconds: float = 1.0
+var health_regen: float = 1.0
 
 var max_mana_points: float = 40.0
 var mana_points: float = 40.0
-var mana_regen_per_seconds: float = 1.0
+var mana_regen: float = 1.0
 
 var max_energy_points: float = 100.0
 var energy_points: float = 100.0
-var energy_regen_per_seconds: float = 1.0
+var energy_regen: float = 1.0
 
 var energy_cost_to_roll: float = 20.0
 var energy_cost_to_attack: float = 5.0
@@ -87,13 +95,7 @@ var max_damage: float = 1.0
 var critical_points: float = 0.0
 var critical_damage: float = 1.0
 
-var poison_hit_rate: float = 0.0
-var poison_duration: float = 0.0
-var poison_dps: float = 0.0
-
-var bleed_hit_rate: float = 0.0
-var bleed_duration: float = 0.0
-var bleed_dps: float = 0.0
+var status_effects: Array[StatusEffectData] = []
 
 var defense_points: float = 0.0
 
@@ -140,77 +142,77 @@ func initialize_base_stats() -> void:
 
 
 func update_health(value: float) -> void:
-	self.health_points = clampf(self.health_points + value, 0.0, self.max_health_points)
-	if self.health_points <= 0:
+	health_points = clampf(health_points + value, 0.0, max_health_points)
+	if health_points <= 0:
 		player_dead.emit()
-	health_changed.emit(self.health_points)
+	health_changed.emit(health_points)
 
 
 func update_max_health(value: float) -> void:
-	self.max_health_points += value
-	max_health_changed.emit(self.max_health_points, self.health_points)
+	max_health_points += value
+	max_health_changed.emit(max_health_points, health_points)
 
+
+func update_health_regen(value: float) -> void:
+	health_regen = clampf(health_regen + value, 1.0, max_health_points)
 
 func update_mana(value: float) -> void:
-	self.mana_points = clampf(self.mana_points + value, 0.0, self.max_mana_points)
-	mana_changed.emit(self.mana_points)
+	mana_points = clampf(mana_points + value, 0.0, max_mana_points)
+	mana_changed.emit(mana_points)
 
 
 func update_max_mana(value: float) -> void:
-	self.max_mana_points += value
-	max_mana_changed.emit(self.max_mana_points, self.mana_points)
+	max_mana_points += value
+	max_mana_changed.emit(max_mana_points, mana_points)
 
 func update_energy(value: float) -> void:
-	self.energy_points = clampf(self.energy_points + value, 0.0, self.max_energy_points)
-	energy_changed.emit(self.energy_points)
+	energy_points = clampf(energy_points + value, 0.0, max_energy_points)
+	energy_changed.emit(energy_points)
 
 
 func update_max_energy(value: float) -> void:
-	self.max_energy_points += value
-	max_energy_changed.emit(self.max_energy_points, self.energy_points)
+	max_energy_points += value
+	max_energy_changed.emit(max_energy_points, energy_points)
 
 
 func update_defense_points(value: float) -> void:
-	self.defense_points = max(defense_points + value, 1)
+	defense_points = max(defense_points + value, 1)
 
 
 func update_min_damage(value: float) -> void:
-	self.min_damage = max(self.min_damage + value, 1.0)
+	min_damage = max(min_damage + value, 1.0)
 
 
 func update_max_damage(value: float) -> void:
-	self.max_damage = max(self.max_damage + value, 1.0)
+	max_damage = max(max_damage + value, 1.0)
 
 
 func update_critical_rate(value: float) -> void:
-	self.critical_points = max(self.critical_points + value, 0)
+	critical_points = max(critical_points + value, 0)
 
 
 func update_critical_damage(value: float) -> void:
-	var crit_dmg = clampf(self.critical_damage + value, 1.0, MAX_CRITICAL_DAMAGE)
-	self.critical_damage = crit_dmg
+	var crit_dmg = clampf(critical_damage + value, 1.0, MAX_CRITICAL_DAMAGE)
+	critical_damage = crit_dmg
 
 
 func update_attack_speed(value: float) -> void:
-	self.attack_speed = clamp(self.attack_speed + value, 1.0, 3.0)
+	attack_speed = clamp(attack_speed + value, 1.0, 3.0)
 
 
 func update_move_speed(value: float) -> void:
-	self.move_speed = clamp(self.move_speed + value, 1.0, 2.0)
+	move_speed = clamp(move_speed + value, 1.0, 2.0)
 
+func update_status_effect_value(value: float) -> void:
+	pass
 
-func update_bleed_rate(value: float) -> void:
-	self.bleed_hit_rate = clampf(self.bleed_hit_rate + value, 0.0, 1.0)
-
-func update_poison_rate(value: float) -> void:
-	self.poison_hit_rate = clampf(self.poison_hit_rate + value, 0.0, 1.0)
 
 func update_knockback_resistance(value: float) -> void:
-	self.knockback_resistance = value
+	knockback_resistance = value
 
 
 func update_knockback_force(value: float) -> void:
-	self.knockback_force = value
+	knockback_force = value
 
 
 func has_energy_to_roll() -> bool:
@@ -232,17 +234,6 @@ func calculate_attack_damage() -> DamageData:
 
 	if randf() * 100 <= knockback_chance:
 		data.is_knockback_hit = true
-
-	# Chance normal de aplicar efeitos
-	if randf() * 100 <= bleed_hit_rate:
-		var bleed_effect = BleedEffectData.new(bleed_dps, bleed_duration)
-		if bleed_effect.active:
-			data.status_effects.append(bleed_effect)
-
-	if randf() * 100 <= poison_hit_rate:
-		var poison_effect = PoisonEffectData.new(poison_dps, poison_duration)
-		if poison_effect.active:
-			data.status_effects.append(poison_effect)
 
 	data.damage = damage
 
@@ -402,8 +393,8 @@ func calculate_exp_to_next_level():
 
 
 func add_experience(amount: float) -> void:
-	total_exp += amount * exp_buff
-	current_exp += amount * exp_buff
+	total_exp += amount * exp_boost
+	current_exp += amount * exp_boost
 	experiance_added.emit(amount)
 	experience_update.emit(current_exp)
 
@@ -458,32 +449,44 @@ func get_attributes() -> PlayerAttributes:
 	player_attributes.level = level
 	player_attributes.health_points = health_points
 	player_attributes.max_health_points = max_health_points
-	player_attributes.health_regen_per_seconds = health_regen_per_seconds
+	player_attributes.health_regen_per_seconds = health_regen
 	player_attributes.mana_points = mana_points
 	player_attributes.max_mana_points = max_mana_points
-	player_attributes.mana_regen_per_seconds = mana_regen_per_seconds
+	player_attributes.mana_regen_per_seconds = mana_regen
 	player_attributes.energy_points = energy_points
 	player_attributes.max_energy_points = max_energy_points
-	player_attributes.energy_regen_per_seconds = energy_regen_per_seconds
+	player_attributes.energy_regen_per_seconds = energy_regen
 	player_attributes.attack_speed = attack_speed
 	player_attributes.move_speed = move_speed
+	
 	player_attributes.min_damage = min_damage
 	player_attributes.max_damage = max_damage
+	
 	player_attributes.critical_points = critical_points
 	player_attributes.critical_rate = get_critical_rate()
 	player_attributes.max_critical_points = get_max_critical_points_for_current_level()
 	player_attributes.critical_damage = critical_damage
+	
 	player_attributes.defense_points = defense_points
 	player_attributes.defense_rate = get_defense_effectiveness_percentage_for_current_level()
 	player_attributes.max_defense_points = get_max_defense_for_current_level()
+	
 	player_attributes.current_exp = current_exp
 	player_attributes.total_exp = total_exp
 	player_attributes.exp_to_next_level = exp_to_next_level
-	player_attributes.exp_buff = exp_buff
-	player_attributes.bleed_hit_rate = bleed_hit_rate
-	player_attributes.poison_hit_rate = poison_hit_rate
+	player_attributes.exp_boost = exp_boost
+
 	player_attributes.knockback_resistance = knockback_resistance
 	player_attributes.knockback_force = knockback_force
 	player_attributes.knockback_chance = knockback_chance
 
+	player_attributes.status_effects = status_effects
+
 	return player_attributes
+
+
+func _load_data() -> void:
+	pass
+
+func _save_data() -> void:
+	pass

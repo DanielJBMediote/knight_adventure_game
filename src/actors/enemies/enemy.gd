@@ -3,20 +3,20 @@ extends CharacterBody2D
 
 const FRICTION := 1000.0
 
-enum ENEMY_TYPES { FLYING, TERRESTRIAL }
+enum ENEMY_TYPES {FLYING, TERRESTRIAL}
 
 @export var enemy_type: ENEMY_TYPES
 @export var enemy_stats: EnemyStats
 
 @export var wall_detection_height := 0.0
-@export var wall_detection_distance := 32.0  # Distância para detectar paredes
-@export var min_floor_distance := 10.0  # Distância para detectar a plataforma
-@export var min_attack_distance := 100.0  # Distância para iniciar o ataque
-@export var attack_cooldown := 1.5  # Tempo entre ataques
-@export var attack_names: Array[String] = []  # Nomes das animações de ataque
+@export var wall_detection_distance := 32.0 # Distância para detectar paredes
+@export var min_floor_distance := 10.0 # Distância para detectar a plataforma
+@export var min_attack_distance := 100.0 # Distância para iniciar o ataque
+@export var attack_cooldown := 1.5 # Tempo entre ataques
+@export var attack_names: Array[String] = [] # Nomes das animações de ataque
 @export var knockback_force: float = 300.0
 @export var knockback_resistance: float = 1.0
-@export var climb_speed := 80.0  # Velocidade de subida
+@export var climb_speed := 80.0 # Velocidade de subida
 @export var time_dead_before_free := 1.0
 @export var knockback_air_force := -1.0
 
@@ -31,7 +31,7 @@ var distance_to_floor := 0.0
 
 var attack_timer: Timer
 var can_attack := true
-var target_in_attack_range := false  # É manipulado pelo EnemyHitbox
+var target_in_attack_range := false # É manipulado pelo EnemyHitbox
 var distance_to_player := 0.0
 var current_attack_animation := ""
 
@@ -141,7 +141,7 @@ func take_knockback(knock_force: float, attacker_position: Vector2):
 	# Calcula direção do knockback
 	var knockback_direction = (global_position - attacker_position).normalized()
 	if enemy_type == ENEMY_TYPES.FLYING:
-		knockback_direction.y = knockback_air_force  # Mais para cima para um efeito melhor
+		knockback_direction.y = knockback_air_force # Mais para cima para um efeito melhor
 
 	# Aplica o knockback
 	velocity = knockback_direction * knock_force * knockback_resistance
@@ -154,7 +154,7 @@ func take_knockback(knock_force: float, attacker_position: Vector2):
 		add_child(knockback_timer)
 		knockback_timer.timeout.connect(_on_knockback_finished)
 
-	knockback_timer.start(0.3)  # Duração do knockback
+	knockback_timer.start(0.3) # Duração do knockback
 
 
 func _on_knockback_finished():
@@ -165,7 +165,7 @@ func _on_knockback_finished():
 
 
 func hit_player():
-	var is_player_in_close_range = target_player and distance_to_player < 30.0  # Aqui considera o player ocupando o mesmo lugar do Mob
+	var is_player_in_close_range = target_player and distance_to_player < 30.0 # Aqui considera o player ocupando o mesmo lugar do Mob
 	var can_hit_player = can_attack and (target_in_attack_range or is_player_in_close_range)
 
 	if can_hit_player and not (target_player.is_rolling or target_player.is_dashing):
@@ -192,7 +192,7 @@ func take_hit_with_knockback() -> bool:
 		var damage_data = PlayerStats.calculate_attack_damage()
 		is_hurting = true
 		enemy_stats.on_take_damage(damage_data.damage)
-		float_damage_control.set_damage(damage_data)
+		float_damage_control.update_damage(damage_data)
 		return damage_data.is_knockback_hit
 
 	return false
@@ -231,10 +231,9 @@ func drop_loots() -> void:
 
 	# Dropa os itens
 	var spread_distance = 10.0
-	var random_offset = Vector2(randf_range(-spread_distance, spread_distance), randf_range(-spread_distance, spread_distance)		)
+	var random_offset = Vector2(randf_range(-spread_distance, spread_distance), randf_range(-spread_distance, spread_distance))
 	for i in range(enemy_stats.num_drops):
 		if i < loot_items.size():
-			
 			var item_resource: Item = loot_items[i]
 			var item_scene = preload("res://src/gameplay/items/item_body.tscn")
 			var item_instance: ItemBody = item_scene.instantiate()

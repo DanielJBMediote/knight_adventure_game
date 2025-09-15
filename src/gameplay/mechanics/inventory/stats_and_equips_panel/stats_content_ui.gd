@@ -202,10 +202,10 @@ func get_player_attributes_formated(new_attributes: PlayerAttributes) -> Diction
 			"value": format_resources(new_attributes.current_exp, new_attributes.exp_to_next_level),
 			"stats_category": GROUP.MISCELLANEOUS
 		},
-		"exp_buff":
+		"exp_boost":
 		{
-			"name": LocalizationManager.get_ui_text("exp_buff"),
-			"value": str(new_attributes.exp_buff * 100, "%"),
+			"name": LocalizationManager.get_ui_text("exp_boost"),
+			"value": str(new_attributes.exp_boost * 100, "%"),
 			"stats_category": GROUP.MISCELLANEOUS
 		},
 	}

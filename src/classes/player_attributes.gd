@@ -24,9 +24,8 @@ var max_defense_points: float
 var current_exp: float
 var total_exp: float
 var exp_to_next_level: float
-var exp_buff: float
-var bleed_hit_rate: float
-var poison_hit_rate: float
+var exp_boost: float
 var knockback_resistance: float
 var knockback_force: float
 var knockback_chance: float
+var status_effects: Array[StatusEffectData]

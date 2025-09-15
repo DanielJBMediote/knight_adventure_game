@@ -6,9 +6,11 @@ signal update_equipment(equip: EquipmentItem, is_equipped: bool)
 signal interaction_showed(text: String)
 signal interaction_hidded(text: String)
 
-signal add_status_effect(effect: StatusEffectData)
-signal remove_status_effect(effect: StatusEffectData)
-signal clear_status_effects
+signal status_effect_added(effect: StatusEffectData, effect_ui: StatusEffectUI)
+signal status_effect_removed(effect: StatusEffectData, effect_ui: StatusEffectUI)
+# signal clear_status_effects
+
+static var active_effects: Dictionary[StatusEffectData.EFFECT, StatusEffectUI] = {}
 
 func _ready() -> void:
 	ItemManager.use_potion.connect(_on_use_potion)
@@ -56,3 +58,35 @@ func show_interaction(text: String) -> void:
 
 func hide_interaction() -> void:
 	interaction_hidded.emit()
+
+
+func add_new_status_effect(status_effect: StatusEffectData) -> bool:
+	if not active_effects.has(status_effect.effect):
+		var effect_ui = _create_effect_ui(status_effect)
+		active_effects[status_effect.effect] = effect_ui
+		status_effect_added.emit(status_effect, effect_ui)
+		return true
+	return false
+
+func remove_status_effect(effect_data: StatusEffectData) -> bool:
+	if active_effects.has(effect_data.effect):
+		var effect_ui = active_effects[effect_data.effect]
+		if effect_ui:
+			effect_ui.queue_free()
+			active_effects.erase(effect_data.effect)
+			effect_data.is_active = false
+			status_effect_removed.emit(effect_data, effect_ui)
+			return true
+	return false
+
+func _create_effect_ui(effect_data: StatusEffectData) -> StatusEffectUI:
+	var base_effect_scene: PackedScene = preload("res://src/gameplay/mechanics/combat/ui/status_effect_ui.tscn")
+	var base_instance = base_effect_scene.instantiate() as StatusEffectUI
+
+	var type_str = effect_data.get_category_key_text()
+	var effect_str = effect_data.get_effect_icon_name()
+	var icon_texture = load("res://assets/ui/status_effect_icons/%ss/%s.png" % [type_str, effect_str])
+	
+	base_instance.set_icon_texture(icon_texture)
+		
+	return base_instance

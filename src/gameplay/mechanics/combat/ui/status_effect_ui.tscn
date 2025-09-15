@@ -1,0 +1,66 @@
+[gd_scene load_steps=6 format=3 uid="uid://drw0mk0vsbgrg"]
+
+[ext_resource type="Script" uid="uid://c6w1bse6ldhov" path="res://src/gameplay/mechanics/combat/ui/status_effect_ui.gd" id="1_71nsl"]
+[ext_resource type="Texture2D" uid="uid://85r7ogi1sxyu" path="res://assets/ui/status_effect_icons/debuffs/bleeding.png" id="2_3cfuc"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="3_71nsl"]
+
+[sub_resource type="Gradient" id="Gradient_71nsl"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 0, 0.99)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3cfuc"]
+gradient = SubResource("Gradient_71nsl")
+use_hdr = true
+
+[node name="StatusEffectUI" type="VBoxContainer"]
+custom_minimum_size = Vector2(32, 32)
+anchors_preset = -1
+anchor_right = 0.025
+anchor_bottom = 0.089
+offset_bottom = -0.0800018
+size_flags_vertical = 6
+script = ExtResource("1_71nsl")
+metadata/_edit_lock_ = true
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="IconTexture" type="TextureRect" parent="Control"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+texture = ExtResource("2_3cfuc")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="TimerProgress" type="TextureProgressBar" parent="Control"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 100.0
+fill_mode = 5
+nine_patch_stretch = true
+texture_progress = SubResource("GradientTexture1D_3cfuc")
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="TimerLabel" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("3_71nsl")
+text = "3:00"
+horizontal_alignment = 1
+vertical_alignment = 2

@@ -37,16 +37,18 @@ func _ready() -> void:
 	attack_names = ["attack_1", "attack_2", "attack_3"]
 	update_attack_speed()
 
-	enemy_stats.died.connect(_on_enemy_died)
-
 	navigation_agent.path_desired_distance = 10.0
 	navigation_agent.target_desired_distance = 10.0
 	navigation_agent.avoidance_enabled = true
-
-	enemy_hurtbox.player_hitbox_entered.connect(_on_player_hitbox_area_entered)
-
-	enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
-	enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
+	
+	if not enemy_stats.died.is_connected(_on_enemy_died):
+		enemy_stats.died.connect(_on_enemy_died)
+	if not enemy_hurtbox.player_hitbox_entered.is_connected(_on_player_hitbox_entered):
+		enemy_hurtbox.player_hitbox_entered.connect(_on_player_hitbox_entered)
+	if not enemy_hitbox.area_entered.is_connected(_on_enemy_hitbox_area_entered):
+		enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
+	if not enemy_hitbox.area_exited.is_connected(_on_enemy_hitbox_area_exited):
+		enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
 
 	hit_flash_animation.animation_finished.connect(_on_hit_flash_animation_animation_finished)
 
@@ -289,8 +291,8 @@ func finish_attack():
 	is_first_attack_after_chase = false
 
 
-#region Signals Connectors
-func _on_detection_zone_trigger_player_entered(player: CharacterBody2D) -> void:
+
+func _on_detection_zone_player_entered(player: CharacterBody2D) -> void:
 	target_player = player
 	state = STATES.CHASE
 	can_attack = true
@@ -298,7 +300,7 @@ func _on_detection_zone_trigger_player_entered(player: CharacterBody2D) -> void:
 	is_first_attack_after_chase = true
 
 
-func _on_detection_zone_trigger_player_exited(player: CharacterBody2D) -> void:
+func _on_detection_zone_player_exited(player: CharacterBody2D) -> void:
 	if player == target_player:
 		target_player = null
 		var active_states = [STATES.IDLE, STATES.WANDER]
@@ -327,20 +329,20 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		enemy_control_ui.hide()
 
 
-func _on_player_hitbox_area_entered() -> void:
+func _on_player_hitbox_entered() -> void:
 	hit_flash_animation.play("hit_flash")
 	if target_player and take_hit_with_knockback():
 		take_knockback(target_player.knockback_force, target_player.global_position)
 
 
 func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
-	if target_player and area.collision_layer == 512:
+	if target_player and area.collision_layer == 1024:
 		target_in_attack_range = true
 		can_attack = true
 
 
 func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
-	if target_player and area.collision_layer == 512:
+	if target_player and area.collision_layer == 1024:
 		target_in_attack_range = false
 		can_attack = false
 
@@ -354,4 +356,3 @@ func _on_hit_flash_animation_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "hit_flash":
 		is_hurting = false
 		is_invulnerable = false
-#endregion

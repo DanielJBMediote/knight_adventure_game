@@ -20,7 +20,7 @@ const GEM_WEIGHTS := {
 	ItemAttribute.TYPE.HEALTH_REGEN: 0.25,
 	ItemAttribute.TYPE.MANA_REGEN: 0.25,
 	ItemAttribute.TYPE.ENERGY_REGEN: 0.25,
-	ItemAttribute.TYPE.EXP_BUFF: 0.25,
+	ItemAttribute.TYPE.EXP_BOOST: 0.25,
 }
 
 const GEM_AVAILABLE_EQUIP_SLOTS = []
@@ -38,7 +38,7 @@ const UNIQUE_GEMS_KEYS := {
 	ItemAttribute.TYPE.HEALTH_REGEN: "health_regen",
 	ItemAttribute.TYPE.MANA_REGEN: "mana_regen",
 	ItemAttribute.TYPE.ENERGY_REGEN: "energy_regen",
-	ItemAttribute.TYPE.EXP_BUFF: "exp_buff",
+	ItemAttribute.TYPE.EXP_BOOST: "exp_boost",
 }
 
 const GEM_COLOR_NAME_KEY := {
@@ -67,5 +67,5 @@ const BASE_VALUES := {
 	ItemAttribute.TYPE.HEALTH_REGEN: 2.0,
 	ItemAttribute.TYPE.MANA_REGEN: 1.0,
 	ItemAttribute.TYPE.ENERGY_REGEN: 0.5,
-	ItemAttribute.TYPE.EXP_BUFF: 0.5
+	ItemAttribute.TYPE.EXP_BOOST: 0.5
 }

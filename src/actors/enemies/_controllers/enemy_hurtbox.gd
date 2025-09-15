@@ -1,8 +1,6 @@
 class_name EnemyHurtbox
 extends Area2D
 
-#signal hurtbox_target_entered(target: Player)
-#signal hurtbox_target_exited(target: Player)
 signal player_hitbox_entered()
 
 @export var radius := 0.0

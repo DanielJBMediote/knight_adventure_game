@@ -27,11 +27,10 @@ const BAR_ANIM_DURATION := 0.5
 const BG_BAR_DELAY := 0.3
 const BG_BAR_DURATION := 0.8
 
-const DEFAULT_CONTROL_SIZE := Vector2(360, 16)
+#const DEFAULT_CONTROL_SIZE := Vector2(360, 16)
 const DEFAULT_BAR_SIZE := Vector2(200, 16)
-# const DEFAULT_POINTS_VALUE := 100.0
 const MAX_BAR_WIDTH := 800 # Largura máxima absoluta para as barras
-const MIN_BAR_WIDTH := 400 # Largura mínima absoluta para as barras
+const MIN_BAR_WIDTH := 200 # Largura mínima absoluta para as barras
 
 var timer_tick: Timer
 var health_tween: Tween
@@ -77,19 +76,19 @@ func setup_timer():
 func _on_regen_tick():
 	var max_health = PlayerStats.max_health_points
 	var current_health = PlayerStats.health_points
-	var health_regen_amount = PlayerStats.health_regen_per_seconds
+	var health_regen_amount = PlayerStats.health_regen
 	if health_regen_amount > 0 and current_health < max_health:
 		PlayerStats.update_health(health_regen_amount)
 	
 	var max_mana = PlayerStats.max_mana_points
 	var current_mana = PlayerStats.mana_points
-	var mana_regen_amount = PlayerStats.mana_regen_per_seconds
+	var mana_regen_amount = PlayerStats.mana_regen
 	if mana_regen_amount > 0 and current_mana < max_mana:
 		PlayerStats.update_mana(mana_regen_amount)
 		
 	var max_energy = PlayerStats.max_energy_points
 	var current_energy = PlayerStats.energy_points
-	var energy_regen_amount = PlayerStats.energy_regen_per_seconds
+	var energy_regen_amount = PlayerStats.energy_regen
 	if energy_regen_amount > 0 and current_energy < max_energy:
 		PlayerStats.update_energy(energy_regen_amount)
 
@@ -158,13 +157,9 @@ func _calculate_bar_width(current_max_value: float, max_target_value: float) -> 
 
 # Função para aplicar os tamanhos de forma consistente
 func _apply_bar_widths(_control: Control, bar: ProgressBar, bg_bar: ProgressBar, width: float):
-	# Ajusta o container
-	# control.custom_minimum_size.x = width
-	# control.size.x = width
 	# Ajusta as barras
 	bar.size.x = width
 	bg_bar.size.x = width
-	
 	# Garante que as barras herdem o mesmo tamanho do container
 	bar.custom_minimum_size.x = width
 	bg_bar.custom_minimum_size.x = width

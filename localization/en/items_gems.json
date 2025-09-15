@@ -12,7 +12,7 @@
     "health_regen": "Unique Life Gem",
     "mana_regen": "Unique Power Gem",
     "energy_regen": "Unique Energised Gem",
-    "exp_buff": "Unique Knowledge Gem"
+    "exp_boost": "Unique Knowledge Gem"
   },
   "quality": {
     "fragmented": "Fragmented",
@@ -35,14 +35,14 @@
     "health_regen": "A unique gem that provides health regeneration over time.",
     "mana_regen": "A unique gem that provides mana regeneration over time.",
     "energy_regen": "A unique gem that provides energy regeneration over time.",
-    "exp_buff": "A unique gem that provides additional experience when defeating monsters or completing missions.",
+    "exp_boost": "A unique gem that provides additional experience when defeating monsters or completing missions.",
     "unique_gem": "It's a unique jewel that increses your base attribute value."
   },
   "unique_descriptions": {
     "health_regen": "\"A pulsating gem with a bright red core that exudes comforting warmth. It is said to have been formed from the crystallized tears of a reborn phoenix. Its life-giving power continually restores the wearer's strength, like a heart that never stops beating.\"",
     "mana_regen": "\"This deep blue gem contains swirls of arcane energy that slowly swirl within. Created during an astral convergence, it whispers cosmic secrets and channels the mystical currents of the universe to fuel the wearer's magical reserves.\"",
     "energy_regen": "\"A shimmering green gem that seems to breathe with primordial energy. Forged in the core of an ancient meteorite, it emits a gentle vibration that revitalizes the body and mind, granting its possessor tireless vigor and supernatural agility.\"",
-    "exp_buff": "\"This translucent golden gem contains geometric patterns that constantly rearrange themselves, like an infinite puzzle. Legend has it that it was carved by the first celestial archivist, and its brilliance accelerates understanding of the world, transforming each experience into crystallized wisdom.\""
+    "exp_boost": "\"This translucent golden gem contains geometric patterns that constantly rearrange themselves, like an infinite puzzle. Legend has it that it was carved by the first celestial archivist, and its brilliance accelerates understanding of the world, transforming each experience into crystallized wisdom.\""
   },
   "alert_messages": {
     "gem_upgrade_success": "Successfully! You upgraded {amount} {gem}.",

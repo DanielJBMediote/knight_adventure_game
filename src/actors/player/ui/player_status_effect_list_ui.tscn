@@ -9,11 +9,10 @@ anchor_bottom = 1.0
 grow_vertical = 2
 script = ExtResource("1_1hdkw")
 
-[node name="StatusList" type="GridContainer" parent="."]
-custom_minimum_size = Vector2(832, 0)
+[node name="StatusList" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 1
-offset_right = 832.0
-offset_bottom = 48.0
-theme_override_constants/h_separation = 32
-theme_override_constants/v_separation = 8
-columns = 3
+anchors_preset = -1
+anchor_bottom = 0.089
+offset_right = 212.0
+offset_bottom = -0.0800018
