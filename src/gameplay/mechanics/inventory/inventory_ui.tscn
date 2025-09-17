@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="4_yjujk"]
 [ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="5_ua31u"]
 [ext_resource type="PackedScene" uid="uid://cvbmrrputn3w6" path="res://src/gameplay/mechanics/inventory/currency/currency_info_ui.tscn" id="6_p32c0"]
-[ext_resource type="PackedScene" uid="uid://cf0qdgwe72vtp" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_and_equips_ui.tscn" id="6_ua31u"]
+[ext_resource type="PackedScene" uid="uid://cf0qdgwe72vtp" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_and_equips_panel_ui.tscn" id="6_ua31u"]
 [ext_resource type="PackedScene" uid="uid://b17ivcxpr6qu2" path="res://src/gameplay/mechanics/inventory/inventory_slots/inventory_slots_ui.tscn" id="7_ua31u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_un16p"]

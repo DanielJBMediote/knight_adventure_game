@@ -37,8 +37,8 @@ const PANEL_MAX_SIZE = Vector2(460, 620)
 @onready var rarity_background_texture: TextureRect = $Panel/TextureMargin/RarityBackgroundTexture
 
 
-const VIEW_ICON_OPEN = Rect2(240, 64, 32, 32)
-const VIEW_ICON_CLOSE = Rect2(272, 64, 32, 32)
+const VIEW_ICON_CLOSE = Rect2(240, 64, 32, 32)
+const VIEW_ICON_OPEN = Rect2(272, 64, 32, 32)
 
 const SET_BONUS_COLORS = {1: Color.GREEN, 0: Color.SLATE_GRAY}
 
@@ -48,9 +48,12 @@ var target_mouse_entered = null
 func _ready() -> void:
 	overlay.mouse_entered.connect(func(): target_mouse_entered = true)
 	overlay.mouse_exited.connect(func(): target_mouse_entered = false)
-	close_button.pressed.connect(_on_close_button_pressed)
-	trash_item_button.pressed.connect(_on_trash_item_button_pressed)
-	advanced_view_button.pressed.connect(_on_advanced_view_button_pressed)
+	if not close_button.pressed.is_connected(_on_close_button_pressed):
+		close_button.pressed.connect(_on_close_button_pressed)
+	if not trash_item_button.pressed.is_connected(_on_trash_item_button_pressed):
+		trash_item_button.pressed.connect(_on_trash_item_button_pressed)
+	if not advanced_view_button.pressed.is_connected(_on_advanced_view_button_pressed):
+		advanced_view_button.pressed.connect(_on_advanced_view_button_pressed)
 	action_button.pressed.connect(_on_action_button_pressed)
 
 	panel.custom_minimum_size = PANEL_MIN_SIZE
@@ -152,7 +155,7 @@ func update_base_stats_info(item: EquipmentItem) -> void:
 	if item.equipment_type == EquipmentItem.TYPE.WEAPON:
 		if not item.damage:
 			return
-		label_type.text = LocalizationManager.get_ui_text("damage")
+		label_type.text = LocalizationManager.get_attribute_text("damage")
 		var min_damage = _format_attribute_value(item.damage.min_value, item.damage.type)
 		var max_damage = _format_attribute_value(item.damage.max_value, item.damage.type)
 		color = ItemAttribute.get_attribute_value_color(item.damage)
@@ -160,7 +163,7 @@ func update_base_stats_info(item: EquipmentItem) -> void:
 	else:
 		if not item.defense:
 			return
-		label_type.text = LocalizationManager.get_ui_text("defense")
+		label_type.text = LocalizationManager.get_attribute_text("defense")
 		color = ItemAttribute.get_attribute_value_color(item.defense)
 		label_values.text = _format_attribute_value(item.defense.value, item.defense.type)
 	label_values.add_theme_color_override("font_color", color)

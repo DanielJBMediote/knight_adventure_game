@@ -1,0 +1,46 @@
+{
+  "knockback_resistance": "Knockback Resistance",
+  "knockback_force": "Knockback Force",
+  "health": "Health",
+  "health_regen": "Health Regen",
+  "mana": "Mana",
+  "mana_regen": "Mana Regen",
+  "energy": "Energy",
+  "energy_regen": "Energy Regen",
+  "defense": "Defense",
+  "damage": "Damage",
+  "damage_boost": "Damage Boost",
+  "critical_rate": "Critical Rate",
+  "critical_damage": "Critical Damage",
+  "attack_speed": "Attack Speed",
+  "attack_speed_boost": "Attack Speed Boost",
+  "move_speed": "Speed",
+  "move_speed_boost": "Speed",
+  "experience": "Experience",
+  "exp_boost": "Additional Experience",
+
+  "poison": "Poison",
+  "poisoned": "Poisoned",
+  "poisoning": "Poisoning",
+  "poison_hit_rate": "Posion Hit Rate",
+
+  "bleed": "Bleed",
+  "bled": "Bled",
+  "bleeding": "Bleeding",
+  "bleed_hit_rate": "Bleed Hit Rate",
+
+  "stun": "Stun",
+  "stunned": "Stunned",
+  "stuning": "Stuning",
+  "stun_hit_rate": "Stun Hit Rate",
+
+  "freeze": "Freeze",
+  "freezed": "Freezed",
+  "freezing": "Freezing",
+  "freeze_hit_rate": "Freeze Hit Rate",
+
+  "burn": "Burn",
+  "burned": "Burned",
+  "burning": "Burning",
+  "burn_hit_rate": "Burn Hit Rate"
+}

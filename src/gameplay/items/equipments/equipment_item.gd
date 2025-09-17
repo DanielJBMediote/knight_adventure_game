@@ -40,7 +40,7 @@ class SetLevelConfig:
 		level_range = _level_range
 
 
-static var level_configs: Array[SetLevelConfig] = [
+var LEVEL_CONFIGS: Array[SetLevelConfig] = [
 	SetLevelConfig.new(GROUPS.COMMON, SETS.TRAVELER, [1, 10]),
 	SetLevelConfig.new(GROUPS.COMMON, SETS.LEATHER, [11, 20]),
 	SetLevelConfig.new(GROUPS.COMMON, SETS.HUNTER, [21, 30]),
@@ -198,7 +198,7 @@ func _determine_equipment_group() -> GROUPS:
 
 
 func _determine_equipment_set(enemy_level: int) -> SETS:
-	var configs_for_group = level_configs.filter(_filter_equipments_sets_config)
+	var configs_for_group = LEVEL_CONFIGS.filter(_filter_equipments_sets_config)
 
 	for config in configs_for_group:
 		if is_level_in_level_range(enemy_level, config.level_range):
@@ -309,7 +309,7 @@ func get_allowed_attributes_for_type() -> Array:
 
  
 func _calculate_attribute_value(attribute_type: ItemAttribute.TYPE) -> float:
-	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["base_value"]
+	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["value"]
 	var factor = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["factor"]
 	var level_multiplier = 1.0 + (min(item_level, 100.0) * factor)
 	# var rarity_multiplier = 1.0 + (item_rarity * 0.1)
@@ -398,9 +398,8 @@ func _generate_defense_stats() -> void:
 
 
 func calculate_base_damage() -> float:
-	var attribute_type = ItemAttribute.TYPE.DAMAGE
-	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["base_value"]
-	var factor = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["factor"]
+	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[ItemAttribute.TYPE.DAMAGE]["value"]
+	var factor = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[ItemAttribute.TYPE.DAMAGE]["factor"]
 	var level_multiplier = 1.0 + (min(item_level, 100.0) * factor)
 	base_value += base_value * (item_level * 0.03) * level_multiplier
 
@@ -412,9 +411,8 @@ func calculate_base_damage() -> float:
 
 
 func calculate_base_defense() -> float:
-	var attribute_type = ItemAttribute.TYPE.DEFENSE
-	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["base_value"]
-	var factor = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[attribute_type]["factor"]
+	var base_value = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[ItemAttribute.TYPE.DEFENSE]["value"]
+	var factor = EquipmentConsts.EQUIPMENTS_STATS_BASE_VALUES[ItemAttribute.TYPE.DEFENSE]["factor"]
 	var level_multiplier = 1.0 + (min(item_level, 100.0) * factor)
 	base_value += base_value * (item_level * 0.015) * level_multiplier
 
@@ -538,18 +536,17 @@ func _calculate_attributes_points() -> float:
 	var quality_points = 0.0
 	
 	for attribute in item_attributes:
-		var attribute_value = attribute.value
 		var min_value = attribute.get_min_value_range()
 		var max_value = attribute.get_max_value_range()
 		var value_range = max_value - min_value
 		
 		if value_range > 0:
 			# Calcula a porcentagem do valor em relação ao range máximo possível
-			var percentage = (attribute_value - min_value) / value_range
+			var percentage = (attribute.value - min_value) / value_range
 			
 			# Sistema de pontuação que recompensa valores altos exponencialmente
 			# Valores abaixo de 50% dão poucos pontos, acima de 100% dão bônus
-			var base_attribute_points = 15.0
+			var base_attribute_points = EquipmentConsts.EQUIPMENT_ATRIBUTE_BASE_POWER[attribute.type]
 			
 			if percentage <= 0.5:
 				# Crescimento linear para valores baixos

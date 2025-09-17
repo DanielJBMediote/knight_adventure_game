@@ -118,8 +118,9 @@ func apply_damage_on_player(damage_data: DamageData, enemy_stats: EnemyStats):
 	float_damage_control.update_damage(damage_data)
 
 	# Processa cada status effect
-	for effect in damage_data.get_active_status_effects():
-		PlayerEvents.add_new_status_effect(effect)
+	for status_effect in damage_data.get_debuff_status_effects():
+		if status_effect.is_active:
+			PlayerEvents.add_new_status_effect(status_effect)
 
 
 func _physics_process(delta) -> void:
@@ -191,6 +192,8 @@ func calculate_distance_to_floors() -> void:
 
 
 func handle_actions() -> void:
+	if Input.is_action_just_pressed("Test"):
+		PlayerStats.add_experience(PlayerStats.exp_to_next_level + 1)
 	if is_on_floor():
 		handle_actions_when_on_floor()
 	else:

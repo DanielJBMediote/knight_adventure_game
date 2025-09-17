@@ -1,5 +1,8 @@
-class_name StatusEffectData
+class_name StatusEffect
 extends Resource
+
+enum TYPE {ACTIVE, PASSIVE, NONE}
+enum CATEGORY {BUFF, DEBUFF, NONE}
 
 enum EFFECT {
 	POISONING,
@@ -25,13 +28,12 @@ enum EFFECT {
 	ATTACK_SPEED_REDUCTION,
 	SPEED_BOOST,
 	SPEED_REDUCTION,
+	NONE
 }
 
-enum CATEGORY {BUFF, DEBUFF}
-enum TYPE {ACTIVE, PASSIVE}
 
-@export var category: CATEGORY
 @export var type: TYPE
+@export var category: CATEGORY
 @export var effect: EFFECT
 
 ## The Base Value os effect
@@ -39,15 +41,26 @@ enum TYPE {ACTIVE, PASSIVE}
 ## Base Rate Chance: Min=0.0 Max=1.0
 @export_range(0.0, 1.0) var base_rate_chance: float = 0.0
 ## Base Duration in seconds.
-@export var base_duration: float = 10.0
+@export var base_duration: float = 5.0
 
 
 var is_active: bool = false
 var value := 0.0
-var rate_chance := 0.0
-var duration := 0.0
+
+var rate_chance := 0.0:
+		get: return rate_chance
+		set(value): rate_chance = clampf(value, 0.0, 1.0)
+
+var duration := 0.0:
+		get: return duration
+		set(value): duration = maxf(value, base_duration)
 
 
+func _init(_effect: EFFECT = EFFECT.NONE, _duration: float = base_duration) -> void:
+	effect = _effect
+	duration = _duration
+	
+	
 func get_effect_value_color() -> Color:
 	match effect:
 		EFFECT.BLEEDING:
@@ -64,15 +77,12 @@ func get_effect_value_color() -> Color:
 			return Color.WHITE
 
 
-static func _filter_by_active_effects(_status_effect: StatusEffectData) -> bool:
-	return _status_effect.is_active == true and _status_effect.type == TYPE.ACTIVE
-
-
 func get_category_key_text() -> String:
 	if category == CATEGORY.BUFF:
 		return "buff"
 	else:
 		return "debuff"
+
 
 func get_effect_icon_name() -> String:
 	match effect:
@@ -97,3 +107,35 @@ func get_effect_icon_name() -> String:
 		EFFECT.ATTACK_SPEED_REDUCTION: return "attack_down"
 		EFFECT.SPEED_BOOST: return "swiftness"
 		_: return ""
+
+
+static func _filter_by_debuff_effects(_status_effect: StatusEffect) -> bool:
+	return (_status_effect.type == TYPE.ACTIVE and _status_effect.category == CATEGORY.DEBUFF and _status_effect.effect != EFFECT.NONE)
+
+static func _filter_by_buff_effects(_status_effect: StatusEffect) -> bool:
+	return (_status_effect.type == TYPE.ACTIVE and _status_effect.category == CATEGORY.DEBUFF and _status_effect.effect != EFFECT.NONE)
+
+
+# Equipments
+static func get_effect_by_equipment_attribute_type(attribute_type: ItemAttribute.TYPE) -> EFFECT:
+	match attribute_type:
+			ItemAttribute.TYPE.POISON_HIT_RATE: return EFFECT.POISONING
+			ItemAttribute.TYPE.BLEED_HIT_RATE: return EFFECT.BLEEDING
+			ItemAttribute.TYPE.FREEZE_HIT_RATE: return EFFECT.FREEZING
+			ItemAttribute.TYPE.STUN_HIT_RATE: return EFFECT.STUNING
+			ItemAttribute.TYPE.BURN_HIT_RATE: return EFFECT.BURNING
+			_: return EFFECT.NONE
+
+# Potions
+static func get_effect_by_potion_atrtibute_type(attribute_type: ItemAttribute.TYPE) -> EFFECT:
+	match attribute_type:
+			ItemAttribute.TYPE.HEALTH: return EFFECT.HEALTH_AMPLIFICATION
+			ItemAttribute.TYPE.MANA: return EFFECT.MANA_AMPLIFICATION
+			ItemAttribute.TYPE.DAMAGE: return EFFECT.DAMAGE_BOOST
+			ItemAttribute.TYPE.DEFENSE: return EFFECT.DEFENSE_BOOST
+			ItemAttribute.TYPE.EXP_BOOST: return EFFECT.EXP_BOOST
+			ItemAttribute.TYPE.CRITICAL_DAMAGE: return EFFECT.CRITICAL_DAMAGE_BOOST
+			ItemAttribute.TYPE.CRITICAL_RATE: return EFFECT.CRITICAL_RATE_BOOST
+			ItemAttribute.TYPE.ATTACK_SPEED: return EFFECT.ATTACK_SPEED_BOOST
+			ItemAttribute.TYPE.MOVE_SPEED: return EFFECT.SPEED_BOOST
+			_: return EFFECT.NONE

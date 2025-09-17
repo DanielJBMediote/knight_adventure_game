@@ -2,20 +2,19 @@
 class_name StatusEffectUI
 extends VBoxContainer
 
+@export var timer_label: Label
+@export var icon_texture: TextureRect
+@export var timer_progress: TextureProgressBar
 
-@onready var timer_label: Label = $TimerLabel
-@onready var icon_texture: TextureRect = $Control/IconTexture
-@onready var timer_progress: TextureProgressBar = $Control/TimerProgress
 
-@export var effect_type: StatusEffectData.EFFECT
-
+var effect_type: StatusEffect.EFFECT
 var effect_timer: Timer
 var current_duration: float = 0.0
 var progress_tween: Tween
 var label_tween: Tween
 
 # Configurações básicas que todas as classes terão
-func setup_effect(effect_data: StatusEffectData) -> void:
+func setup_effect(effect_data: StatusEffect) -> void:
 	#label.text = effect_data.get_effect_name()
 	effect_type = effect_data.effect
 	update_ui(effect_data.duration)
@@ -29,7 +28,7 @@ func set_icon_texture(texture: Texture2D) -> void:
 	if icon_texture:
 		icon_texture.texture = texture
 
-func start_timer(effect_data: StatusEffectData) -> void:
+func start_timer(effect_data: StatusEffect) -> void:
 	if effect_timer:
 		effect_timer.stop()
 		effect_timer.queue_free()
@@ -84,7 +83,7 @@ func _update_timer_label() -> void:
 		var remaining_time = timer_progress.value
 		timer_label.text = format_timer(remaining_time)
 
-func _on_timer_timeout(effect_data: StatusEffectData) -> void:
+func _on_timer_timeout(effect_data: StatusEffect) -> void:
 	PlayerEvents.remove_status_effect(effect_data)
 
 func format_timer(seconds: float) -> String:

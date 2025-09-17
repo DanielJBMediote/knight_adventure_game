@@ -3,10 +3,10 @@ extends Control
 
 @onready var float_label: PackedScene = preload("res://src/ui/float_label.tscn")
 
-@onready var health_bar: ProgressBar = $VBoxContainer/HBoxContainer/HealthBarContainer/HealthBar
-@onready var health_bar_bg: ProgressBar = $VBoxContainer/HBoxContainer/HealthBarContainer/HealthBarBG
-#@onready var enemy_name: Label = $VBoxContainer/HBoxContainer/EnemyName
-@onready var enemy_level: Label = $VBoxContainer/HBoxContainer/EnemyLevel
+@onready var enemy_level: Label = $VBoxContainer/MainContainer/EnemyLevel
+@onready var health_bar_bg: ProgressBar = $VBoxContainer/MainContainer/HealthBarContainer/HealthBarBG
+@onready var health_bar: ProgressBar = $VBoxContainer/MainContainer/HealthBarContainer/HealthBar
+@onready var status_effect_list: HBoxContainer = $VBoxContainer/StatusEffectList
 
 @export var enemy_stats: EnemyStats
 
@@ -26,12 +26,13 @@ func _ready() -> void:
 	health_bar_bg.value = enemy_stats.current_health_points
 
 	enemy_stats.health_changed.connect(on_update_health)
-
-	timer_tick = Timer.new()
+	if not timer_tick:
+		timer_tick = Timer.new()
+	
 	timer_tick.autostart = true
-	timer_tick.start(1.0)
 	timer_tick.timeout.connect(_on_timeout)
 	add_child(timer_tick)
+	timer_tick.start(1.0)
 
 	setup_labels()
 

@@ -7,10 +7,9 @@ signal died(exp_amount: float)
 enum ENEMY_TYPE {MOB, MINIBOSS, BOSS}
 enum RACE {BATS, SKELETONS, ORCS}
 
-const MAX_CRITICAL_RATE := 100.0 # 100% máximo
-const MAX_CRITICAL_DAMAGE := 300.0 # 300% máximo
-const MAX_STATUS_CHANCE := 100.0 # 100% máximo
-const SPEED := 100.0
+const MAX_CRITICAL_RATE := 1.0 # 100% máximo
+const MAX_CRITICAL_DAMAGE := 3.0 # 300% máximo
+const BASE_SPEED := 100.0
 
 ## Define the name of Entity
 @export var enemy_name := ""
@@ -47,10 +46,10 @@ const SPEED := 100.0
 # Stats de velocidade
 ## Base value of attack speed, min of 100%, max of 200%. Percentage Values: 0.0 - 2.0.
 @export_range(1.0, 2.0) var base_attack_speed: float = 1.0
-## Base value of speed, min of 100%, max of 200%. Percentage Values: 0.0 - 2.0.
+## Base value of speed, max of 200%. Percentage Values: 0.0 - 2.0.
 @export_range(0.5, 2.0) var base_move_speed: float = 1.0
 
-@export var status_effects: Array[StatusEffectData] = []
+@export var status_effects: Array[StatusEffect] = []
 
 var health_points: float = 0.0
 var health_regen_per_seconds: float = 0.0
@@ -101,7 +100,7 @@ func _ready() -> void:
 
 	# Calcula stats de velocidade
 	self.attack_speed = clamp(base_attack_speed * status_modificator * level_factor * 0.02, 1.0, 2.0)
-	self.move_speed = SPEED * clamp(base_move_speed * status_modificator * level_factor * 0.02, base_move_speed, base_move_speed * 2.0)
+	self.move_speed = BASE_SPEED * clamp(base_move_speed * status_modificator * level_factor * 0.02, base_move_speed, base_move_speed * 2.0)
 
 	# Fórmulas balanceadas para CRITICAL RATE e CRITICAL DAMAGE
 	calculate_critical_stats(level_factor, status_modificator)
@@ -148,31 +147,24 @@ func calculate_num_of_coins() -> int:
 
 func calculate_critical_stats(_level_factor: float, difficulty_factor: float) -> void:
 	# Critical Rate - escala suavemente até o máximo
-	var crit_rate_growth = 0.25 # Taxa de crescimento (ajuste conforme necessário)
-	var max_crit_level = 90 # Nível onde atinge o máximo
-
-	if level >= max_crit_level:
-		self.crit_rate = MAX_CRITICAL_RATE
-	else:
-		# Fórmula logarítmica para crescimento suave
-		var crit_rate_factor = 1.0 + log(level + 1) * crit_rate_growth
-		self.crit_rate = min(base_crit_rate * crit_rate_factor * difficulty_factor, MAX_CRITICAL_RATE)
-
+	var crit_rate_growth = 0.75 # Taxa de crescimento (ajuste conforme necessário)
+	var max_crit_level = 100 # Nível onde atinge 75%
+	var crit_rate_factor = 1.0 + log(level + 1) * crit_rate_growth
+	crit_rate = min(base_crit_rate * crit_rate_factor * difficulty_factor, MAX_CRITICAL_RATE)
+	if level >= max_crit_level and crit_rate >= MAX_CRITICAL_RATE:
+		crit_rate = MAX_CRITICAL_RATE
+	
 	# Critical Damage - escala gradualmente até 300%
-	var crit_damage_growth = 0.15 # % adicional por nível (ajuste conforme necessário)
-	var max_crit_damage_level = 90 # Nível onde atinge 300%
-
-	if level >= max_crit_damage_level:
-		self.crit_damage = MAX_CRITICAL_DAMAGE
-	else:
-		# Crescimento linear controlado
-		var crit_damage_bonus = (level - 1) * crit_damage_growth
-		self.crit_damage = min(base_crit_damage + crit_damage_bonus, MAX_CRITICAL_DAMAGE)
-		self.crit_damage *= difficulty_factor
+	var crit_damage_growth = 0.00445 # % adicional por nível (ajuste conforme necessário)
+	var max_crit_damage_level = 100 # Nível onde atinge 300%
+	var crit_damage_bonus = (level - 1) * crit_damage_growth
+	crit_damage = min(base_crit_damage + (crit_damage_bonus * difficulty_factor), MAX_CRITICAL_DAMAGE)
+	if level >= max_crit_damage_level and crit_damage >= MAX_CRITICAL_DAMAGE:
+		crit_damage = MAX_CRITICAL_DAMAGE
 
 func update_status_effect_values(difficulty_factor: float) -> void:
 	for status in status_effects:
-		if status.category == StatusEffectData.CATEGORY.DEBUFF:
+		if status.category == StatusEffect.CATEGORY.DEBUFF:
 			if status.base_value:
 				var damage = randf_range(min_attack_damage, max_attack_damage)
 				status.value = damage * (status.base_value * (1.0 + ((level - 1) * 0.001) * difficulty_factor))
@@ -188,12 +180,12 @@ func calculate_base_attack_damage() -> DamageData:
 	var damage = randf_range(min_attack_damage, max_attack_damage)
 
 	# Critical hit
-	if randf() * 1.0 <= base_crit_rate:
-		damage *= min(1.0, base_crit_damage)
+	if randf() * 1.0 <= crit_rate:
+		damage *= min(1.0, crit_damage)
 		damage_data.is_critical = true
 
 	for status in status_effects:
-		if status.category == StatusEffectData.CATEGORY.DEBUFF:
+		if status.category == StatusEffect.CATEGORY.DEBUFF:
 			if randf() * 1.0 <= status.rate_chance:
 				status.is_active = true
 				damage_data.status_effects.append(status)

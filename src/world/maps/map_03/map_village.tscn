@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=4 uid="uid://nxgqn7u057kw"]
+[gd_scene load_steps=17 format=4 uid="uid://nxgqn7u057kw"]
 
 [ext_resource type="Script" uid="uid://dirkxfg16rje0" path="res://src/world/maps/_configs/map_data.gd" id="1_id7sn"]
 [ext_resource type="PackedScene" uid="uid://bgtrneqf6i4of" path="res://src/world/maps/_configs/smart_camera_controller.tscn" id="2_0wnlr"]
@@ -12,7 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://m58oo4qhmrxd" path="res://src/world/props/plants/wheat.tscn" id="7_ks8s1"]
 [ext_resource type="PackedScene" uid="uid://bmqja38h84vuw" path="res://src/actors/player/ui/player_ui.tscn" id="9_5ivhs"]
 [ext_resource type="PackedScene" uid="uid://dt7jdj04ndxo7" path="res://src/world/tilesets/props.tscn" id="10_635wq"]
-[ext_resource type="PackedScene" uid="uid://bm3d45tncritm" path="res://src/actors/enemies/skeletons/warrior/skeleton_warrior.tscn" id="10_e0syh"]
+[ext_resource type="PackedScene" uid="uid://bc0emswvufmdk" path="res://src/world/spawn_zone.tscn" id="10_e0syh"]
+[ext_resource type="PackedScene" uid="uid://bm3d45tncritm" path="res://src/actors/enemies/skeletons/warrior/skeleton_warrior.tscn" id="11_w4cpr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1cow1"]
 size = Vector2(37, 576)
@@ -25,9 +26,9 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(2624, 512, 2624, 672, 3
 [node name="MapVillage" type="Node2D" groups=["maps"]]
 script = ExtResource("1_id7sn")
 map_name = "Village"
-level_mob_min = 1
-level_mob_max = 5
-boss_level = 5
+level_mob_min = 35
+level_mob_max = 40
+boss_level = 45
 
 [node name="CameraMapController" parent="." instance=ExtResource("2_0wnlr")]
 right_marker_position = Vector2(4480, 360)
@@ -227,10 +228,23 @@ tile_map_data = PackedByteArray("AADOAHkAAwAQAAIAAADhAGwAAwASAAIAAACeAHwAAwADACA
 position = Vector2(1408, 512)
 
 [node name="Player" parent="Entities" instance=ExtResource("4_p7nqb")]
-position = Vector2(3322, 725)
+position = Vector2(3294, 304)
 
-[node name="SkeletonWarrior" parent="Entities" instance=ExtResource("10_e0syh")]
-position = Vector2(3718, 732)
+[node name="SpawnZone" parent="." instance=ExtResource("10_e0syh")]
+position = Vector2(3658, 778)
+min_enemy_numbers = 3
+enemy_scenes = Array[PackedScene]([ExtResource("11_w4cpr")])
+disable_smoke_animaiton = true
+metadata/_edit_lock_ = true
+
+[node name="SpawnPoint" type="Marker2D" parent="SpawnZone"]
+position = Vector2(-820, -151)
+
+[node name="SpawnPoint2" type="Marker2D" parent="SpawnZone"]
+position = Vector2(182, -70)
+
+[node name="SpawnPoint3" type="Marker2D" parent="SpawnZone"]
+position = Vector2(155, -355)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 

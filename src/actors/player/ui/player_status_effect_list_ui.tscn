@@ -3,10 +3,9 @@
 [ext_resource type="Script" uid="uid://d1fdwbkqvnrd3" path="res://src/actors/player/ui/player_status_effect_list_ui.gd" id="1_1hdkw"]
 
 [node name="PlayerStatusEffectListUI" type="Control"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 3
-anchors_preset = 9
-anchor_bottom = 1.0
-grow_vertical = 2
+anchors_preset = 0
 script = ExtResource("1_1hdkw")
 
 [node name="StatusList" type="HBoxContainer" parent="."]
@@ -14,5 +13,4 @@ custom_minimum_size = Vector2(0, 64)
 layout_mode = 1
 anchors_preset = -1
 anchor_bottom = 0.089
-offset_right = 212.0
-offset_bottom = -0.0800018
+offset_bottom = 58.304

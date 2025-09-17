@@ -1,18 +1,10 @@
 class_name SkeletonWarrior
 extends TerrestrialEnemy
 
-@onready var float_Damage_control: FloatDamageControl = $FloatDamageControl
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
-@onready var enemy_hitbox: Area2D = $EnemyHitbox
-@onready var enemy_hurtbox: EnemyHurtbox = $EnemyHurtbox
-@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 @onready var hit_flash_animation: AnimationPlayer = $HitFlashAnimation
 
 @onready var debug_label: Label = $DebugLabel
-
-# Controllers
-@onready var wander_controller: WanderController = $WanderController
-@onready var enemy_control_ui: EnemyControlUI = $EnemyControlUI
 
 @export var min_time_state: float = 5.0
 @export var max_time_state: float = 10.0
@@ -32,32 +24,15 @@ var navigation_timer := 0.0
 func _ready() -> void:
 	super._ready()
 	pick_random_state([STATES.IDLE, STATES.WANDER])
-	wander_controller.start_position = global_position
-	wander_controller.enemy_type = Enemy.ENEMY_TYPES.FLYING
 	attack_names = ["attack_1", "attack_2", "attack_3"]
-	update_attack_speed()
+	update_attack_speed(animated_sprite_2d)
 
-	navigation_agent.path_desired_distance = 10.0
-	navigation_agent.target_desired_distance = 10.0
-	navigation_agent.avoidance_enabled = true
-	
-	if not enemy_stats.died.is_connected(_on_enemy_died):
-		enemy_stats.died.connect(_on_enemy_died)
-	if not enemy_hurtbox.player_hitbox_entered.is_connected(_on_player_hitbox_entered):
-		enemy_hurtbox.player_hitbox_entered.connect(_on_player_hitbox_entered)
-	if not enemy_hitbox.area_entered.is_connected(_on_enemy_hitbox_area_entered):
-		enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
-	if not enemy_hitbox.area_exited.is_connected(_on_enemy_hitbox_area_exited):
-		enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
-
-	hit_flash_animation.animation_finished.connect(_on_hit_flash_animation_animation_finished)
-
-
-func update_attack_speed():
-	var attk_speed = roundi(enemy_stats.attack_speed * 12)
-	animated_sprite_2d.sprite_frames.set_animation_speed("attack_1", attk_speed)
-	animated_sprite_2d.sprite_frames.set_animation_speed("attack_2", attk_speed)
-	animated_sprite_2d.sprite_frames.set_animation_speed("attack_3", attk_speed)
+	if enemy_stats and not enemy_stats.died.is_connected(_on_enemy_stats_died):
+		enemy_stats.died.connect(_on_enemy_stats_died)
+	if enemy_hurtbox and not enemy_hurtbox.area_entered.is_connected(_on_enemy_hurtbox_area_entered):
+		enemy_hurtbox.area_entered.connect(_on_enemy_hurtbox_area_entered)
+	if hit_flash_animation and not hit_flash_animation.animation_finished.is_connected(_on_hit_flash_animation_animation_finished):
+		hit_flash_animation.animation_finished.connect(_on_hit_flash_animation_animation_finished)
 
 
 func _physics_process(delta: float) -> void:
@@ -83,12 +58,12 @@ func _physics_process(delta: float) -> void:
 			handle_idle_state(delta)
 		STATES.WANDER:
 			#debug_label.text = str(
-				#"State: WANDER\n", "Position:", position, "\nTarget Pos (Wander): ", wander_controller.target_position
+			#"State: WANDER\n", "Position:", position, "\nTarget Pos (Wander): ", wander_controller.target_position
 			#)
 			handle_wander_state(delta)
 		STATES.CHASE:
 			#debug_label.text = str(
-				#"State: CHASE\n", "Position:", position, "\nTarget Pos (Player): ", target_player.position
+			#"State: CHASE\n", "Position:", position, "\nTarget Pos (Player): ", target_player.position
 			#)
 			handle_chase_state(delta)
 		STATES.ATTACKING:
@@ -291,7 +266,6 @@ func finish_attack():
 	is_first_attack_after_chase = false
 
 
-
 func _on_detection_zone_player_entered(player: CharacterBody2D) -> void:
 	target_player = player
 	state = STATES.CHASE
@@ -329,30 +303,20 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		enemy_control_ui.hide()
 
 
-func _on_player_hitbox_entered() -> void:
-	hit_flash_animation.play("hit_flash")
-	if target_player and take_hit_with_knockback():
-		take_knockback(target_player.knockback_force, target_player.global_position)
-
-
-func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
-	if target_player and area.collision_layer == 1024:
-		target_in_attack_range = true
-		can_attack = true
-
-
-func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
-	if target_player and area.collision_layer == 1024:
-		target_in_attack_range = false
-		can_attack = false
-
-
-func _on_enemy_died(exp_amount: float) -> void:
-	animated_sprite_2d.play("dead")
-	super._on_dead(exp_amount)
+func _on_enemy_hurtbox_area_entered(area2D: Area2D) -> void:
+	if target_player and area2D.collision_layer == 512:
+		hit_flash_animation.play("hit_flash")
+		var is_knockback = take_hit()
+		if is_knockback:
+			take_knockback(target_player.knockback_force, target_player.global_position)
 
 
 func _on_hit_flash_animation_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "hit_flash":
 		is_hurting = false
 		is_invulnerable = false
+
+
+func _on_enemy_stats_died(exp_amount: float) -> void:
+	animated_sprite_2d.play("dead")
+	super._on_enemy_stats_died(exp_amount)

@@ -27,6 +27,7 @@ class DamageStats:
 
 static var player_ref: Player
 
+const MAX_LEVEL = 100
 const BASE_EXP = 1000
 const EXP_SCALE_FACTOR = 1.15
 const EXP_ADDITIVE = 50
@@ -42,17 +43,17 @@ const CRITICAL_GROWTH_FACTOR_PER_LEVEL = (MAX_CRITICAL_POINTS_FOR_MAX - BASE_CRI
 const GROWTH_DEFENSE_FACTOR_PER_LEVEL = 0.045 # 4.5%
 const REDUCT_DEFENSE_FACTOR_PER_LEVEL = 0.03 # 3%
 
-const MAX_TARGET_HEALTH = 120000.0
-const MAX_TARGET_MANA = 600.0
-const MAX_TARGET_ENERGY = 300
+const MAX_TARGET_HEALTH = 85000.0
+const MAX_TARGET_MANA = 450.0
+const MAX_TARGET_ENERGY = 150
 
 ## 1 = normal, <1 = menos knockback, >1 = mais knockback
 var knockback_resistance: float = 1.0
 var knockback_force: float = 300.0
 var knockback_chance: float = 1.0 # de 0% até 60%
 
-var level: int = 1
 
+var level: int = 39
 var total_exp := 0.0
 var current_exp := 0.0
 var exp_to_next_level := 0.0
@@ -93,15 +94,19 @@ var min_damage: float = 1.0
 var max_damage: float = 1.0
 
 var critical_points: float = 0.0
-var critical_damage: float = 1.0
+var critical_damage: float = 1.0:
+	get: return critical_damage
+	set(value): critical_damage = maxf(value, 1.0)
 
-var status_effects: Array[StatusEffectData] = []
 
 var defense_points: float = 0.0
 
 var attack_speed: float = 1.0
 var move_speed: float = 1.0
 
+var active_status_effects: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
+
+var passive_status_effects: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
 
 # os valores serão instanciados por um arquivo onde eu vou armazenar
 func _ready() -> void:
@@ -203,9 +208,24 @@ func update_attack_speed(value: float) -> void:
 func update_move_speed(value: float) -> void:
 	move_speed = clamp(move_speed + value, 1.0, 2.0)
 
-func update_status_effect_value(value: float) -> void:
-	pass
 
+func update_active_status_effect(attribute_type: ItemAttribute.TYPE, rate_value: float) -> void:
+	var effect = StatusEffect.get_effect_by_equipment_attribute_type(attribute_type)
+	if active_status_effects.has(effect):
+		var active_status = active_status_effects[effect]
+		active_status.rate_chance += rate_value
+		active_status.duration = active_status.base_duration + ((level - 1) * 0.01)
+	else:
+		var new_active_status = StatusEffect.new(effect)
+		new_active_status.effect = effect
+		new_active_status.type = StatusEffect.TYPE.ACTIVE
+		new_active_status.duration = new_active_status.base_duration + ((level - 1) * 0.01)
+		new_active_status.rate_chance = rate_value
+		active_status_effects[effect] = new_active_status
+
+# Quando ativado por poções
+func update_passive_status_effects(attribute_type: ItemAttribute.TYPE, value: float) -> void:
+	pass
 
 func update_knockback_resistance(value: float) -> void:
 	knockback_resistance = value
@@ -224,20 +244,25 @@ func has_energy_to_attack() -> bool:
 
 
 func calculate_attack_damage() -> DamageData:
-	var data = DamageData.new()
+	var damage_data = DamageData.new()
 	var damage = randf_range(min_damage, max_damage)
 	
 	var current_critical_rate = get_critical_rate()
-	if randf() * 100 <= current_critical_rate:
-		damage *= (critical_damage / 100.0) + 1.0
-		data.is_critical = true
+	if randf() * 1.0 <= current_critical_rate:
+		damage *= critical_damage
+		damage_data.is_critical = true
 
 	if randf() * 100 <= knockback_chance:
-		data.is_knockback_hit = true
+		damage_data.is_knockback_hit = true
 
-	data.damage = damage
+	for status_effect in active_status_effects.values():
+		if randf() * 1.0 <= status_effect.rate_chance:
+			status_effect.is_active = true
+			damage_data.status_effects.append(status_effect)
 
-	return data
+	damage_data.damage = damage
+
+	return damage_data
 
 
 func calculate_damage_taken(damage_data: DamageData, enemy_level: int) -> DamageData:
@@ -335,25 +360,21 @@ func get_max_defense_for_current_level() -> float:
 	var defense_to_hit_max = 800.0 + (level - 1) * (7200.0 / 99.0)
 	return defense_to_hit_max * difficulty_factor
 
-# Atualize também a função get_defense_effectiveness_percentage
-func get_defense_effectiveness_percentage(enemy_level: int) -> float:
-	var factor = calculate_defense_factor(enemy_level)
-	# Converte para percentual de redução (ex: 0.2 = 80% de redução)
-	var reduction_percentage = (1.0 - factor) * 100.0
-	return reduction_percentage
-
-## Retorna o valor defensivo do level atual do jogador em percentual 
-func get_defense_effectiveness_percentage_for_current_level() -> float:
-	var factor = calculate_defense_factor(self.level)
-	# Converte para percentual de redução (ex: 0.2 = 80% de redução)
-	var reduction_percentage = (1.0 - factor) * 100.0
+func get_defense_effectiveness_percentage(target_level: int) -> float:
+	var factor = calculate_defense_factor(target_level)
+	var reduction_percentage = (1.0 - factor)
 	return reduction_percentage
 #endregion
 
 
 func calculate_health_at_level(target_level: int) -> float:
-	var growth_factor = pow(MAX_TARGET_HEALTH / base_max_health, 1.0 / 99.0)
-	return base_max_health * pow(growth_factor, target_level - 1)
+	# Polinominal Progress
+	var growth_factor = float(target_level - 1) / (MAX_LEVEL - 1)
+	return base_max_health + (MAX_TARGET_HEALTH - base_max_health) * pow(growth_factor, 1.5)
+
+	# Exponencial Progress
+	# var growth_factor = pow(MAX_TARGET_HEALTH / base_max_health, 1.0 / 99.0)
+	# return base_max_health * pow(growth_factor, target_level - 1)
 
 
 func calculate_mana_at_level(target_level: int) -> float:
@@ -419,17 +440,19 @@ func add_level() -> int:
 	var mana_ratio = mana_points / max_mana_points
 	var energy_ratio = energy_points / max_energy_points
 
-	self.max_health_points = new_health
-	self.health_points = new_health * health_ratio
+	max_health_points = new_health
+	health_points = new_health * health_ratio
+	max_health_changed.emit(max_health_points, health_changed)
 
-	self.max_mana_points = new_mana
-	self.mana_points = new_mana * mana_ratio
+	max_mana_points = new_mana
+	mana_points = new_mana * mana_ratio
 
-	self.max_energy_points = new_energy
-	self.energy_points = new_energy * energy_ratio
 
-	self.min_damage = new_damage.min_damage
-	self.max_damage = new_damage.max_damage
+	max_energy_points = new_energy
+	energy_points = new_energy * energy_ratio
+
+	min_damage = new_damage.min_damage
+	max_damage = new_damage.max_damage
 
 	# Recalcula para o próximo nível
 	calculate_exp_to_next_level()
@@ -468,7 +491,7 @@ func get_attributes() -> PlayerAttributes:
 	player_attributes.critical_damage = critical_damage
 	
 	player_attributes.defense_points = defense_points
-	player_attributes.defense_rate = get_defense_effectiveness_percentage_for_current_level()
+	player_attributes.defense_rate = get_defense_effectiveness_percentage(level)
 	player_attributes.max_defense_points = get_max_defense_for_current_level()
 	
 	player_attributes.current_exp = current_exp
@@ -480,13 +503,13 @@ func get_attributes() -> PlayerAttributes:
 	player_attributes.knockback_force = knockback_force
 	player_attributes.knockback_chance = knockback_chance
 
-	player_attributes.status_effects = status_effects
+	player_attributes.active_status_effects = active_status_effects.values()
 
 	return player_attributes
 
 
-func _load_data() -> void:
+func _load_stats_data() -> void:
 	pass
 
-func _save_data() -> void:
+func _save_stats_data() -> void:
 	pass

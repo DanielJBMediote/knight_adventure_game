@@ -1,8 +1,8 @@
 class_name StringUtils
 
-const ONE_BILLION = pow(10, 9)  # 1 Bilhão = 10^9
-const ONE_MILLION = pow(10, 6)  # 1 Milhão = 10^6
-const ONE_THOUSAND = pow(10, 3)  # 1 Mil = 10^3
+const ONE_BILLION = pow(10, 9) # 1 Bilhão = 10^9
+const ONE_MILLION = pow(10, 6) # 1 Milhão = 10^6
+const ONE_THOUSAND = pow(10, 3) # 1 Mil = 10^3
 
 
 static func format_currency(value: float) -> String:
@@ -34,3 +34,9 @@ static func format_currency(value: float) -> String:
 			return str(int(value))
 		else:
 			return str(snapped(value, 0.01))
+
+static func format_decimal(value: float) -> String:
+	return str(snapped(value, 0.01))
+
+static func format_to_percentage(value: float) -> String:
+	return str(snapped(value * 100, 0.01), "%")

@@ -17,11 +17,13 @@ enum TYPE {
 	EXP_BOOST,
 	POISON_HIT_RATE,
 	BLEED_HIT_RATE,
-	FREEZE_HIT_RATE
+	FREEZE_HIT_RATE,
+	STUN_HIT_RATE,
+	BURN_HIT_RATE
 }
 
 # Mapeamento de tipos que devem ser convertidos para porcentagem
-const PERCENTAGE_TYPES := [
+const PERCENTAGE_TYPES = [
 	#TYPE.DEFENSE,
 	#TYPE.CRITICAL_RATE,
 	TYPE.CRITICAL_DAMAGE,
@@ -30,7 +32,30 @@ const PERCENTAGE_TYPES := [
 	TYPE.EXP_BOOST,
 	TYPE.POISON_HIT_RATE,
 	TYPE.BLEED_HIT_RATE,
-	TYPE.FREEZE_HIT_RATE
+	TYPE.FREEZE_HIT_RATE,
+	TYPE.STUN_HIT_RATE,
+	TYPE.BURN_HIT_RATE
+]
+
+const HIT_RATE_ATTRIBUTES = [
+	TYPE.POISON_HIT_RATE,
+	TYPE.BLEED_HIT_RATE,
+	TYPE.FREEZE_HIT_RATE,
+	TYPE.STUN_HIT_RATE,
+	TYPE.BURN_HIT_RATE
+]
+
+const BOOST_ATTRIBUTES = [
+	TYPE.HEALTH,
+	TYPE.MANA,
+	TYPE.ENERGY,
+	TYPE.DEFENSE,
+	TYPE.DAMAGE,
+	TYPE.CRITICAL_RATE,
+	TYPE.CRITICAL_DAMAGE,
+	TYPE.ATTACK_SPEED,
+	TYPE.MOVE_SPEED,
+	TYPE.EXP_BOOST,
 ]
 
 const ATTRIBUTE_NAMES = {
@@ -110,7 +135,7 @@ func get_min_value_range() -> float:
 
 
 static func get_attribute_type_name(_attribute_type: TYPE) -> String:
-	return LocalizationManager.get_ui_text(ATTRIBUTE_KEYS[_attribute_type])
+	return LocalizationManager.get_attribute_text(ATTRIBUTE_KEYS[_attribute_type])
 
 
 static func filter_by_type(attribute: ItemAttribute, filter_type: TYPE) -> bool:

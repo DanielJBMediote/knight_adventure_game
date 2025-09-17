@@ -27,6 +27,10 @@ const BAR_ANIM_DURATION := 0.5
 const BG_BAR_DELAY := 0.3
 const BG_BAR_DURATION := 0.8
 
+const MAX_TARGET_HEALTH = PlayerStats.MAX_TARGET_HEALTH + 50000
+const MAX_TARGET_MANA = PlayerStats.MAX_TARGET_MANA + 200
+const MAX_TARGET_ENERGY = PlayerStats.MAX_TARGET_ENERGY + 150
+
 #const DEFAULT_CONTROL_SIZE := Vector2(360, 16)
 const DEFAULT_BAR_SIZE := Vector2(200, 16)
 const MAX_BAR_WIDTH := 800 # Largura máxima absoluta para as barras
@@ -113,7 +117,7 @@ func _update_health_bar(max_value: float, value: float) -> void:
 	health_bar_bg.value = value
 	
 	# Ajusta o tamanho do container e das barras
-	var new_width = _calculate_bar_width(max_value, PlayerStats.MAX_TARGET_HEALTH)
+	var new_width = _calculate_bar_width(max_value, MAX_TARGET_HEALTH)
 	_apply_bar_widths(health_control, health_bar, health_bar_bg, new_width)
 	update_health_points_label(value)
 
@@ -124,7 +128,7 @@ func _update_mana_bar(max_value: float, value: float) -> void:
 	mana_bar_bg.value = value
 
 	# Ajusta o tamanho do container e das barras
-	var new_width = _calculate_bar_width(max_value, PlayerStats.MAX_TARGET_MANA)
+	var new_width = _calculate_bar_width(max_value, MAX_TARGET_MANA)
 	_apply_bar_widths(mana_control, mana_bar, mana_bar_bg, new_width)
 	update_mana_points_label(value)
 
@@ -135,7 +139,7 @@ func _update_energy_bar(max_value: float, value: float) -> void:
 	energy_bar_bg.value = value
 	
 	# Ajusta o tamanho do container e das barras
-	var new_width = _calculate_bar_width(max_value, PlayerStats.MAX_TARGET_ENERGY)
+	var new_width = _calculate_bar_width(max_value, MAX_TARGET_ENERGY)
 	_apply_bar_widths(energy_control, energy_bar, energy_bar_bg, new_width)
 
 func _update_exp_bar(max_value: float, value: float) -> void:
@@ -158,11 +162,16 @@ func _calculate_bar_width(current_max_value: float, max_target_value: float) -> 
 # Função para aplicar os tamanhos de forma consistente
 func _apply_bar_widths(_control: Control, bar: ProgressBar, bg_bar: ProgressBar, width: float):
 	# Ajusta as barras
-	bar.size.x = width
-	bg_bar.size.x = width
+	#bar.size.x = width
+	#bg_bar.size.x = width
+	bar.set_deferred("size:x", width)
+	bg_bar.set_deferred("size:x", width)
 	# Garante que as barras herdem o mesmo tamanho do container
-	bar.custom_minimum_size.x = width
-	bg_bar.custom_minimum_size.x = width
+	#bar.custom_minimum_size.x = width
+	#bg_bar.custom_minimum_size.x = width
+	bar.set_deferred("custom_minimum_size.x", width)
+	bg_bar.set_deferred("custom_minimum_size.x", width)
+	
 
 func update_health_points_label(value: float):
 	var max_value = PlayerStats.max_health_points

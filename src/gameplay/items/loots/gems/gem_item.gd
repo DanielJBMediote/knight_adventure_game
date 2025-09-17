@@ -80,8 +80,8 @@ func _generate_gem_id() -> String:
 
 
 func _generate_gem_name() -> String:
-	var quality = self.gem_quality
-	var quality_name = LocalizationManager.get_gem_quality_text(quality)
+	var quality_key = GemConsts.GEM_QUALITY_KEY[gem_quality]
+	var quality_name = LocalizationManager.get_gem_quality_text(quality_key)
 	var type_str = ItemAttribute.ATTRIBUTE_KEYS[gem_type]
 	var gem_type_name = LocalizationManager.get_gem_name_text(type_str)
 	var base_name = "%s %s" % [quality_name, gem_type_name]
@@ -95,8 +95,8 @@ func _generate_gem_descriptions() -> Array[String]:
 	var type_str = ItemAttribute.ATTRIBUTE_KEYS.get(gem_type)
 	var base_Description = LocalizationManager.get_gem_base_description_text(type_str)
 
-	var quality = self.gem_quality
-	var quality_name = LocalizationManager.get_gem_quality_text(quality)
+	var quality_key = GemConsts.GEM_QUALITY_KEY[gem_quality]
+	var quality_name = LocalizationManager.get_gem_quality_text(quality_key)
 
 	base_Description = LocalizationManager.format_text_with_params(base_Description, {"quality": quality_name})
 

@@ -122,11 +122,11 @@ func collect() -> bool:
 
 
 func can_spawn() -> bool:
-	var can_spawn := false
+	var is_spawned := false
 	if item_resource:
 		var factor = randf() * 1.0
-		can_spawn = factor <= item_resource.spawn_chance
-	return can_spawn
+		is_spawned = factor <= item_resource.spawn_chance
+	return is_spawned
 
 
 func spawn_collect_effect() -> void:

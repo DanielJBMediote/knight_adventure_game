@@ -1,0 +1,66 @@
+[gd_scene load_steps=5 format=3 uid="uid://bficvlxmvv52x"]
+
+[ext_resource type="Texture2D" uid="uid://85r7ogi1sxyu" path="res://assets/ui/status_effect_icons/debuffs/bleeding.png" id="1_qb4lf"]
+[ext_resource type="Script" uid="uid://c6w1bse6ldhov" path="res://src/gameplay/mechanics/combat/ui/status_effect_ui.gd" id="1_t7gti"]
+
+[sub_resource type="Gradient" id="Gradient_71nsl"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 0, 0.99)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3cfuc"]
+gradient = SubResource("Gradient_71nsl")
+use_hdr = true
+
+[node name="StatusEffectUISmall" type="Control" node_paths=PackedStringArray("icon_texture", "timer_progress")]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 3
+anchor_right = 0.012
+anchor_bottom = 0.022
+offset_right = -15.36
+offset_bottom = -15.84
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_t7gti")
+icon_texture = NodePath("IconTexture")
+timer_progress = NodePath("TimerProgress")
+metadata/_edit_lock_ = true
+
+[node name="IconTexture" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 0
+texture = ExtResource("1_qb4lf")
+expand_mode = 3
+stretch_mode = 5
+metadata/_edit_lock_ = true
+
+[node name="TimerProgress" type="TextureProgressBar" parent="."]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+value = 100.0
+fill_mode = 5
+nine_patch_stretch = true
+texture_progress = SubResource("GradientTexture1D_3cfuc")
+metadata/_edit_lock_ = true

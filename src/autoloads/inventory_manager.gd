@@ -39,23 +39,23 @@ func create_ramdon_items() -> void:
 		return
 	var enemy_stats = EnemyStats.new()
 	var player_level = PlayerStats.level
-	enemy_stats.level = player_level
+	# enemy_stats.level = player_level
 	# var total_itens = 0
-	for i in 20:
+	# for i in 20:
 		# var rune = RuneItem.new()
 		# rune.setup(enemy_stats)
 		# add_item(rune)
-		var gem = GemItem.new()
-		gem.setup(enemy_stats)
-		add_item(gem)
+		# var gem = GemItem.new()
+		# gem.setup(enemy_stats)
+		# add_item(gem)
 		# var potion = PotionItem.new()
 		# potion.setup(enemy_stats)
 		# add_item(potion)
 
 		# if is_addded:
 		# 	total_itens += 1
-	for i in 10:
-		enemy_stats.level = randi_range(player_level - 5, player_level + 5)
+	for i in 21:
+		enemy_stats.level = randi_range(player_level - 5, player_level)
 		var equip = EquipmentItem.new()
 		equip.setup(enemy_stats)
 		add_item(equip)

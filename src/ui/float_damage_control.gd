@@ -22,12 +22,13 @@ func update_damage(damage_data: DamageData) -> void:
 	_show_damage(damage_data.damage, damage_data.is_critical)
 	
 	# Processa cada status effect
-	for status_effect_data in damage_data.get_active_status_effects():
-		_start_status_effect(status_effect_data)
+	for status_effect in damage_data.get_debuff_status_effects():
+		if status_effect.is_active:
+			_start_status_effect(status_effect)
 
-func _start_status_effect(status_effect_data: StatusEffectData) -> void:
-	var effect = status_effect_data.effect
-	var duration = status_effect_data.duration
+func _start_status_effect(status_effect: StatusEffect) -> void:
+	var effect = status_effect.effect
+	var duration = status_effect.duration
 	
 	# Cria um timer para o efeito se não existir
 	if not active_status_effects.has(effect):
@@ -37,22 +38,22 @@ func _start_status_effect(status_effect_data: StatusEffectData) -> void:
 		add_child(timer)
 		active_status_effects[effect] = {
 			"timer": timer,
-			"effect": status_effect_data
+			"effect": status_effect
 		}
 		timer.start(duration)
 	else:
 		# Se o efeito já existe, apenas atualiza a duração
 		active_status_effects[effect].timer.start(duration)
-		active_status_effects[effect].effect = status_effect_data
+		active_status_effects[effect].effect = status_effect
 
-func _on_status_effect_ended(effect: StatusEffectData.EFFECT) -> void:
+func _on_status_effect_ended(effect: StatusEffect.EFFECT) -> void:
 	if active_status_effects.has(effect):
 		active_status_effects.erase(effect)
 
 func _apply_damage_on_finish_tick() -> void:
 	# Aplica dano de todos os status effects ativos
 	for effect_data in active_status_effects.values():
-		var status_effect: StatusEffectData = effect_data.effect
+		var status_effect: StatusEffect = effect_data.effect
 		_show_status_damage(status_effect.value, status_effect)
 
 func _show_damage(damage: float, is_critical: bool = false) -> void:
@@ -70,7 +71,7 @@ func _show_damage(damage: float, is_critical: bool = false) -> void:
 	add_child(float_label)
 	hitted.emit(damage)
 
-func _show_status_damage(damage: float, status_effect: StatusEffectData) -> void:
+func _show_status_damage(damage: float, status_effect: StatusEffect) -> void:
 	var float_label: FloatLabel = float_label_scene.instantiate()
 	float_label.text = str(roundi(damage))
 

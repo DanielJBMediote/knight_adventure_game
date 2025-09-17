@@ -207,7 +207,11 @@ const SETS_AVAILABLE_PARTS = {
 		EquipmentItem.TYPE.WEAPON,
 	],
 	EquipmentItem.SETS.SACRED_CRUSADER:
-	[EquipmentItem.TYPE.HELMET, EquipmentItem.TYPE.ARMOR, EquipmentItem.TYPE.BOOTS],
+	[
+		EquipmentItem.TYPE.HELMET,
+		EquipmentItem.TYPE.ARMOR,
+		EquipmentItem.TYPE.BOOTS
+	],
 	EquipmentItem.SETS.FROSTBEAR_WRATH:
 	[
 		EquipmentItem.TYPE.HELMET,
@@ -291,9 +295,16 @@ const ALLOWED_ATTRIBUTES_PER_TYPE: Dictionary[EquipmentItem.TYPE, Array] = {
 		ItemAttribute.TYPE.DEFENSE,
 	],
 	EquipmentItem.TYPE.HELMET:
-	[ItemAttribute.TYPE.DEFENSE, ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.CRITICAL_DAMAGE],
+	[
+		ItemAttribute.TYPE.DEFENSE,
+		ItemAttribute.TYPE.HEALTH,
+		ItemAttribute.TYPE.CRITICAL_DAMAGE
+	],
 	EquipmentItem.TYPE.BOOTS:
-	[ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.DEFENSE, ItemAttribute.TYPE.MOVE_SPEED],
+	[
+		ItemAttribute.TYPE.HEALTH,
+		ItemAttribute.TYPE.DEFENSE,
+		ItemAttribute.TYPE.MOVE_SPEED],
 	EquipmentItem.TYPE.GLOVES:
 	[
 		ItemAttribute.TYPE.DAMAGE,
@@ -330,18 +341,33 @@ const EQUIPMENT_BASE_PRICES = {
 }
 
 const EQUIPMENTS_STATS_BASE_VALUES = {
-	ItemAttribute.TYPE.DAMAGE: {"base_value": 40.0, "factor": 0.05},
-	ItemAttribute.TYPE.DEFENSE: {"base_value": 50.0, "factor": 0.1},
-	ItemAttribute.TYPE.HEALTH: {"base_value": 75.0, "factor": 0.5},
-	ItemAttribute.TYPE.MANA: {"base_value": 4.0, "factor": 0.05},
-	ItemAttribute.TYPE.ENERGY: {"base_value": 2.0, "factor": 0.05},
-	ItemAttribute.TYPE.CRITICAL_RATE: {"base_value": 25.0, "factor": 0.15},
-	ItemAttribute.TYPE.CRITICAL_DAMAGE: {"base_value": 3.0, "factor": 0.05},
-	ItemAttribute.TYPE.ATTACK_SPEED: {"base_value": 3.0, "factor": 0.01},
-	ItemAttribute.TYPE.MOVE_SPEED: {"base_value": 3.0, "factor": 0.01},
-	ItemAttribute.TYPE.POISON_HIT_RATE: {"base_value": 3.0, "factor": 0.01},
-	ItemAttribute.TYPE.BLEED_HIT_RATE: {"base_value": 3.0, "factor": 0.01},
-	# ItemAttribute.TYPE.HEALTH_REGEN: {"base_value": 3.0, "factor": 0.01},
-	# ItemAttribute.TYPE.MANA_REGEN: {"base_value": 3.0, "factor": 0.01},
-	# ItemAttribute.TYPE.ENERGY_REGEN: {"base_value": 3.0, "factor": 0.01},
+	ItemAttribute.TYPE.DAMAGE: {"value": 40.0, "factor": 0.05},
+	ItemAttribute.TYPE.DEFENSE: {"value": 50.0, "factor": 0.1},
+	ItemAttribute.TYPE.HEALTH: {"value": 75.0, "factor": 0.5},
+	ItemAttribute.TYPE.MANA: {"value": 4.0, "factor": 0.05},
+	ItemAttribute.TYPE.ENERGY: {"value": 2.0, "factor": 0.05},
+	ItemAttribute.TYPE.CRITICAL_RATE: {"value": 25.0, "factor": 0.15},
+	ItemAttribute.TYPE.CRITICAL_DAMAGE: {"value": 3.0, "factor": 0.05},
+	ItemAttribute.TYPE.ATTACK_SPEED: {"value": 3.0, "factor": 0.01},
+	ItemAttribute.TYPE.MOVE_SPEED: {"value": 3.0, "factor": 0.01},
+	ItemAttribute.TYPE.POISON_HIT_RATE: {"value": 3.0, "factor": 0.01},
+	ItemAttribute.TYPE.BLEED_HIT_RATE: {"value": 3.0, "factor": 0.01},
+	# ItemAttribute.TYPE.HEALTH_REGEN: {"value": 3.0, "factor": 0.01},
+	# ItemAttribute.TYPE.MANA_REGEN: {"value": 3.0, "factor": 0.01},
+	# ItemAttribute.TYPE.ENERGY_REGEN: {"value": 3.0, "factor": 0.01},
+}
+
+const EQUIPMENT_ATRIBUTE_BASE_POWER = {
+	ItemAttribute.TYPE.DAMAGE: 45.0,
+	ItemAttribute.TYPE.DEFENSE: 40.0,
+	ItemAttribute.TYPE.HEALTH: 20.0,
+	ItemAttribute.TYPE.MANA: 25.0,
+	ItemAttribute.TYPE.MANA_REGEN: 40.0,
+	ItemAttribute.TYPE.ENERGY: 35.0,
+	ItemAttribute.TYPE.ENERGY_REGEN: 40.0,
+	ItemAttribute.TYPE.CRITICAL_RATE: 25.0,
+	ItemAttribute.TYPE.CRITICAL_DAMAGE: 30.0,
+	ItemAttribute.TYPE.ATTACK_SPEED: 30.0,
+	ItemAttribute.TYPE.MOVE_SPEED: 35.0,
+	ItemAttribute.TYPE.EXP_BOOST: 50.0,
 }

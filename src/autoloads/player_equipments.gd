@@ -13,8 +13,8 @@ var equipment_slots: Array[EquipmentItem.TYPE] = [
 	EquipmentItem.TYPE.WEAPON
 ]
 
-var active_attributes: Array[ItemAttribute]
-
+var active_attributes: Array[ItemAttribute] = []
+var active_bonus_attributes: Array[ItemAttribute] = []
 
 func _ready() -> void:
 	PlayerEvents.update_equipment.connect(_update_equipment)
@@ -121,8 +121,8 @@ func unequip(equipment: EquipmentItem, slot_index: int = -1) -> bool:
 		# Verifica se tem espaço no inventário primeiro
 		var is_added = InventoryManager.add_item(equipment, slot_index)
 		if is_added:
-			remove_equipment_stats(equipment)
 			equipped_items[slot_type] = null
+			remove_equipment_stats(equipment)
 			player_equipment_updated.emit(slot_type, null)
 			InventoryManager.inventory_updated.emit()
 			return true
@@ -138,12 +138,9 @@ func apply_equipment_stats(equipment: EquipmentItem) -> void:
 	# 1. Primeiro remove TODOS os bônus de set atuais
 	remove_all_set_bonuses()
 
-	# 2. Aplica os atributos base do equipamento
-	#apply_base_equipment_stats(equipment, 1.0)
-
 	# 3. Aplica os atributos adicionais do equipamento
-	var all_attributes = equipment.get_all_attributes()
-	apply_attributes_to_stats(all_attributes, 1.0)
+	active_attributes = equipment.get_all_attributes()
+	apply_attributes_to_stats(active_attributes, 1.0)
 
 	# 4. Recalcula e aplica os bônus de set (agora incluindo o novo equipamento)
 	apply_all_set_bonuses()
@@ -158,12 +155,9 @@ func remove_equipment_stats(equipment: EquipmentItem) -> void:
 	# 1. Primeiro remove TODOS os bônus de set atuais
 	remove_all_set_bonuses()
 
-	# 2. Remove os atributos base do equipamento
-	#apply_base_equipment_stats(equipment, -1.0)
-
 	# 3. Remove os atributos adicionais do equipamento
-	var all_attributes = equipment.get_all_attributes()
-	apply_attributes_to_stats(all_attributes, -1.0)
+	active_attributes = equipment.get_all_attributes()
+	apply_attributes_to_stats(active_attributes, -1.0)
 
 	# 4. Recalcula e aplica os bônus de set (agora sem o equipamento removido)
 	apply_all_set_bonuses()
@@ -180,13 +174,12 @@ func apply_base_equipment_stats(equipment: EquipmentItem, multiplier: float) -> 
 
 
 func apply_all_set_bonuses() -> void:
-	var bonus_attributes = get_set_bonus_attributes()
-	apply_attributes_to_stats(bonus_attributes, 1.0)
+	active_bonus_attributes = get_set_bonus_attributes()
+	apply_attributes_to_stats(active_bonus_attributes, 1.0)
 
 
 func remove_all_set_bonuses() -> void:
-	var bonus_attributes = get_set_bonus_attributes()
-	apply_attributes_to_stats(bonus_attributes, -1.0)
+	apply_attributes_to_stats(active_bonus_attributes, -1)
 
 
 # Método genérico para aplicar/remover atributos
@@ -198,51 +191,35 @@ func apply_attributes_to_stats(attributes: Array[ItemAttribute], multiplier: flo
 
 # Método para aplicar um único atributo
 func apply_single_attribute(attribute_type: ItemAttribute.TYPE, value: float) -> void:
-	match attribute_type:
-		ItemAttribute.TYPE.HEALTH:
-			PlayerStats.update_max_health(value)
-		ItemAttribute.TYPE.MANA:
-			PlayerStats.update_max_mana(value)
-		ItemAttribute.TYPE.DAMAGE:
-			PlayerStats.update_min_damage(value)
-			PlayerStats.update_max_damage(value)
-		ItemAttribute.TYPE.DEFENSE:
-			PlayerStats.update_defense_points(value)
-		ItemAttribute.TYPE.CRITICAL_RATE:
-			PlayerStats.update_critical_rate(value)
-		ItemAttribute.TYPE.CRITICAL_DAMAGE:
-			PlayerStats.update_critical_damage(value)
-		ItemAttribute.TYPE.ATTACK_SPEED:
-			PlayerStats.update_attack_speed(value)
-		ItemAttribute.TYPE.MOVE_SPEED:
-			PlayerStats.update_move_speed(value)
-		ItemAttribute.TYPE.ENERGY:
-			PlayerStats.update_max_energy(value)
-		ItemAttribute.TYPE.ENERGY_REGEN:
-			PlayerStats.update_energy_regen(value)
-		ItemAttribute.TYPE.HEALTH_REGEN:
-			PlayerStats.update_health_regen(value)
-		ItemAttribute.TYPE.MANA_REGEN:
-			PlayerStats.update_mana_regen(value)
-
-		ItemAttribute.TYPE.POISON_HIT_RATE:
-			PlayerStats.update_poison_rate(value)
-		ItemAttribute.TYPE.BLEED_HIT_RATE:
-			PlayerStats.update_bleed_rate(value)
-		# ItemAttribute.TYPE.EXP_BOOST:
-		# 	PlayerStats.update_exp_boost(value)
-		# ItemAttribute.TYPE.GOLD_FIND:
-		# 	PlayerStats.update_gold_find(value)
-		# ItemAttribute.TYPE.ITEM_FIND:
-		# 	PlayerStats.update_item_find(value)
-		# ItemAttribute.TYPE.DAMAGE_REDUCTION:
-		# 	PlayerStats.update_damage_reduction(value)
-		# ItemAttribute.TYPE.SLOW_EFFECT:
-		# 	PlayerStats.update_slow_effect(value)
-		# ItemAttribute.TYPE.SPELL_POWER:
-		# 	PlayerStats.update_spell_power(value)
-		# ItemAttribute.TYPE.ALL_STATS:
-		# 	PlayerStats.update_all_stats(value)
+	if attribute_type in ItemAttribute.HIT_RATE_ATTRIBUTES:
+		PlayerStats.update_active_status_effect(attribute_type, value)
+	else:
+		match attribute_type:
+			ItemAttribute.TYPE.HEALTH:
+				PlayerStats.update_max_health(value)
+			ItemAttribute.TYPE.MANA:
+				PlayerStats.update_max_mana(value)
+			ItemAttribute.TYPE.DAMAGE:
+				PlayerStats.update_min_damage(value)
+				PlayerStats.update_max_damage(value)
+			ItemAttribute.TYPE.DEFENSE:
+				PlayerStats.update_defense_points(value)
+			ItemAttribute.TYPE.CRITICAL_RATE:
+				PlayerStats.update_critical_rate(value)
+			ItemAttribute.TYPE.CRITICAL_DAMAGE:
+				PlayerStats.update_critical_damage(value)
+			ItemAttribute.TYPE.ATTACK_SPEED:
+				PlayerStats.update_attack_speed(value)
+			ItemAttribute.TYPE.MOVE_SPEED:
+				PlayerStats.update_move_speed(value)
+			ItemAttribute.TYPE.ENERGY:
+				PlayerStats.update_max_energy(value)
+			ItemAttribute.TYPE.ENERGY_REGEN:
+				PlayerStats.update_energy_regen(value)
+			ItemAttribute.TYPE.HEALTH_REGEN:
+				PlayerStats.update_health_regen(value)
+			ItemAttribute.TYPE.MANA_REGEN:
+				PlayerStats.update_mana_regen(value)
 
 
 func get_set_bonus_attributes() -> Array[ItemAttribute]:

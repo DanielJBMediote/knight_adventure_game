@@ -20,13 +20,6 @@ func load_translation_category(category: String) -> bool:
 	var file_path = "res://localization/%s/%s.json" % [current_language, category]
 	
 	if ResourceLoader.exists(file_path):
-		# var file = FileAccess.open(file_path, FileAccess.READ)
-		# if file:
-		# 	var json_string = file.get_as_text()
-		# 	var json = JSON.new()
-		# 	var error = json.parse(json_string)
-		# 	if error == OK:
-		# 		loaded_translations.set(category, json.data)
 		var translation_data = ResourceLoader.load(file_path)
 		loaded_translations[category] = translation_data.data
 		translation_loaded.emit(category)
@@ -88,56 +81,59 @@ func format_text_with_params(text: String, params: Dictionary) -> String:
 		result = result.replace("{%s}" % param_key, str(params[param_key]))
 	return result
 
-func get_item_name_text(item_key: String) -> String:
-	return get_translation("items_general", item_key)
+func get_item_name_text(key: String) -> String:
+	return get_translation("items_general", key)
 
-func get_item_rarity_name_text(text_key: String) -> String:
-	return get_translation("items_general", "rarity." + text_key)
+func get_item_rarity_name_text(key: String) -> String:
+	return get_translation("items_general", "rarity." + key)
 
-func get_item_rarity_prefix_text(text_key: String) -> String:
-	return get_translation("items_general", "rarity_prefix." + text_key)
+func get_item_rarity_prefix_text(key: String) -> String:
+	return get_translation("items_general", "rarity_prefix." + key)
 
-func get_item_rarity_sufix_text(text_key: String) -> String:
-	return get_translation("items_general", "rarity_sufix." + text_key)
+func get_item_rarity_sufix_text(key: String) -> String:
+	return get_translation("items_general", "rarity_sufix." + key)
 
-func get_item_category_name_text(text_key: String) -> String:
-	return get_translation("items_general", "category." + text_key)
+func get_item_category_name_text(key: String) -> String:
+	return get_translation("items_general", "category." + key)
 
-func get_item_subcategory_name_text(text_key: String) -> String:
-	return get_translation("items_general", "subcategory." + text_key)
+func get_item_subcategory_name_text(key: String) -> String:
+	return get_translation("items_general", "subcategory." + key)
 	
 # Potions get functions
-func get_potion_name_text(attribute: String) -> String:
-	return get_translation("items_potions", "names." + attribute)
+func get_potion_name_text(key: String) -> String:
+	return get_translation("items_potions", "names." + key)
 
-func get_potion_base_description_text(attribute: String) -> String:
-	return get_translation("items_potions", "base_descriptions." + attribute)
+func get_potion_base_description_text(key: String) -> String:
+	return get_translation("items_potions", "base_descriptions." + key)
 
 
 # Gems get functions
-func get_gem_name_text(attribute: String) -> String:
-	return get_translation("items_gems", "names." + attribute)
+func get_gem_name_text(key: String) -> String:
+	return get_translation("items_gems", "names." + key)
 
-func get_gem_base_description_text(attribute: String) -> String:
-	return get_translation("items_gems", "base_descriptions." + attribute)
+func get_gem_base_description_text(key: String) -> String:
+	return get_translation("items_gems", "base_descriptions." + key)
 
-func get_gem_alert_text(attribute_key: String) -> String:
-	return get_translation("items_gems", "alert_messages." + attribute_key)
+func get_gem_alert_text(key: String) -> String:
+	return get_translation("items_gems", "alert_messages." + key)
 
-func get_gem_unique_description_text(attribute: String) -> String:
-	return get_translation("items_gems", "unique_descriptions." + attribute)
+func get_gem_unique_description_text(key: String) -> String:
+	return get_translation("items_gems", "unique_descriptions." + key)
 
-func get_gem_quality_text(quality: GemItem.QUALITY) -> String:
-	return get_translation("items_gems", str("quality.", GemConsts.GEM_QUALITY_KEY[quality]))
+func get_gem_quality_text(key: String) -> String:
+	return get_translation("items_gems", "quality." + key)
 
 
 # Runes Section
-func get_rune_name_text(attribute: String) -> String:
-	return get_translation("items_runes", "names." + attribute)
+func get_rune_name_text(key: String) -> String:
+	return get_translation("items_runes", "names." + key)
 
-func get_rune_description_text(attribute: String) -> String:
-	return get_translation("items_runes", "base_descriptions." + attribute)
+func get_rune_description_text(key: String) -> String:
+	return get_translation("items_runes", "base_descriptions." + key)
 
+
+func get_attribute_text(key: String) -> String:
+	return get_translation("attributes", key)
 
 # Equipment Section
 func get_equipment_common_item(set_key: EquipmentItem.SETS, equip_type: EquipmentItem.TYPE) -> String:

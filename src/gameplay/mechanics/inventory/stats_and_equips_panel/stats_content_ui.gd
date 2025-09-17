@@ -6,10 +6,13 @@ enum GROUP {OFFENSIVE, DEFENSIVE, MISCELLANEOUS}
 @onready var stats_info_scene: PackedScene = preload("res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_info.tscn")
 @onready var container: VBoxContainer = $VBoxContainer
 
-const GROUP_KEYS = {GROUP.OFFENSIVE: "offensive", GROUP.DEFENSIVE: "defensive", GROUP.MISCELLANEOUS: "miscellaneous"}
+const GROUP_KEYS = {
+	GROUP.OFFENSIVE: "offensive",
+	GROUP.DEFENSIVE: "defensive",
+	GROUP.MISCELLANEOUS: "miscellaneous"}
 
 var stats_groups: Dictionary[GROUP, Array] = {GROUP.OFFENSIVE: [], GROUP.DEFENSIVE: [], GROUP.MISCELLANEOUS: []}
-var player_attributes: Dictionary[String, Variant] = {}
+var player_attributes: Dictionary = {}
 
 
 func _ready() -> void:
@@ -47,10 +50,10 @@ func create_list() -> void:
 		var separator = " ---- "
 		title_label.stats_name = separator + LocalizationManager.get_ui_text(GROUP_KEYS[group]) + separator
 		container.add_child(title_label)
-		title_label.label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		title_label.label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		title_label.label.add_theme_font_size_override("font_size", 24)
-		title_label.value.hide()
+		title_label.name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		title_label.name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		title_label.name_label.add_theme_font_size_override("font_size", 24)
+		title_label.value_label.hide()
 
 		var stats_list = stats_groups[group] as Array[StatsInfoUI]
 		for stat_info in stats_list:
@@ -89,104 +92,121 @@ func get_player_attributes_formated(new_attributes: PlayerAttributes) -> Diction
 	return {
 		"damage":
 		{
-			"name": LocalizationManager.get_ui_text("damage"),
+			"name": LocalizationManager.get_attribute_text("damage"),
 			"value": str(roundi(new_attributes.min_damage), " - ", roundi(new_attributes.max_damage)),
 			"stats_category": GROUP.OFFENSIVE
 		},
 		"critical_rate":
 		{
-			"name": LocalizationManager.get_ui_text("critical_rate"),
-			"value": str(roundi(new_attributes.critical_points), " (", snapped(new_attributes.critical_rate * 100, 0.01), "%)"),
+			"name": LocalizationManager.get_attribute_text("critical_rate"),
+			"value": str(roundi(new_attributes.critical_points), " (", StringUtils.format_to_percentage(new_attributes.critical_rate), ")"),
 			"stats_category": GROUP.OFFENSIVE
 		},
-		"max_criticl_points": {
-			"name": "Critical to Max %",
-			"value": str(snapped(new_attributes.max_critical_points, 0.01)),
-			"stats_category": GROUP.OFFENSIVE
-		},
+		# "max_criticl_points": {
+		# 	"name": "Critical to Max %",
+		# 	"value": str(snapped(new_attributes.max_critical_points, 0.01)),
+		# 	"stats_category": GROUP.OFFENSIVE
+		# },
 		"critical_damage":
 		{
-			"name": LocalizationManager.get_ui_text("critical_damage"),
-			"value": str(snapped(new_attributes.critical_damage * 100, 0.01), "%"),
+			"name": LocalizationManager.get_attribute_text("critical_damage"),
+			"value": StringUtils.format_to_percentage(new_attributes.critical_damage),
 			"stats_category": GROUP.OFFENSIVE
 		},
 		"attack_speed":
 		{
-			"name": LocalizationManager.get_ui_text("attack_speed"),
-			"value": str(snapped(new_attributes.attack_speed * 100, 0.01), "%"),
-			"stats_category": GROUP.OFFENSIVE
-		},
-		"bleed_hit_rate":
-		{
-			"name": LocalizationManager.get_ui_text("bleed_hit_rate"),
-			"value": str(snapped(new_attributes.bleed_hit_rate * 100, 0.01), "%"),
+			"name": LocalizationManager.get_attribute_text("attack_speed"),
+			"value": StringUtils.format_to_percentage(new_attributes.attack_speed),
 			"stats_category": GROUP.OFFENSIVE
 		},
 		"poison_hit_rate":
 		{
-			"name": LocalizationManager.get_ui_text("poison_hit_rate"),
-			"value": str(snapped(new_attributes.poison_hit_rate * 100, 0.01), "%"),
+			"name": LocalizationManager.get_attribute_text("poison_hit_rate"),
+			"value": StringUtils.format_to_percentage(new_attributes.get_hit_rate_value_by_effect(StatusEffect.EFFECT.POISONING)),
+			"stats_category": GROUP.OFFENSIVE
+		},
+		"bleed_hit_rate":
+		{
+			"name": LocalizationManager.get_attribute_text("bleed_hit_rate"),
+			"value": StringUtils.format_to_percentage(new_attributes.get_hit_rate_value_by_effect(StatusEffect.EFFECT.BLEEDING)),
+			"stats_category": GROUP.OFFENSIVE
+		},
+		"burn_hit_rate":
+		{
+			"name": LocalizationManager.get_attribute_text("burn_hit_rate"),
+			"value": StringUtils.format_to_percentage(new_attributes.get_hit_rate_value_by_effect(StatusEffect.EFFECT.BURNING)),
+			"stats_category": GROUP.OFFENSIVE
+		},
+		"freeze_hit_rate":
+		{
+			"name": LocalizationManager.get_attribute_text("freeze_hit_rate"),
+			"value": StringUtils.format_to_percentage(new_attributes.get_hit_rate_value_by_effect(StatusEffect.EFFECT.FREEZING)),
+			"stats_category": GROUP.OFFENSIVE
+		},
+		"stun_hit_rate":
+		{
+			"name": LocalizationManager.get_attribute_text("stun_hit_rate"),
+			"value": StringUtils.format_to_percentage(new_attributes.get_hit_rate_value_by_effect(StatusEffect.EFFECT.STUNING)),
 			"stats_category": GROUP.OFFENSIVE
 		},
 		"health":
 		{
-			"name": LocalizationManager.get_ui_text("health"),
+			"name": LocalizationManager.get_attribute_text("health"),
 			"value": format_resources(new_attributes.health_points, new_attributes.max_health_points),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"health_regen":
 		{
-			"name": LocalizationManager.get_ui_text("health_regen"),
+			"name": LocalizationManager.get_attribute_text("health_regen"),
 			"value": str(new_attributes.health_regen_per_seconds, "/s"),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"mana":
 		{
-			"name": LocalizationManager.get_ui_text("mana"),
+			"name": LocalizationManager.get_attribute_text("mana"),
 			"value": format_resources(new_attributes.mana_points, new_attributes.max_mana_points),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"mana_regen":
 		{
-			"name": LocalizationManager.get_ui_text("mana_regen"),
+			"name": LocalizationManager.get_attribute_text("mana_regen"),
 			"value": str(new_attributes.mana_regen_per_seconds, "/s"),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"energy":
 		{
-			"name": LocalizationManager.get_ui_text("energy"),
+			"name": LocalizationManager.get_attribute_text("energy"),
 			"value": format_resources(new_attributes.energy_points, new_attributes.max_energy_points),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"energy_regen":
 		{
-			"name": LocalizationManager.get_ui_text("energy_regen"),
+			"name": LocalizationManager.get_attribute_text("energy_regen"),
 			"value": str(new_attributes.energy_regen_per_seconds, "/s"),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"defense":
 		{
-			"name": LocalizationManager.get_ui_text("defense"),
-			"value":
-			str(snapped(new_attributes.defense_points, 0.01), " (", snapped(new_attributes.defense_rate, 0.01), "%)"),
+			"name": LocalizationManager.get_attribute_text("defense"),
+			"value": str(StringUtils.format_decimal(new_attributes.defense_points), " (", StringUtils.format_to_percentage(new_attributes.defense_rate), ")"),
 			"stats_category": GROUP.DEFENSIVE
 		},
-		"max_defense_points":
-		{
-			"name": "Defense to Max %",
-			"value":
-			str(snapped(new_attributes.max_defense_points, 0.01)),
-			"stats_category": GROUP.DEFENSIVE
-		},
+		# "max_defense_points":
+		# {
+		# 	"name": "Defense to Max %",
+		# 	"value":
+		# 	str(snapped(new_attributes.max_defense_points, 0.01)),
+		# 	"stats_category": GROUP.DEFENSIVE
+		# },
 		"move_speed":
 		{
-			"name": LocalizationManager.get_ui_text("move_speed"),
-			"value": str(snapped(new_attributes.move_speed * 100, 0.01), "%"),
+			"name": LocalizationManager.get_attribute_text("move_speed"),
+			"value": StringUtils.format_to_percentage(new_attributes.move_speed),
 			"stats_category": GROUP.DEFENSIVE
 		},
 		"knockback_resistance":
 		{
-			"name": LocalizationManager.get_ui_text("knockback_resistance"),
+			"name": LocalizationManager.get_attribute_text("knockback_resistance"),
 			"value": format_knockback_resistance(new_attributes.knockback_resistance),
 			"stats_category": GROUP.DEFENSIVE
 		},
@@ -198,22 +218,20 @@ func get_player_attributes_formated(new_attributes: PlayerAttributes) -> Diction
 		},
 		"experience":
 		{
-			"name": LocalizationManager.get_ui_text("experience"),
+			"name": LocalizationManager.get_attribute_text("experience"),
 			"value": format_resources(new_attributes.current_exp, new_attributes.exp_to_next_level),
 			"stats_category": GROUP.MISCELLANEOUS
 		},
 		"exp_boost":
 		{
-			"name": LocalizationManager.get_ui_text("exp_boost"),
-			"value": str(new_attributes.exp_boost * 100, "%"),
+			"name": LocalizationManager.get_attribute_text("exp_boost"),
+			"value": StringUtils.format_to_percentage(new_attributes.exp_boost),
 			"stats_category": GROUP.MISCELLANEOUS
 		},
 	}
 
-
 func format_resources(value: float, max_value: float) -> String:
 	return "%s/%s" % [roundi(value), roundi(max_value)]
-
 
 func format_knockback_resistance(knockback_resistance: float) -> String:
 	var percentage = (1.0 - knockback_resistance) * 100

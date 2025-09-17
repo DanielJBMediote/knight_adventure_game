@@ -28,25 +28,25 @@ func _init() -> void:
 
 
 func setup(enemy_stats: EnemyStats) -> void:
-	potion_type = get_random_potion_type()
+	self.potion_type = _generate_random_potion_type()
 	self.item_usable = true
 	self.stackable = true
 	self.max_stack = MAX_STACK
 	self.item_category = Item.CATEGORY.CONSUMABLES
 	self.item_subcategory = Item.SUBCATEGORY.POTION
-	self.item_level = calculate_potion_level(enemy_stats.level)
-	self.item_rarity = calculate_potion_rarity()
-	self.spawn_chance = calculate_potion_spawn_chance()
-	self.item_action = setup_potion_action()
-	self.item_name = set_potion_name()
-	self.item_descriptions = setup_potion_description()
-	self.item_id = generate_potion_id()
+	self.item_level = _calculate_potion_level(enemy_stats.level)
+	self.item_rarity = _calculate_potion_rarity()
+	self.spawn_chance = _calculate_potion_spawn_chance()
+	self.item_action = _setup_potion_action()
+	self.item_name = _generate_potion_name()
+	self.item_descriptions = _generate_potion_description()
+	self.item_id = _generate_potion_id()
 	self.item_price = _calculate_item_price(BASE_POTION_VALUE)
 
-	setup_texture()
+	_setup_texture()
 
 
-func calculate_potion_rarity() -> Item.RARITY:
+func _calculate_potion_rarity() -> Item.RARITY:
 	var player_level = PlayerStats.level
 	var map_level = GameEvents.current_map.get_min_mob_level()
 	var difficutly = GameEvents.current_map.get_difficulty()
@@ -55,7 +55,7 @@ func calculate_potion_rarity() -> Item.RARITY:
 	return rarity
 
 
-func calculate_potion_spawn_chance() -> float:
+func _calculate_potion_spawn_chance() -> float:
 	var base_chance = 1.0 # 30% de chance base
 
 	# Multiplicador baseado na raridade
@@ -87,14 +87,14 @@ func calculate_potion_spawn_chance() -> float:
 	return clamp(final_chance, 0.01, 1.0)
 
 
-func generate_potion_id() -> String:
+func _generate_potion_id() -> String:
 	var potion_resource_name = ItemAttribute.ATTRIBUTE_NAMES.get(potion_type, "UNKNOWN")
 	var rarity_name = Item.get_rarity_text(self.item_rarity)
 	var level_str = str("L", self.item_level)
 	return Item._generate_item_id(["POTION", potion_resource_name, rarity_name, level_str])
 
 
-func get_random_potion_type() -> ItemAttribute.TYPE:
+func _generate_random_potion_type() -> ItemAttribute.TYPE:
 	var total_weight: float = 0.0
 	for weight in POTION_WEIGHTS.values():
 		total_weight += weight
@@ -111,7 +111,7 @@ func get_random_potion_type() -> ItemAttribute.TYPE:
 	return ItemAttribute.TYPE.HEALTH
 
 
-func set_potion_name() -> String:
+func _generate_potion_name() -> String:
 	var potion_key = ItemAttribute.ATTRIBUTE_KEYS[potion_type].to_lower()
 	var base_name = LocalizationManager.get_potion_name_text(potion_key)
 	var rarity_prefix = Item.get_rarity_prefix_text(item_rarity)
@@ -119,7 +119,7 @@ func set_potion_name() -> String:
 	return "%s %s %s" % [rarity_prefix, base_name, rarity_sufix]
 
 
-func setup_potion_description() -> Array[String]:
+func _generate_potion_description() -> Array[String]:
 	var potion_type_name = ItemAttribute.ATTRIBUTE_KEYS.get(potion_type, "unknown")
 	var base_description = LocalizationManager.get_potion_base_description_text(potion_type_name)
 	var params = {"amount": item_action.attribute.value, "duration": item_action.duration}
@@ -201,12 +201,12 @@ func calculate_buff_duration() -> float:
 	return duration + rarity_bonus + unique_bonus
 
 
-func calculate_potion_level(enemy_level: int) -> int:
+func _calculate_potion_level(enemy_level: int) -> int:
 	var potion_level = max(1, floori(enemy_level / float(LEVEL_INTERVAL)) * LEVEL_INTERVAL)
 	return potion_level
 
 
-func setup_potion_action() -> ItemAction:
+func _setup_potion_action() -> ItemAction:
 	var action = ItemAction.new()
 	var attribute = ItemAttribute.new(potion_type, 0)
 
@@ -223,7 +223,7 @@ func setup_potion_action() -> ItemAction:
 	return action
 
 
-func setup_texture() -> void:
+func _setup_texture() -> void:
 	var resource_key = ItemAttribute.ATTRIBUTE_KEYS.get(potion_type)
 	var potion_rank = get_potion_rank()
 	var base_path = "res://assets/sprites/items/potions/%s_potion_%s.png" % [resource_key, potion_rank]

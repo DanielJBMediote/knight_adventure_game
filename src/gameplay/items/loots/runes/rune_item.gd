@@ -48,9 +48,10 @@ func generate_rune_name() -> String:
 func generate_rune_descriptions() -> Array[String]:
 	var rune_key = RuneConsts.RUNE_TYPE_KEYS.get(self.rune_type, "UNKNOWN")
 	var next_gem_quality = GemItem.get_next_gem_quality_by_required_rune(self.item_rarity)
-	var prev_gem_quality = next_gem_quality - 1
-	var prev_gem_name = LocalizationManager.get_gem_quality_text(prev_gem_quality).capitalize()
-	var next_gem_name = LocalizationManager.get_gem_quality_text(next_gem_quality).capitalize()
+	var next_gem_quality_key = GemConsts.GEM_QUALITY_KEY[next_gem_quality]
+	var prev_gem_quality_key = GemConsts.GEM_QUALITY_KEY[next_gem_quality - 1]
+	var prev_gem_name = LocalizationManager.get_gem_quality_text(prev_gem_quality_key).capitalize()
+	var next_gem_name = LocalizationManager.get_gem_quality_text(next_gem_quality_key).capitalize()
 	var base_description = LocalizationManager.get_rune_description_text(rune_key)
 	var params = {"next_gem_quality": next_gem_name, "gem_quality": prev_gem_name}
 	base_description = LocalizationManager.format_text_with_params(base_description, params)

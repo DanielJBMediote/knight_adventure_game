@@ -21,7 +21,8 @@ extends Node2D
 
 # Configurações da fumaça
 @export var smoke_animation_name: String = "spawn_1"
-@export var smoke_duration: float = 0.5  # Duração da animação de fumaça
+@export var smoke_duration: float = 0.5 # Duração da animação de fumaça
+@export var disable_smoke_animaiton := false
 
 # Array para os Marker2D de spawn points
 var spawn_points: Array[Marker2D] = []
@@ -160,7 +161,7 @@ func prepare_spawn_with_smoke() -> void:
 	
 	# Configura a instância do inimigo (mas ainda não adiciona à cena)
 	enemy_instance.global_position = spawn_point.global_position
-	enemy_instance.visible = false  # Inimigo invisível inicialmente
+	enemy_instance.visible = false # Inimigo invisível inicialmente
 	#enemy_instance.target_player = player
 	
 	if enemy_instance.has_signal("tree_exiting"):
@@ -177,10 +178,10 @@ func prepare_spawn_with_smoke() -> void:
 	# Inicia a animação de fumaça
 	start_smoke_effect(spawn_point.global_position)
 	
-	print("Preparing to spawn enemy ", current_spawn_count + 1, " of ", enemies_to_spawn, " in wave ", current_wave)
+	# print("Preparing to spawn enemy ", current_spawn_count + 1, " of ", enemies_to_spawn, " in wave ", current_wave)
 
 func start_smoke_effect(smoke_position: Vector2) -> void:
-	if smoke_effects:
+	if smoke_effects and disable_smoke_animaiton == true:
 		smoke_effects.global_position = smoke_position
 		smoke_effects.visible = true
 		smoke_effects.play(smoke_animation_name)
@@ -195,17 +196,18 @@ func _on_smoke_effects_animation_finished() -> void:
 	# Pega o próximo spawn da fila
 	var spawn_data = pending_spawns.pop_front()
 	var enemy_instance: Enemy = spawn_data["enemy"]
-	var spawn_point: Marker2D = spawn_data["spawn_point"]
+	var _spawn_point: Marker2D = spawn_data["spawn_point"]
 	
 	# Adiciona o inimigo à cena
 	var entities_zone = get_tree().get_first_node_in_group("entities_zone")
 	if entities_zone:
 		entities_zone.add_child(enemy_instance)
-		enemy_instance.visible = true  # Torna o inimigo visível
+		enemy_instance.visible = true
+		enemy_instance.name = enemy_instance.enemy_stats.enemy_name
 		enemies.append(enemy_instance)
 		
 		current_spawn_count += 1
-		print("Spawned enemy ", current_spawn_count, " of ", enemies_to_spawn, " in wave ", current_wave)
+		# print("Spawned enemy ", current_spawn_count, " of ", enemies_to_spawn, " in wave ", current_wave)
 	else:
 		push_error("Entities zone not found!")
 		enemy_instance.queue_free()

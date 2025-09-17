@@ -15,7 +15,6 @@
 [ext_resource type="PackedScene" uid="uid://ciaj2edwf0e0c" path="res://src/actors/enemies/_controllers/enemy_control_ui.tscn" id="13_7rc4i"]
 [ext_resource type="PackedScene" uid="uid://rtxpfrnud2ta" path="res://src/actors/enemies/_controllers/wander_controller.tscn" id="14_1v3lw"]
 [ext_resource type="PackedScene" uid="uid://c8and80a8q8yw" path="res://src/actors/enemies/_controllers/enemy_stats.tscn" id="14_kkjuk"]
-[ext_resource type="PackedScene" uid="uid://bw7gs5y32rs22" path="res://src/actors/enemies/_controllers/enemy_hurtbox.tscn" id="15_5prew"]
 [ext_resource type="Script" uid="uid://26jp3u7gnljs" path="res://src/gameplay/mechanics/combat/status_effect_data.gd" id="15_oaf8t"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="16_7rc4i"]
 
@@ -443,19 +442,22 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t48kw"]
-size = Vector2(64, 96)
+size = Vector2(32, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_5prew"]
 size = Vector2(99.5, 114)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kkjuk"]
+size = Vector2(32, 90)
+
 [sub_resource type="Resource" id="Resource_oaf8t"]
 script = ExtResource("15_oaf8t")
-category = 1
 type = 0
+category = 1
 effect = 1
 base_value = 0.2
 base_rate_chance = 1.0
-base_duration = 10.0
+base_duration = 5.0
 metadata/_custom_type_script = "uid://26jp3u7gnljs"
 
 [sub_resource type="Animation" id="Animation_ukdjr"]
@@ -496,12 +498,18 @@ _data = {
 &"hit_flash": SubResource("Animation_t48kw")
 }
 
-[node name="SkeletonWarrior" type="CharacterBody2D" node_paths=PackedStringArray("enemy_stats") groups=["enemies"]]
+[node name="SkeletonWarrior" type="CharacterBody2D" node_paths=PackedStringArray("float_damage_control", "enemy_hitbox", "enemy_hurtbox", "navigation_agent", "wander_controller", "enemy_control_ui", "enemy_stats") groups=["enemies"]]
 collision_layer = 16
 collision_mask = 34
 floor_snap_length = 5.0
 script = ExtResource("1_w8w3d")
 wall_jump_force = 850.0
+float_damage_control = NodePath("FloatDamageControl")
+enemy_hitbox = NodePath("EnemyHitbox")
+enemy_hurtbox = NodePath("EnemyHurtbox")
+navigation_agent = NodePath("NavigationAgent2D")
+wander_controller = NodePath("WanderController")
+enemy_control_ui = NodePath("EnemyControlUI")
 enemy_type = 1
 enemy_stats = NodePath("EnemyStats")
 wall_detection_distance = 42.0
@@ -514,12 +522,12 @@ position = Vector2(0, -9.53674e-07)
 scale = Vector2(1.75, 1.75)
 sprite_frames = SubResource("SpriteFrames_1ek18")
 animation = &"attack_3"
-offset = Vector2(0, -44)
+offset = Vector2(0, -56)
 flip_h = true
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -16)
+position = Vector2(0, 8)
 shape = SubResource("RectangleShape2D_t48kw")
 
 [node name="EnemyHitbox" type="Area2D" parent="."]
@@ -532,10 +540,14 @@ shape = SubResource("RectangleShape2D_5prew")
 debug_color = Color(0.876399, 0.343111, 1.92523e-07, 0.42)
 metadata/_edit_lock_ = true
 
-[node name="EnemyHurtbox" parent="." instance=ExtResource("15_5prew")]
-radius = 32.0
-height = 116.0
-colision_position = Vector2(0, -42)
+[node name="EnemyHurtbox" type="Area2D" parent="."]
+collision_layer = 4096
+collision_mask = 512
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyHurtbox"]
+position = Vector2(0, -35)
+shape = SubResource("RectangleShape2D_kkjuk")
+debug_color = Color(1, 0.155195, 0.334391, 0.42)
 
 [node name="DetectionZone" parent="." instance=ExtResource("11_07v5p")]
 radius_range = 700.0
@@ -552,10 +564,8 @@ wander_range = Vector2(500, 0)
 enemy_type = 1
 
 [node name="EnemyControlUI" parent="." node_paths=PackedStringArray("enemy_stats") instance=ExtResource("13_7rc4i")]
-offset_left = -10.0
-offset_top = -116.0
-offset_right = -10.0
-offset_bottom = -116.0
+offset_top = -144.0
+offset_bottom = -144.0
 grow_horizontal = 1
 grow_vertical = 1
 enemy_stats = NodePath("../EnemyStats")
@@ -583,8 +593,8 @@ libraries = {
 }
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
-[connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_player_hitbox_entered"]
+[connection signal="area_entered" from="EnemyHurtbox" to="." method="_on_enemy_hurtbox_area_entered"]
 [connection signal="player_entered" from="DetectionZone" to="." method="_on_detection_zone_player_entered"]
 [connection signal="player_exited" from="DetectionZone" to="." method="_on_detection_zone_player_exited"]
-[connection signal="died" from="EnemyStats" to="." method="_on_enemy_died"]
+[connection signal="died" from="EnemyStats" to="." method="_on_enemy_stats_died"]
 [connection signal="animation_finished" from="HitFlashAnimation" to="." method="_on_hit_flash_animation_animation_finished"]

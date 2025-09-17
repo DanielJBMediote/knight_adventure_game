@@ -45,7 +45,7 @@ const COINS_SIZE_MULTIPLY = {
 @export var coin_size: SIZE
 @export var coin_texture: Texture2D
 
-func _init(enemy_stats: EnemyStats = EnemyStats.new()) -> void:
+func _init(_enemy_stats: EnemyStats = EnemyStats.new()) -> void:
 	self.coin_type = generate_random_type()
 	self.coin_size = generate_random_size()
 	self.coin_value = calculate_value()

@@ -5,18 +5,33 @@ const FRICTION := 1000.0
 
 enum ENEMY_TYPES {FLYING, TERRESTRIAL}
 
+@export var float_damage_control: FloatDamageControl
+@export var enemy_hitbox: Area2D
+@export var enemy_hurtbox: Area2D
+@export var navigation_agent: NavigationAgent2D
+@export var wander_controller: WanderController
+@export var enemy_control_ui: EnemyControlUI
+
 @export var enemy_type: ENEMY_TYPES
 @export var enemy_stats: EnemyStats
 
+## Distância para detectar plataformas acima
 @export var wall_detection_height := 0.0
-@export var wall_detection_distance := 32.0 # Distância para detectar paredes
-@export var min_floor_distance := 10.0 # Distância para detectar a plataforma
-@export var min_attack_distance := 100.0 # Distância para iniciar o ataque
-@export var attack_cooldown := 1.5 # Tempo entre ataques
-@export var attack_names: Array[String] = [] # Nomes das animações de ataque
+## Distância para detectar paredes
+@export var wall_detection_distance := 32.0
+## Distância para detectar a plataforma
+@export var min_floor_distance := 10.0
+## Distância para iniciar o ataque
+@export var min_attack_distance := 100.0
+## Tempo entre ataques
+@export var attack_cooldown := 1.5
+## Nomes das animações de ataque
+@export var attack_names: Array[String] = []
 @export var knockback_force: float = 300.0
 @export var knockback_resistance: float = 1.0
-@export var climb_speed := 80.0 # Velocidade de subida
+## Velocidade de subida
+@export var climb_speed := 80.0
+## Tempo de estado "Morto" antes de ser removido da Àrvore
 @export var time_dead_before_free := 1.0
 @export var knockback_air_force := -1.0
 
@@ -31,7 +46,8 @@ var distance_to_floor := 0.0
 
 var attack_timer: Timer
 var can_attack := true
-var target_in_attack_range := false # É manipulado pelo EnemyHitbox
+## É manipulado pelo EnemyHitbox
+var target_in_attack_range := false
 var distance_to_player := 0.0
 var current_attack_animation := ""
 
@@ -43,22 +59,28 @@ var is_attacking := false
 var is_dead := false
 var is_hurting := false
 
-var dead_timer: Timer
-
-func _init() -> void:
-	pass
-
 func _ready() -> void:
 	setup_attack_timer()
-	setup_dead_timer()
 	setup_raycasts()
 
+	if wander_controller:
+		wander_controller.start_position = global_position
 
-func setup_dead_timer() -> void:
-	dead_timer = Timer.new()
-	dead_timer.wait_time = time_dead_before_free
-	dead_timer.one_shot = true
-	dead_timer.timeout.connect(_on_dead_timer_timeout)
+	if not navigation_agent:
+		navigation_agent = NavigationAgent2D.new()
+		add_child(navigation_agent)
+	
+	# Configuração do NavigationAgent
+	navigation_agent.path_desired_distance = 10.0
+	navigation_agent.target_desired_distance = 10.0
+	navigation_agent.avoidance_enabled = true
+	
+	
+	if not enemy_hitbox.area_entered.is_connected(_on_enemy_hitbox_area_entered):
+		enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
+	if not enemy_hitbox.area_exited.is_connected(_on_enemy_hitbox_area_exited):
+		enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
+
 
 func setup_attack_timer() -> void:
 	attack_timer = Timer.new()
@@ -92,6 +114,11 @@ func setup_raycasts() -> void:
 	floor_raycast.position = Vector2.ZERO
 	add_child(floor_raycast)
 
+func update_attack_speed(animated_sprite_2d: AnimatedSprite2D):
+	var attk_speed = roundi(enemy_stats.attack_speed * 12)
+
+	for attack_name in attack_names:
+		animated_sprite_2d.sprite_frames.set_animation_speed(attack_name, attk_speed)
 
 func get_distance_to_floor() -> float:
 	floor_raycast.force_raycast_update()
@@ -110,7 +137,7 @@ func get_distance_to_player() -> float:
 
 
 func disable_enemy_hitbox(disabled: bool = false) -> void:
-	var collision: CollisionShape2D = get_node("EnemyHitbox").get_node("CollisionShape2D")
+	var collision: CollisionShape2D = enemy_hitbox.get_node("CollisionShape2D")
 	collision.set_deferred("disabled", disabled)
 
 
@@ -157,13 +184,6 @@ func take_knockback(knock_force: float, attacker_position: Vector2):
 	knockback_timer.start(0.3) # Duração do knockback
 
 
-func _on_knockback_finished():
-	is_in_knockback = false
-	is_hurting = false
-	is_invulnerable = false
-	can_attack = true
-
-
 func hit_player():
 	var is_player_in_close_range = target_player and distance_to_player < 30.0 # Aqui considera o player ocupando o mesmo lugar do Mob
 	var can_hit_player = can_attack and (target_in_attack_range or is_player_in_close_range)
@@ -178,24 +198,38 @@ func hit_player():
 		can_attack = false
 
 
-func take_hit_with_knockback() -> bool:
+func take_hit() -> bool:
 	if is_dead:
 		return false
-
-	var float_damage_control: FloatDamageControl = get_node_or_null("FloatDamageControl")
-
-	if enemy_stats == null or float_damage_control == null:
-		printerr("EnemyStats or FloatDamageControl is nulls, check tree.")
+	
+	if not float_damage_control or not enemy_stats:
 		return false
 
 	if target_player and not is_in_knockback and not is_invulnerable:
-		var damage_data = PlayerStats.calculate_attack_damage()
 		is_hurting = true
+		var damage_data = PlayerStats.calculate_attack_damage()
 		enemy_stats.on_take_damage(damage_data.damage)
 		float_damage_control.update_damage(damage_data)
 		return damage_data.is_knockback_hit
 
 	return false
+
+func _on_knockback_finished():
+	is_in_knockback = false
+	is_hurting = false
+	is_invulnerable = false
+	can_attack = true
+
+func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
+	if target_player and area.collision_layer == 1024:
+		target_in_attack_range = true
+		can_attack = true
+
+
+func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
+	if target_player and area.collision_layer == 1024:
+		target_in_attack_range = false
+		can_attack = false
 
 
 func _on_attack_cooldown_finished():
@@ -208,14 +242,21 @@ func _on_dead_timer_timeout() -> void:
 	queue_free()
 
 
-func _on_dead(exp: float) -> void:
+func _on_enemy_stats_died(exp_amount: float) -> void:
 	is_dead = true
 	drop_loots()
-	PlayerStats.add_experience(exp)
+	PlayerStats.add_experience(exp_amount)
 	if time_dead_before_free >= 1.0:
-		add_child(dead_timer)
-		dead_timer.start()
+		_setup_dead_timer()
 
+
+func _setup_dead_timer() -> void:
+	var dead_timer = Timer.new()
+	dead_timer.wait_time = time_dead_before_free
+	dead_timer.one_shot = true
+	dead_timer.timeout.connect(_on_dead_timer_timeout)
+	add_child(dead_timer)
+	dead_timer.start()
 
 func drop_loots() -> void:
 	if loot_categories.is_empty():

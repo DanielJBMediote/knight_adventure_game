@@ -15,16 +15,16 @@ static var UNIQUE_SETS_BONUSES: Dictionary = {
 	],
 	EquipmentItem.SETS.WINDCUTTER: [
 		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.DAMAGE, 300.0)),
-		SetBonus.new(3, ItemAttribute.new(ItemAttribute.TYPE.ATTACK_SPEED, 0.05))
+		SetBonus.new(3, ItemAttribute.new(ItemAttribute.TYPE.ATTACK_SPEED, 0.10))
 	],
 	EquipmentItem.SETS.SERPENT_EMBRACE: [
-		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.HEALTH, 1200.0)),
-		SetBonus.new(3, ItemAttribute.new(ItemAttribute.TYPE.CRITICAL_DAMAGE, 0.10)),
+		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.CRITICAL_DAMAGE, 0.15)),
+		SetBonus.new(3, ItemAttribute.new(ItemAttribute.TYPE.POISON_HIT_RATE, 0.15)),
 		SetBonus.new(5, ItemAttribute.new(ItemAttribute.TYPE.POISON_HIT_RATE, 0.15)),
 	],
 	EquipmentItem.SETS.SILVER_MOON: [
 		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.CRITICAL_RATE, 350)),
-		SetBonus.new(3, ItemAttribute.new(ItemAttribute.TYPE.ATTACK_SPEED, 0.15))
+		SetBonus.new(3, ItemAttribute.new(ItemAttribute.TYPE.ATTACK_SPEED, 0.25))
 	],
 	EquipmentItem.SETS.SACRED_CRUSADER: [
 		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.HEALTH, 2000.0)),
@@ -39,13 +39,13 @@ static var UNIQUE_SETS_BONUSES: Dictionary = {
 		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.HEALTH, 3000.0)),
 		SetBonus.new(3, ItemAttribute.new(ItemAttribute.TYPE.DEFENSE, 1000.0)),
 		SetBonus.new(5, ItemAttribute.new(ItemAttribute.TYPE.CRITICAL_RATE, 500.0)),
-		SetBonus.new(6, ItemAttribute.new(ItemAttribute.TYPE.CRITICAL_DAMAGE, 15.0)),
+		SetBonus.new(6, ItemAttribute.new(ItemAttribute.TYPE.CRITICAL_DAMAGE, 0.15)),
 		SetBonus.new(7, ItemAttribute.new(ItemAttribute.TYPE.DAMAGE, 750.0)),
 	],
 	EquipmentItem.SETS.DEMONS_BANE: [
 		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.CRITICAL_DAMAGE, 0.20)),
 		SetBonus.new(3, ItemAttribute.new(ItemAttribute.TYPE.DAMAGE, 1000.0)),
-		SetBonus.new(4, ItemAttribute.new(ItemAttribute.TYPE.ATTACK_SPEED, 0.10)),
+		SetBonus.new(4, ItemAttribute.new(ItemAttribute.TYPE.ATTACK_SPEED, 0.20)),
 		SetBonus.new(5, ItemAttribute.new(ItemAttribute.TYPE.DEFENSE, 1200.0)),
 	],
 	EquipmentItem.SETS.SOLARIS: [
@@ -69,6 +69,7 @@ static var UNIQUE_SETS_BONUSES: Dictionary = {
 	EquipmentItem.SETS.ELEMENTALS_POWERFULL: [
 		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.HEALTH, 10000.0)),
 		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.MANA, 250.0)),
+		SetBonus.new(2, ItemAttribute.new(ItemAttribute.TYPE.ENERGY, 100.0)),
 	],
 	
 	# Defina os demais sets seguindo o mesmo padrão...

@@ -14,7 +14,6 @@
 [ext_resource type="PackedScene" uid="uid://crghd6gyb71w5" path="res://src/actors/enemies/_controllers/detection_zone.tscn" id="12_cww7r"]
 [ext_resource type="PackedScene" uid="uid://ciaj2edwf0e0c" path="res://src/actors/enemies/_controllers/enemy_control_ui.tscn" id="12_ykyxn"]
 [ext_resource type="PackedScene" uid="uid://c8and80a8q8yw" path="res://src/actors/enemies/_controllers/enemy_stats.tscn" id="14_55kbc"]
-[ext_resource type="PackedScene" uid="uid://bw7gs5y32rs22" path="res://src/actors/enemies/_controllers/enemy_hurtbox.tscn" id="14_yvpm3"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="15_4siq7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8os3d"]
@@ -571,10 +570,13 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_p0hut"]
-radius = 32.0
+radius = 12.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c5sj0"]
 size = Vector2(96, 64)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3h23b"]
+radius = 20.0
 
 [sub_resource type="Animation" id="Animation_tqihg"]
 length = 0.001
@@ -614,13 +616,19 @@ _data = {
 &"hit_flash": SubResource("Animation_olv3m")
 }
 
-[node name="Bat" type="CharacterBody2D" node_paths=PackedStringArray("enemy_stats") groups=["enemies"]]
+[node name="Bat" type="CharacterBody2D" node_paths=PackedStringArray("float_damage_control", "enemy_hitbox", "enemy_hurtbox", "navigation_agent", "wander_controller", "enemy_control_ui", "enemy_stats") groups=["enemies"]]
 collision_layer = 16
 collision_mask = 34
 motion_mode = 1
 platform_floor_layers = 4294901762
 script = ExtResource("1_qt1fd")
 min_flight_height = 70.0
+float_damage_control = NodePath("FloatDamageControl")
+enemy_hitbox = NodePath("EnemyHitbox")
+enemy_hurtbox = NodePath("EnemyHurtbox")
+navigation_agent = NodePath("NavigationAgent2D")
+wander_controller = NodePath("WanderController")
+enemy_control_ui = NodePath("EnemyControlUI")
 enemy_stats = NodePath("EnemyStats")
 attack_cooldown = 1.0
 attack_names = Array[String](["attack_bite", "attack_slash"])
@@ -639,12 +647,6 @@ metadata/_edit_lock_ = true
 shape = SubResource("CircleShape2D_p0hut")
 metadata/_edit_lock_ = true
 
-[node name="WanderController" parent="." instance=ExtResource("11_ykyxn")]
-wander_range = Vector2(300, 50)
-
-[node name="DetectionZone" parent="." instance=ExtResource("12_cww7r")]
-radius_range = 300.0
-
 [node name="EnemyHitbox" type="Area2D" parent="."]
 collision_layer = 2048
 collision_mask = 1024
@@ -655,9 +657,16 @@ position = Vector2(48, 0)
 shape = SubResource("RectangleShape2D_c5sj0")
 debug_color = Color(0.724805, 0, 0.0693719, 0.42)
 
-[node name="EnemyHurtbox" parent="." instance=ExtResource("14_yvpm3")]
-radius = 25.0
-height = 50.0
+[node name="EnemyHurtbox" type="Area2D" parent="."]
+collision_layer = 4096
+collision_mask = 512
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyHurtbox"]
+shape = SubResource("CircleShape2D_3h23b")
+debug_color = Color(1, 0.607839, 0.602136, 0.42)
+
+[node name="DetectionZone" parent="." instance=ExtResource("12_cww7r")]
+radius_range = 300.0
 
 [node name="EnemyStats" parent="." instance=ExtResource("14_55kbc")]
 enemy_name = "Bat"
@@ -666,9 +675,9 @@ base_min_damage = 10.0
 base_max_damage = 15.0
 base_experience = 50.0
 base_num_drops = 8
-base_poison_chance = 0.15
-base_poison_duration = 5.0
-base_poison_damage = 0.1
+
+[node name="WanderController" parent="." instance=ExtResource("11_ykyxn")]
+wander_range = Vector2(300, 50)
 
 [node name="EnemyControlUI" parent="." node_paths=PackedStringArray("enemy_stats") instance=ExtResource("12_ykyxn")]
 offset_top = -56.0
@@ -698,7 +707,4 @@ libraries = {
 }
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
-[connection signal="trigger_player_entered" from="DetectionZone" to="." method="_on_target_player_entered"]
-[connection signal="trigger_player_exited" from="DetectionZone" to="." method="_on_target_player_exited"]
-[connection signal="player_hitbox_entered" from="EnemyHurtbox" to="." method="_on_player_hitbox_area_entered"]
 [connection signal="animation_finished" from="HitFlashAnimation" to="." method="_on_hit_flash_animation_animation_finished"]

@@ -32,19 +32,27 @@ metadata/_edit_use_anchors_ = true
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(196, 0)
 layout_mode = 1
-anchors_preset = 5
+anchors_preset = 7
 anchor_left = 0.5
+anchor_top = 1.0
 anchor_right = 0.5
+anchor_bottom = 1.0
 offset_left = -98.0
+offset_top = -19.0
 offset_right = 98.0
-offset_bottom = 15.0
 grow_horizontal = 2
+grow_vertical = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="StatusEffectList" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+alignment = 2
+
+[node name="MainContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="EnemyLevel" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="EnemyLevel" type="Label" parent="VBoxContainer/MainContainer"]
 texture_filter = 3
 layout_mode = 2
 size_flags_horizontal = 4
@@ -52,7 +60,7 @@ size_flags_vertical = 1
 theme_override_fonts/font = ExtResource("3_hvx7y")
 text = "Lv 100"
 
-[node name="HealthBarContainer" type="TextureRect" parent="VBoxContainer/HBoxContainer"]
+[node name="HealthBarContainer" type="TextureRect" parent="VBoxContainer/MainContainer"]
 texture_filter = 3
 custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
@@ -61,8 +69,9 @@ size_flags_vertical = 6
 texture = SubResource("AtlasTexture_rtbkc")
 expand_mode = 1
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
 
-[node name="HealthBarBG" type="ProgressBar" parent="VBoxContainer/HBoxContainer/HealthBarContainer"]
+[node name="HealthBarBG" type="ProgressBar" parent="VBoxContainer/MainContainer/HealthBarContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -77,8 +86,9 @@ theme_override_styles/background = SubResource("StyleBoxFlat_hvx7y")
 theme_override_styles/fill = SubResource("StyleBoxTexture_ck4s7")
 value = 100.0
 show_percentage = false
+metadata/_edit_lock_ = true
 
-[node name="HealthBar" type="ProgressBar" parent="VBoxContainer/HBoxContainer/HealthBarContainer"]
+[node name="HealthBar" type="ProgressBar" parent="VBoxContainer/MainContainer/HealthBarContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -93,3 +103,4 @@ theme_override_styles/background = SubResource("StyleBoxEmpty_1jutp")
 theme_override_styles/fill = SubResource("StyleBoxTexture_1jutp")
 value = 100.0
 show_percentage = false
+metadata/_edit_lock_ = true
