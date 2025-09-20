@@ -8,12 +8,13 @@ enum ENEMY_TYPES {FLYING, TERRESTRIAL}
 @export var float_damage_control: FloatDamageControl
 @export var enemy_hitbox: Area2D
 @export var enemy_hurtbox: Area2D
+@export var target_zone: Area2D
 @export var navigation_agent: NavigationAgent2D
 @export var wander_controller: WanderController
 @export var enemy_control_ui: EnemyControlUI
+@export var enemy_stats: EnemyStats
 
 @export var enemy_type: ENEMY_TYPES
-@export var enemy_stats: EnemyStats
 
 ## Distância para detectar plataformas acima
 @export var wall_detection_height := 0.0
@@ -35,6 +36,10 @@ enum ENEMY_TYPES {FLYING, TERRESTRIAL}
 @export var time_dead_before_free := 1.0
 @export var knockback_air_force := -1.0
 
+@export var min_time_state: float = 5.0
+@export var max_time_state: float = 10.0
+@export var navigation_update_interval := 0.2
+
 @export var loot_categories: Array[Item.CATEGORY] = []
 
 var floor_raycast: RayCast2D
@@ -44,9 +49,11 @@ var is_near_wall := false
 var target_player: Player
 var distance_to_floor := 0.0
 
+var navigation_timer := 0.0
+
 var attack_timer: Timer
 var can_attack := true
-## É manipulado pelo EnemyHitbox
+var is_hitbox_on_target := false
 var target_in_attack_range := false
 var distance_to_player := 0.0
 var current_attack_animation := ""
@@ -59,6 +66,10 @@ var is_attacking := false
 var is_dead := false
 var is_hurting := false
 
+var face_direction := 1
+var direction_str: String:
+	get: return "Right" if face_direction == 1 else "Left"
+
 func _ready() -> void:
 	setup_attack_timer()
 	setup_raycasts()
@@ -69,17 +80,24 @@ func _ready() -> void:
 	if not navigation_agent:
 		navigation_agent = NavigationAgent2D.new()
 		add_child(navigation_agent)
-	
+
 	# Configuração do NavigationAgent
 	navigation_agent.path_desired_distance = 10.0
 	navigation_agent.target_desired_distance = 10.0
 	navigation_agent.avoidance_enabled = true
+
+	if float_damage_control and not float_damage_control.hitted.is_connected(_on_hitted):
+		float_damage_control.hitted.connect(_on_hitted)
 	
-	
-	if not enemy_hitbox.area_entered.is_connected(_on_enemy_hitbox_area_entered):
+	if enemy_hitbox and not enemy_hitbox.area_entered.is_connected(_on_enemy_hitbox_area_entered):
 		enemy_hitbox.area_entered.connect(_on_enemy_hitbox_area_entered)
-	if not enemy_hitbox.area_exited.is_connected(_on_enemy_hitbox_area_exited):
+	if enemy_hitbox and not enemy_hitbox.area_exited.is_connected(_on_enemy_hitbox_area_exited):
 		enemy_hitbox.area_exited.connect(_on_enemy_hitbox_area_exited)
+
+	if target_zone and not target_zone.area_entered.is_connected(_on_target_zone_area_entered):
+		target_zone.area_entered.connect(_on_target_zone_area_entered)
+	if target_zone and not target_zone.area_exited.is_connected(_on_target_zone_area_exited):
+		target_zone.area_exited.connect(_on_target_zone_area_exited)
 
 
 func setup_attack_timer() -> void:
@@ -114,11 +132,6 @@ func setup_raycasts() -> void:
 	floor_raycast.position = Vector2.ZERO
 	add_child(floor_raycast)
 
-func update_attack_speed(animated_sprite_2d: AnimatedSprite2D):
-	var attk_speed = roundi(enemy_stats.attack_speed * 12)
-
-	for attack_name in attack_names:
-		animated_sprite_2d.sprite_frames.set_animation_speed(attack_name, attk_speed)
 
 func get_distance_to_floor() -> float:
 	floor_raycast.force_raycast_update()
@@ -189,7 +202,7 @@ func hit_player():
 	var can_hit_player = can_attack and (target_in_attack_range or is_player_in_close_range)
 
 	if can_hit_player and not (target_player.is_rolling or target_player.is_dashing):
-		var damage_data: DamageData = enemy_stats.calculate_base_attack_damage()
+		var damage_data = enemy_stats.calculate_base_attack_damage()
 
 		target_player.apply_damage_on_player(damage_data, enemy_stats)
 		target_player.take_knockback(knockback_force, global_position)
@@ -201,18 +214,23 @@ func hit_player():
 func take_hit() -> bool:
 	if is_dead:
 		return false
-	
+
 	if not float_damage_control or not enemy_stats:
 		return false
 
 	if target_player and not is_in_knockback and not is_invulnerable:
 		is_hurting = true
 		var damage_data = PlayerStats.calculate_attack_damage()
-		enemy_stats.on_take_damage(damage_data.damage)
+		enemy_stats.calculate_damage_taken(damage_data)
 		float_damage_control.update_damage(damage_data)
 		return damage_data.is_knockback_hit
 
 	return false
+
+
+func _on_hitted(damage: float) -> void:
+	enemy_stats.update_health(-damage)
+
 
 func _on_knockback_finished():
 	is_in_knockback = false
@@ -220,17 +238,28 @@ func _on_knockback_finished():
 	is_invulnerable = false
 	can_attack = true
 
+
 func _on_enemy_hitbox_area_entered(area: Area2D) -> void:
 	if target_player and area.collision_layer == 1024:
-		target_in_attack_range = true
-		can_attack = true
+		is_hitbox_on_target = true
 
 
 func _on_enemy_hitbox_area_exited(area: Area2D) -> void:
 	if target_player and area.collision_layer == 1024:
-		target_in_attack_range = false
-		can_attack = false
+		is_hitbox_on_target = false
 
+
+func _on_target_zone_area_entered(area: Area2D) -> void:
+	if target_player and area.collision_layer == 1024:
+		can_attack = true
+		target_in_attack_range = true
+
+
+func _on_target_zone_area_exited(area: Area2D) -> void:
+	if target_player and area.collision_layer == 1024:
+		can_attack = false
+		target_in_attack_range = false
+		# is_attacking = false
 
 func _on_attack_cooldown_finished():
 	can_attack = true
@@ -258,18 +287,15 @@ func _setup_dead_timer() -> void:
 	add_child(dead_timer)
 	dead_timer.start()
 
+
 func drop_loots() -> void:
 	if loot_categories.is_empty():
 		return
 
-	var drop_zone = get_tree().get_first_node_in_group("items_dropped_zone")
-	if !drop_zone:
-		printerr("Nenhuma zona de drop encontrada!")
-		return
-
 	# Gera os itens de loot
 	var loot_items = LootManager.generate_loot_for_enemy(enemy_stats, loot_categories)
-
+	var map = GameEvents.current_map
+	
 	# Dropa os itens
 	var spread_distance = 10.0
 	var random_offset = Vector2(randf_range(-spread_distance, spread_distance), randf_range(-spread_distance, spread_distance))
@@ -281,13 +307,12 @@ func drop_loots() -> void:
 			item_instance.item_resource = item_resource
 
 			if item_instance.can_spawn():
-				# Posiciona o item com algum espalhamento
 				item_instance.position = global_position + random_offset
-				drop_zone.add_child(item_instance)
-	
+				map.add_child(item_instance)
+
 	for i in range(enemy_stats.amount_coins):
 		var coin_scene = preload("res://src/gameplay/items/coin/coin_body.tscn")
 		var coin_instance: CoinBody = coin_scene.instantiate()
 		coin_instance.position = global_position + random_offset
 		coin_instance.coin = Coin.new()
-		drop_zone.add_child(coin_instance)
+		map.add_child(coin_instance)

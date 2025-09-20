@@ -40,12 +40,10 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause_game"):
-		pause_game()
-	if event.is_action_pressed("inventory"):
-		InventoryManager.handle_inventory_visibility()
+		_pause_game()
 
 
-func pause_game() -> void:
+func _pause_game() -> void:
 	is_paused = !is_paused
 	get_tree().paused = is_paused
 	game_paused.emit()

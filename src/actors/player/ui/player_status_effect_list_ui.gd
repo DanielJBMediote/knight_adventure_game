@@ -22,18 +22,6 @@ func _add_status_on_list(effect_ui: StatusEffectUI, effect_data: StatusEffect) -
 		status_list.add_child(effect_ui)
 		effect_ui.setup_effect(effect_data)
 
-
-func _update_active_status_effect(effect_data: StatusEffect) -> void:
-	if PlayerEvents.active_effects_ui.has(effect_data.effect):
-		var effect_ui: StatusEffectUI = PlayerEvents.active_effects_ui[effect_data.effect]
-		effect_ui.extend_effect_duration(effect_data.duration)
-
-# func _on_status_effect_removed(_effect_data: StatusEffect, effect_ui: StatusEffectUI) -> void:
-# 	for child in status_list.get_children():
-# 		if effect_ui == child:
-# 			effect_ui.queue_free()
-# 			break
-
 func _on_clear_status_effects() -> void:
 	for effect_ui in PlayerEvents.active_effects_ui.values():
 		effect_ui.queue_free()

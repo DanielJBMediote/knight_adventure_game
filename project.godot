@@ -51,7 +51,6 @@ player_stats_ui=""
 player_ui=""
 maps=""
 enemies=""
-items_dropped_zone=""
 coins=""
 entities_zone=""
 

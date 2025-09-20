@@ -3,8 +3,8 @@ extends Node
 signal page_changed
 
 signal inventory_updated
-# signal inventory_saved
-# signal inventory_loaded
+signal inventory_saved
+signal inventory_loaded
 signal item_drag_started(item: Item, slot_index: int)
 signal item_drag_ended(success: bool)
 signal items_swapped(slot_index_a: int, slot_index_b: int)
@@ -14,7 +14,7 @@ signal inventory_oppened(is_open: bool)
 var items: Array[Item] = []
 var slots: Array[Item] = []
 var current_page: int = 0
-var unlocked_slots: int = 21
+var unlocked_slots: int = 42
 
 const MAX_SLOTS: int = 63
 const SLOTS_PER_PAGE: int = 21
@@ -41,30 +41,35 @@ func create_ramdon_items() -> void:
 	var player_level = PlayerStats.level
 	# enemy_stats.level = player_level
 	# var total_itens = 0
-	# for i in 20:
+	for i in 50:
 		# var rune = RuneItem.new()
 		# rune.setup(enemy_stats)
 		# add_item(rune)
 		# var gem = GemItem.new()
 		# gem.setup(enemy_stats)
 		# add_item(gem)
-		# var potion = PotionItem.new()
-		# potion.setup(enemy_stats)
-		# add_item(potion)
+		var potion = PotionItem.new()
+		potion.setup(enemy_stats)
+		add_item(potion)
 
 		# if is_addded:
 		# 	total_itens += 1
-	for i in 21:
-		enemy_stats.level = randi_range(player_level - 5, player_level)
+	for i in 15:
+		enemy_stats.level = randi_range(maxi(1, player_level - 5), mini(player_level, 115))
 		var equip = EquipmentItem.new()
 		equip.setup(enemy_stats)
 		add_item(equip)
 	# print("Total itens added: ", total_itens)
 
 
-func handle_inventory_visibility() -> void:
-	is_open = !is_open
-	inventory_oppened.emit(is_open)
+func open_inventory() -> void:
+	is_open = true
+	inventory_oppened.emit(true)
+
+
+func close_inventory() -> void:
+	is_open = false
+	inventory_oppened.emit(false)
 
 
 func is_slot_unlocked(slot_index: int) -> bool:
@@ -253,13 +258,6 @@ func sort_inventory(mode: String = "ASC"):
 
 # Função de comparação personalizada para ordenação
 func _sort_items(a: Item, b: Item, mode: String) -> bool:
-	# 3. Se SubCategory igual, ordena por Rarity
-	if a.item_rarity != b.item_rarity:
-		if mode == "ASC":
-			return a.item_rarity < b.item_rarity
-		else:
-			return a.item_rarity > b.item_rarity
-
 	# 1. Ordena por Category
 	if a.item_category != b.item_category:
 		if mode == "ASC":
@@ -282,6 +280,12 @@ func _sort_items(a: Item, b: Item, mode: String) -> bool:
 				return a_sort_value < b_sort_value
 			else:
 				return a_sort_value > b_sort_value
+
+	if a.item_rarity != b.item_rarity:
+		if mode == "ASC":
+			return a.item_rarity < b.item_rarity
+		else:
+			return a.item_rarity > b.item_rarity
 
 	if a.is_unique != b.is_unique:
 		if mode == "ASC":
@@ -423,9 +427,9 @@ func swap_items(from_slot: int, to_slot: int) -> void:
 	# Caso 3: Itens diferentes - troca de posição
 	else:
 		slots[from_slot] = to_item
-		slots[from_slot].slot_index_ref = to_item
+		slots[from_slot].slot_index_ref = to_item.slot_index_ref
 		slots[to_slot] = from_item
-		slots[to_slot].slot_index_ref = from_item
+		slots[to_slot].slot_index_ref = from_item.slot_index_ref
 
 	drag_item = null
 	drag_slot_index = -1
@@ -446,29 +450,24 @@ func get_items_by_subcategory(subcategory: Item.SUBCATEGORY) -> Array[Item]:
 
 
 func save_inventory():
-	var save_data = []
-	for item in items:
-		if item != null:
-			save_data.append({"id": item.id, "current_stack": item.current_stack})
-		else:
-			save_data.append(null)
-
+	var save_data = {}
 	# Salva no arquivo (usando Godot's File API)
 	var file = FileAccess.open("user://inventory.save", FileAccess.WRITE)
 	file.store_var(save_data)
 
+	inventory_saved.emit()
+
 
 func load_inventory():
 	if FileAccess.file_exists("user://inventory.save"):
-		var file = FileAccess.open("user://inventory.save", FileAccess.READ)
-		var save_data = file.get_var()
-
-		for i in range(min(save_data.size(), items.size())):
-			if save_data[i] != null:
-				var item_data = save_data[i]
-				var item = load("res://items/%s.tres" % item_data["id"])
-				if item:
-					item.current_stack = item_data["current_stack"]
-					items[i] = item
-
+		# var file = FileAccess.open("user://inventory.save", FileAccess.READ)
+		# var save_data = file.get_var()
+		# for i in range(min(save_data.size(), items.size())):
+		# 	if save_data[i] != null:
+		# 		var item_data = save_data[i]
+		# 		var item = load("res://items/%s.tres" % item_data["id"])
+		# 		if item:
+		# 			item.current_stack = item_data["current_stack"]
+		# 			items[i] = item
+		inventory_loaded.emit()
 		inventory_updated.emit()

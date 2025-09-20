@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://7rlq4qhgg13x"]
+
+[sub_resource type="Gradient" id="Gradient_f6aa5"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.016139, 0.0265581, 0.0422624, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fsonc"]
+gradient = SubResource("Gradient_f6aa5")
+width = 320
+height = 180
+fill_to = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_fsonc"]
+offsets = PackedFloat32Array(0.14726, 0.263699, 0.315068)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.0927317, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_220v7"]
+gradient = SubResource("Gradient_fsonc")
+width = 256
+height = 256
+use_hdr = true
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 1)
+
+[node name="NightSky" type="Sprite2D"]
+scale = Vector2(4, 4)
+texture = SubResource("GradientTexture2D_fsonc")
+centered = false
+metadata/_edit_lock_ = true
+
+[node name="Moon" type="Sprite2D" parent="."]
+position = Vector2(29.25, 23.5)
+scale = Vector2(0.3, 0.3)
+texture = SubResource("GradientTexture2D_220v7")

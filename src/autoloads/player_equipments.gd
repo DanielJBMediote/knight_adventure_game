@@ -192,7 +192,7 @@ func apply_attributes_to_stats(attributes: Array[ItemAttribute], multiplier: flo
 # Método para aplicar um único atributo
 func apply_single_attribute(attribute_type: ItemAttribute.TYPE, value: float) -> void:
 	if attribute_type in ItemAttribute.HIT_RATE_ATTRIBUTES:
-		PlayerStats.update_active_status_effect(attribute_type, value)
+		PlayerStats.update_hit_rate_status_effects(attribute_type, value)
 	else:
 		match attribute_type:
 			ItemAttribute.TYPE.HEALTH:

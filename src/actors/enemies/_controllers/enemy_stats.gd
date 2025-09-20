@@ -51,6 +51,7 @@ const BASE_SPEED := 100.0
 
 @export var status_effects: Array[StatusEffect] = []
 
+var max_health_points: float = 0.0
 var health_points: float = 0.0
 var health_regen_per_seconds: float = 0.0
 
@@ -65,7 +66,6 @@ var crit_rate := 0.0
 var attack_speed: float = 1.0
 var move_speed: float = 1.0
 
-var current_health_points: float = 0.0
 var num_drops := 0
 var amount_coins := 0
 
@@ -91,7 +91,7 @@ func _ready() -> void:
 	var exp_factor := base_factor + (level - 1) * 0.65 # +65% de atributos por level
 
 	# Calcula stats de vida
-	self.health_points = base_health_points * (health_factor * status_modificator)
+	self.max_health_points = base_health_points * (health_factor * status_modificator)
 	self.health_regen_per_seconds = base_health_points_regen * (level_factor * status_modificator)
 
 	# Calcula stats de dano
@@ -109,8 +109,8 @@ func _ready() -> void:
 	update_status_effect_values(status_modificator)
 
 	# Inicializa a vida atual
-	self.current_health_points = health_points
-	self.health_changed.emit(current_health_points)
+	self.health_points = max_health_points
+	self.health_changed.emit(health_points)
 
 	# Experiência
 	self.experience = max(1, base_experience * exp_factor * status_modificator)
@@ -169,7 +169,8 @@ func update_status_effect_values(difficulty_factor: float) -> void:
 				var damage = randf_range(min_attack_damage, max_attack_damage)
 				status.value = damage * (status.base_value * (1.0 + ((level - 1) * 0.001) * difficulty_factor))
 			if status.base_duration:
-				status.duration = status.base_duration * (1.0 + ((level - 1) * 0.05) * difficulty_factor)
+				var growth = 1.0 + ((level - 1) * 0.025) * difficulty_factor
+				status.duration = clampf(status.base_duration, status.base_duration + growth, 15.0)
 			if status.base_rate_chance > 0.0:
 				status.rate_chance = min(status.base_rate_chance * (1.0 + (level - 1) * 0.005) * difficulty_factor, 1.0)
 
@@ -194,13 +195,12 @@ func calculate_base_attack_damage() -> DamageData:
 	return damage_data
 
 
-func calculate_damage_taken(damage: float) -> float:
-	return damage
+func update_health(value: float) -> void:
+	health_points = clampf(health_points + value, 0, max_health_points)
+	if health_points <= 0:
+		died.emit(experience)
+	health_changed.emit(health_points)
 
 
-func on_take_damage(damage: float):
-	damage = calculate_damage_taken(damage)
-	self.current_health_points = max(current_health_points - damage, 0)
-	self.health_changed.emit(self.current_health_points)
-	if current_health_points <= 0:
-		died.emit(self.experience)
+func calculate_damage_taken(damage_data: DamageData) -> DamageData:
+	return damage_data

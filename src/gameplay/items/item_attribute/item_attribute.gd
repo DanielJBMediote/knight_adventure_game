@@ -106,19 +106,14 @@ const COLOR_PERFECT = Color.FUCHSIA # 🟣 Perfeito (125%+)
 @export var base_value: float = 0.0
 @export var value: float = 0.0
 @export var min_value: float:
-	get:
-		return base_value * 0.75
-	set(value):
-		min_value = value
+	get: return base_value * 0.75
+	set(value): min_value = value
 @export var max_value: float:
-	get:
-		return base_value * 1.25
-	set(value):
-		max_value = value
+	get: return base_value * 1.25
+	set(value): max_value = value
 
 var attribute_name: String:
-	get:
-		return ATTRIBUTE_NAMES.get(type, "Unknown")
+	get: return ATTRIBUTE_NAMES.get(type, "Unknown")
 
 func _init(_type: TYPE, _value: float) -> void:
 	type = _type

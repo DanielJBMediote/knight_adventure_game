@@ -28,11 +28,11 @@ var exp_boost: float
 var knockback_resistance: float
 var knockback_force: float
 var knockback_chance: float
-var active_status_effects: Array[StatusEffect]
+var hit_rate_status_effects: Array[StatusEffect]
 
 
 func get_hit_rate_value_by_effect(effect: StatusEffect.EFFECT) -> float:
-	var index = active_status_effects.find_custom(func(ase): return ase.effect == effect)
+	var index = hit_rate_status_effects.find_custom(func(ase): return ase.effect == effect)
 	if index != -1:
-		return active_status_effects[index].rate_chance
+		return hit_rate_status_effects[index].rate_chance
 	return 0.0

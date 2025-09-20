@@ -1,4 +1,4 @@
-[gd_scene load_steps=96 format=3 uid="uid://cc8hjpk4p2yx7"]
+[gd_scene load_steps=97 format=3 uid="uid://cc8hjpk4p2yx7"]
 
 [ext_resource type="Texture2D" uid="uid://bm0m5w1dstb5a" path="res://assets/sprites/entities/enemies/bat/Bat-IdleFly.png" id="1_p0hut"]
 [ext_resource type="Script" uid="uid://6gabuqunp5hr" path="res://src/actors/enemies/bat/bat.gd" id="1_qt1fd"]
@@ -578,6 +578,9 @@ size = Vector2(96, 64)
 [sub_resource type="CircleShape2D" id="CircleShape2D_3h23b"]
 radius = 20.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3h23b"]
+size = Vector2(192, 64)
+
 [sub_resource type="Animation" id="Animation_tqihg"]
 length = 0.001
 tracks/0/type = "value"
@@ -616,7 +619,7 @@ _data = {
 &"hit_flash": SubResource("Animation_olv3m")
 }
 
-[node name="Bat" type="CharacterBody2D" node_paths=PackedStringArray("float_damage_control", "enemy_hitbox", "enemy_hurtbox", "navigation_agent", "wander_controller", "enemy_control_ui", "enemy_stats") groups=["enemies"]]
+[node name="Bat" type="CharacterBody2D" node_paths=PackedStringArray("float_damage_control", "enemy_hitbox", "enemy_hurtbox", "target_zone", "navigation_agent", "wander_controller", "enemy_control_ui", "enemy_stats") groups=["enemies"]]
 collision_layer = 16
 collision_mask = 34
 motion_mode = 1
@@ -626,6 +629,7 @@ min_flight_height = 70.0
 float_damage_control = NodePath("FloatDamageControl")
 enemy_hitbox = NodePath("EnemyHitbox")
 enemy_hurtbox = NodePath("EnemyHurtbox")
+target_zone = NodePath("TargetZone")
 navigation_agent = NodePath("NavigationAgent2D")
 wander_controller = NodePath("WanderController")
 enemy_control_ui = NodePath("EnemyControlUI")
@@ -638,9 +642,9 @@ loot_categories = Array[int]([2, 0, 1])
 material = SubResource("ShaderMaterial_8os3d")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_c5sj0")
-animation = &"moving"
-frame_progress = 0.963409
-flip_h = true
+animation = &"attack_slash"
+frame = 7
+frame_progress = 1.0
 metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -664,6 +668,15 @@ collision_mask = 512
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyHurtbox"]
 shape = SubResource("CircleShape2D_3h23b")
 debug_color = Color(1, 0.607839, 0.602136, 0.42)
+
+[node name="TargetZone" type="Area2D" parent="."]
+collision_layer = 2048
+collision_mask = 1024
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetZone"]
+position = Vector2(0, 16)
+shape = SubResource("RectangleShape2D_3h23b")
+debug_color = Color(0.997716, 0.0390676, 3.85046e-07, 0.42)
 
 [node name="DetectionZone" parent="." instance=ExtResource("12_cww7r")]
 radius_range = 300.0
@@ -707,4 +720,6 @@ libraries = {
 }
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="player_entered" from="DetectionZone" to="." method="_on_detection_zone_player_entered"]
+[connection signal="player_exited" from="DetectionZone" to="." method="_on_detection_zone_player_exited"]
 [connection signal="animation_finished" from="HitFlashAnimation" to="." method="_on_hit_flash_animation_animation_finished"]

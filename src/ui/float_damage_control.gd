@@ -7,8 +7,6 @@ signal hitted(damage: float)
 @onready var float_label_scene: PackedScene = preload("res://src/ui/float_label.tscn")
 @onready var tick_timer: Timer = $TickTimer
 
-const CRIT_DAMAGE_SIZE := 64
-
 # Dicionário para armazenar status effects ativos
 var active_status_effects: Dictionary = {}
 
@@ -66,7 +64,7 @@ func _show_damage(damage: float, is_critical: bool = false) -> void:
 	
 	if is_critical:
 		float_label.add_theme_color_override("font_color", Color.ORANGE_RED)
-		float_label.add_theme_font_size_override("font_size", CRIT_DAMAGE_SIZE)
+		float_label.add_theme_font_size_override("font_size", 48)
 	
 	add_child(float_label)
 	hitted.emit(damage)

@@ -181,7 +181,7 @@ func prepare_spawn_with_smoke() -> void:
 	# print("Preparing to spawn enemy ", current_spawn_count + 1, " of ", enemies_to_spawn, " in wave ", current_wave)
 
 func start_smoke_effect(smoke_position: Vector2) -> void:
-	if smoke_effects and disable_smoke_animaiton == true:
+	if smoke_effects and disable_smoke_animaiton:
 		smoke_effects.global_position = smoke_position
 		smoke_effects.visible = true
 		smoke_effects.play(smoke_animation_name)
@@ -305,9 +305,9 @@ func get_spawn_progress() -> Dictionary:
 		"cooldown_remaining": wave_cooldown_timer.time_left if is_in_cooldown else 0.0
 	}
 
-func add_spawn_point(position: Vector2) -> void:
+func add_spawn_point(new_position: Vector2) -> void:
 	var new_marker = Marker2D.new()
-	new_marker.global_position = position
+	new_marker.global_position = new_position
 	add_child(new_marker)
 	spawn_points.append(new_marker)
 

@@ -38,7 +38,7 @@ func _ready() -> void:
 
 	# Timer para diferenciar clique de drag
 	click_timer = Timer.new()
-	click_timer.wait_time = 0.3
+	click_timer.wait_time = 0.2
 	click_timer.one_shot = true
 	add_child(click_timer)
 
@@ -124,10 +124,12 @@ func _on_gui_input(event: InputEvent) -> void:
 				is_click = false
 				is_drag_started = true
 				start_drag()
+				get_viewport().set_input_as_handled()
 		elif not event.pressed and is_click and not is_drag_started:
 			# Clique concluído - mostra informações
 			is_click = false
 			ItemManager.update_selected_item(current_item)
+			get_viewport().set_input_as_handled()
 		elif not event.pressed and is_dragging:
 			# Soltou o botão durante drag - finaliza
 			end_drag()

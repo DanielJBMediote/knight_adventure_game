@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://coexygw78eu6p"]
+[gd_scene load_steps=20 format=4 uid="uid://coexygw78eu6p"]
 
 [ext_resource type="Script" uid="uid://dirkxfg16rje0" path="res://src/world/maps/_configs/map_data.gd" id="1_vlgfo"]
 [ext_resource type="PackedScene" uid="uid://bgtrneqf6i4of" path="res://src/world/maps/_configs/smart_camera_controller.tscn" id="2_dsxq3"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://fujugraamx3i" path="res://src/world/tilesets/plataform.tscn" id="5_axxhc"]
 [ext_resource type="PackedScene" uid="uid://cskwylgkas0rj" path="res://src/world/tilesets/trees.tscn" id="6_0owvr"]
 [ext_resource type="PackedScene" uid="uid://doom7rgxnt8p7" path="res://src/actors/player/player.tscn" id="6_hnsy3"]
-[ext_resource type="Script" uid="uid://c7fsv8mj3g2c6" path="res://src/world/maps/_configs/map_droped_item_node.gd" id="7_n21sq"]
 [ext_resource type="PackedScene" uid="uid://cc8hjpk4p2yx7" path="res://src/actors/enemies/bat/bat.tscn" id="7_q0ktx"]
 [ext_resource type="PackedScene" uid="uid://bc0emswvufmdk" path="res://src/world/spawn_zone.tscn" id="8_n2vfr"]
 [ext_resource type="Script" uid="uid://dlmywaf73fyaa" path="res://src/world/maps/map_01/map_graveward_parallax_config.gd" id="8_vrosl"]
@@ -56,11 +55,6 @@ metadata/_edit_lock_ = true
 
 [node name="Trees" parent="MapLayers" instance=ExtResource("6_0owvr")]
 tile_map_data = PackedByteArray("AADD/ggAAQABAAEAAADk/ggAAQACAAEAAAAA/wgAAQADAAIAAABO//n/AQAAAAMAAAB7//v/AQACAAEAAACL//X/AAACAAAAAAAKAAkAAAADAAAAAACw//z/AQAAAAAAAAC5/wEAAQACAAAAAABC//n/AQAAAAMAAABt//v/AQAAAAMAAABn//v/AQAAAAMAAACXAAsAAAACAAEAAAB3AA4AAAACAAEAAABkAA4AAAABAAIAAAApAAoAAAAAAAIAAABSAAcAAQACAAEAAABbAAwAAQACAAEAAADFAAAAAQABAAEAAACzAAAAAQADAAIAAACmAAcAAQAAAAIAAADE/wIAAQAAAAAAAADlAAUAAAACAAEAAAAXAfr/AQAAAAEAAAAJAQIAAQADAAIAAAA+Afr/AQADAAEAAAApAfr/AQACAAEAAAA0Afv/AQABAAIAAAA=")
-
-[node name="DropItemsZone" type="Node2D" parent="." groups=["items_dropped_zone"]]
-y_sort_enabled = true
-position = Vector2(1, 0)
-script = ExtResource("7_n21sq")
 
 [node name="SpawnZone" parent="." instance=ExtResource("8_n2vfr")]
 position = Vector2(-5984, 384)

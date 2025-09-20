@@ -43,14 +43,14 @@ func start_timer(effect_data: StatusEffect) -> void:
 	
 	update_ui(effect_data.duration)
 
-func extend_effect_duration(new_duration: float) -> void:
+func updated_effect_duration(duartion: float) -> void:
 	if effect_timer:
 		# var remaining = effect_timer.time_left
 		effect_timer.stop()
-		effect_timer.wait_time = new_duration
-		current_duration = new_duration
+		effect_timer.wait_time = duartion
+		current_duration = duartion
 		effect_timer.start()
-		update_ui(new_duration)
+		update_ui(duartion)
 
 func update_ui(duration: float) -> void:
 	if timer_progress:

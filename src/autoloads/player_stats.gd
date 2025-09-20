@@ -10,9 +10,14 @@ signal max_mana_changed(max_mana: float, mana: float)
 signal energy_changed(energy: float)
 signal max_energy_changed(max_energy: float, energy: float)
 
+signal attack_speed_updated(value: float)
+signal move_speed_updated(value: float)
+
 signal experiance_added(amount: float)
 signal experience_update(exp: float)
 signal level_updated(level: float)
+
+signal passive_status_effect_changed(status_effect: StatusEffect)
 
 signal attributes_changed(attributes)
 signal player_dead
@@ -33,11 +38,11 @@ const EXP_SCALE_FACTOR = 1.15
 const EXP_ADDITIVE = 50
 const MAX_DEFENCE_REDUCTION = 0.8
 
-const MAX_CRITICAL_RATE = 0.8
-const MAX_CRITICAL_DAMAGE = 4.0
+const MAX_CRITICAL_RATE = 0.8 # 80% Crit. Rate
+const MAX_CRITICAL_DAMAGE = 4.0 # 400% Damage
 
-const BASE_CRITICAL_POINTS_FOR_MAX = 500.0 # 500pts para 80% no nível 1
-const MAX_CRITICAL_POINTS_FOR_MAX = 5000.0 # 5000pts para 80% no nível 100
+const BASE_CRITICAL_POINTS_FOR_MAX = 800.0 # 800pts para 80% no nível 1
+const MAX_CRITICAL_POINTS_FOR_MAX = 8000.0 # 8000pts para 80% no nível 100
 const CRITICAL_GROWTH_FACTOR_PER_LEVEL = (MAX_CRITICAL_POINTS_FOR_MAX - BASE_CRITICAL_POINTS_FOR_MAX) / 99.0
 
 const GROWTH_DEFENSE_FACTOR_PER_LEVEL = 0.045 # 4.5%
@@ -47,41 +52,58 @@ const MAX_TARGET_HEALTH = 85000.0
 const MAX_TARGET_MANA = 450.0
 const MAX_TARGET_ENERGY = 150
 
+# Base values References
+var BASE_HEALTH: float = 1200.0
+var BASE_MANA: float = 50.0
+var BASE_ENERGY: float = 100.0
+var BASE_MIN_DAMAGE: float = 150.0
+var BASE_MAX_DAMAGE: float = 250.0
+
 ## 1 = normal, <1 = menos knockback, >1 = mais knockback
 var knockback_resistance: float = 1.0
 var knockback_force: float = 300.0
 var knockback_chance: float = 1.0 # de 0% até 60%
 
 
-var level: int = 39
-var total_exp := 0.0
-var current_exp := 0.0
+var level: int = 1:
+	get: return level
+	set(value): level = clampi(value, 1, 100)
+var exp_total := 0.0
+var exp_current := 0.0
 var exp_to_next_level := 0.0
-var exp_boost := 1.0 # 100% de Experincia
-
-# Valores base no nível 1
-var base_max_health: float = 1200.0
-var base_min_health: float = 800.0
-
-var base_max_mana: float = 40.0
-
-var base_max_energy: float = 100.0
-
-var base_min_damage: float = 150.0
-var base_max_damage: float = 250.0
-
-# Valores atuais
-var max_health_points: float = 1000.0
-var health_points: float = 1000.0
-var health_regen: float = 1.0
-
-var max_mana_points: float = 40.0
-var mana_points: float = 40.0
-var mana_regen: float = 1.0
-
-var max_energy_points: float = 100.0
-var energy_points: float = 100.0
-var energy_regen: float = 1.0
+var exp_boost := 1.0: # 100% Experincia
+	get: return exp_boost
+	set(value): exp_boost = maxf(1.0, value)
+# Health
+var max_health_points: float = BASE_HEALTH:
+	get: return max_health_points
+	set(value): max_health_points = maxf(0.0, value)
+var health_points: float = BASE_HEALTH:
+	get(): return health_points
+	set(value): health_points = clampf(value, 0.0, max_health_points)
+var health_regen: float = 1.0:
+	get: return health_regen
+	set(value): health_regen = clampf(value, 1.0, max_health_points)
+# Mana
+var max_mana_points: float = BASE_MANA:
+	get: return max_mana_points
+	set(value): max_mana_points = maxf(0.0, value)
+var mana_points: float = BASE_MANA:
+	get(): return mana_points
+	set(value): mana_points = clampf(value, 0.0, max_mana_points)
+var mana_regen: float = 1.0:
+	get: return mana_regen
+	set(value): mana_regen = clampf(value, 1.0, max_mana_points)
+# Energy
+var max_energy_points: float = 100.0:
+	get: return max_energy_points
+	set(value): max_energy_points = maxf(100.0, value)
+var energy_points: float = 100.0:
+	get(): return energy_points
+	set(value): energy_points = clampf(value, 0.0, max_energy_points)
+var energy_regen: float = 1.0:
+	get(): return energy_regen
+	set(value): energy_regen = clampf(value, 1.0, max_energy_points)
 
 var energy_cost_to_roll: float = 20.0
 var energy_cost_to_attack: float = 5.0
@@ -90,23 +112,33 @@ var mana_cost_to_cast_skill_0: float = 0.0
 var mana_cost_to_cast_skill_1: float = 0.0
 var mana_cost_to_cast_skill_2: float = 0.0
 
-var min_damage: float = 1.0
-var max_damage: float = 1.0
-
-var critical_points: float = 0.0
+var min_damage: float = 0.0:
+	get: return min_damage + aditional_attribute.get(StatusEffect.EFFECT.DAMAGE_BOOST, 0.0)
+	set(value): min_damage = maxf(0.0, value)
+var max_damage: float = 0.0:
+	get: return max_damage + aditional_attribute.get(StatusEffect.EFFECT.DAMAGE_BOOST, 0.0)
+	set(value): max_damage = maxf(0.0, value)
+## Critical Points or Critical Rate is used to determine the chance to Critical Hit
+var critical_points: float = 0.0:
+	get: return critical_points + aditional_attribute.get(StatusEffect.EFFECT.CRITICAL_RATE_BOOST, 0.0)
+	set(value): critical_points = maxf(0.0, value)
+## Critical Damage is used to determine the times os damage
 var critical_damage: float = 1.0:
-	get: return critical_damage
-	set(value): critical_damage = maxf(value, 1.0)
+	get: return critical_damage + aditional_attribute.get(StatusEffect.EFFECT.CRITICAL_DAMAGE_BOOST, 0.0)
+	set(value): critical_damage = clampf(value, 1.0, MAX_CRITICAL_DAMAGE)
+var defense_points: float = 0.0:
+	get: return defense_points + aditional_attribute.get(StatusEffect.EFFECT.DEFENSE_BOOST, 0.0)
+	set(value): defense_points = maxf(0.0, value)
+var attack_speed: float = 1.0:
+	get: return attack_speed
+	set(value): attack_speed = clampf(value, 1.0, 2.0)
+var move_speed: float = 1.0:
+	get: return move_speed
+	set(value): move_speed = clampf(value, 1.0, 2.0)
 
-
-var defense_points: float = 0.0
-
-var attack_speed: float = 1.0
-var move_speed: float = 1.0
-
-var active_status_effects: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
-
-var passive_status_effects: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
+var hit_rate_status_effects: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
+var active_status_effect: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
+var aditional_attribute: Dictionary[StatusEffect.EFFECT, float] = {}
 
 # os valores serão instanciados por um arquivo onde eu vou armazenar
 func _ready() -> void:
@@ -120,112 +152,139 @@ func _ready() -> void:
 
 
 func initialize_base_stats() -> void:
-	# Valores aleatórios dentro dos ranges especificados
-	base_max_health = calculate_health_at_level(level)
-	base_max_mana = calculate_mana_at_level(level)
-	base_max_energy = calculate_energy_at_level(level)
-	base_min_damage = calculate_damage_at_level(level).min_damage
-	base_max_damage = calculate_damage_at_level(level).max_damage
-	# base_max_health = randf_range(800.0, 1200.0)
-	# base_max_mana = randf_range(25.0, 50.0)
-	# base_max_energy = 100.0
-	# base_min_damage = randf_range(100.0, 200.0)
-	# base_max_damage = randf_range(200.0, 300.0)
-
 	# Aplica valores base
-	max_health_points = base_max_health
-	health_points = base_max_health
-	max_mana_points = base_max_mana
-	mana_points = base_max_mana
-	max_energy_points = base_max_energy
-	energy_points = base_max_energy
-	min_damage = base_min_damage
-	max_damage = base_max_damage
-	
-	critical_points = 0.0
-	critical_damage = 1.0
+	max_health_points = randf_range(BASE_HEALTH * 0.75, BASE_HEALTH * 1.25)
+	health_points = max_health_points
+	max_mana_points = randf_range(BASE_MANA * 0.75, BASE_MANA * 1.25)
+	mana_points = max_mana_points
+	max_energy_points = 100.0
+	energy_points = max_energy_points
+	min_damage = randf_range(BASE_MIN_DAMAGE * 0.75, BASE_MIN_DAMAGE * 1.25)
+	max_damage = randf_range(BASE_MAX_DAMAGE * 0.75, BASE_MAX_DAMAGE * 1.25)
 
+	# max_health_points = calculate_health_at_level(level)
+	# health_points = max_health_points
+	# max_mana_points = calculate_mana_at_level(level)
+	# mana_points = max_mana_points
+	# max_energy_points = calculate_energy_at_level(level)
+	# energy_points = max_energy_points
+	# min_damage = calculate_damage_at_level(level).min_damage
+	# max_damage = calculate_damage_at_level(level).max_damage
+
+
+func update_max_health(value: float) -> void:
+	var new_max_health_points = max_health_points + value
+	max_health_points = new_max_health_points
+	max_health_changed.emit(max_health_points, health_points)
 
 func update_health(value: float) -> void:
-	health_points = clampf(health_points + value, 0.0, max_health_points)
+	var new_health_points = health_points + value
+	health_points = new_health_points
 	if health_points <= 0:
 		player_dead.emit()
 	health_changed.emit(health_points)
 
-
-func update_max_health(value: float) -> void:
-	max_health_points += value
-	max_health_changed.emit(max_health_points, health_points)
-
-
 func update_health_regen(value: float) -> void:
-	health_regen = clampf(health_regen + value, 1.0, max_health_points)
-
-func update_mana(value: float) -> void:
-	mana_points = clampf(mana_points + value, 0.0, max_mana_points)
-	mana_changed.emit(mana_points)
+	var new_health_regen = health_regen + value
+	health_regen = new_health_regen
 
 
 func update_max_mana(value: float) -> void:
-	max_mana_points += value
+	var new_max_mana_points = max_mana_points + value
+	max_mana_points = new_max_mana_points
 	max_mana_changed.emit(max_mana_points, mana_points)
 
-func update_energy(value: float) -> void:
-	energy_points = clampf(energy_points + value, 0.0, max_energy_points)
-	energy_changed.emit(energy_points)
+func update_mana(value: float) -> void:
+	var new_mana_points = mana_points + value
+	mana_points = new_mana_points
+	mana_changed.emit(mana_points)
+
+func update_mana_regen(value: float) -> void:
+	var new_mana_regen = mana_regen + value
+	mana_regen = new_mana_regen
 
 
 func update_max_energy(value: float) -> void:
-	max_energy_points += value
+	var new_max_energy_points = max_energy_points + value
+	max_energy_points = new_max_energy_points
 	max_energy_changed.emit(max_energy_points, energy_points)
+
+func update_energy(value: float) -> void:
+	var new_energy_points = energy_points + value
+	energy_points = new_energy_points
+	energy_changed.emit(energy_points)
+
+func update_energy_regen(value: float) -> void:
+	var new_energy_regen = energy_regen + value
+	energy_regen = new_energy_regen
 
 
 func update_defense_points(value: float) -> void:
-	defense_points = max(defense_points + value, 1)
+	var new_defense_points = defense_points + value
+	defense_points = new_defense_points
 
 
 func update_min_damage(value: float) -> void:
-	min_damage = max(min_damage + value, 1.0)
-
+	var new_damage = min_damage + value
+	min_damage = new_damage
 
 func update_max_damage(value: float) -> void:
-	max_damage = max(max_damage + value, 1.0)
-
+	var new_damage = max_damage + value
+	max_damage = new_damage
+	
 
 func update_critical_rate(value: float) -> void:
-	critical_points = max(critical_points + value, 0)
+	var new_critical_points = critical_points + value
+	critical_points = new_critical_points
 
 
 func update_critical_damage(value: float) -> void:
-	var crit_dmg = clampf(critical_damage + value, 1.0, MAX_CRITICAL_DAMAGE)
-	critical_damage = crit_dmg
+	var new_critical_damage = critical_damage + value
+	critical_damage = new_critical_damage
 
 
 func update_attack_speed(value: float) -> void:
-	attack_speed = clamp(attack_speed + value, 1.0, 3.0)
-
+	var new_attack_speed = attack_speed + value
+	attack_speed = new_attack_speed
+	attack_speed_updated.emit(attack_speed)
 
 func update_move_speed(value: float) -> void:
-	move_speed = clamp(move_speed + value, 1.0, 2.0)
+	var new_move_speed = move_speed + value
+	move_speed = new_move_speed
+	move_speed_updated.emit(move_speed)
 
 
-func update_active_status_effect(attribute_type: ItemAttribute.TYPE, rate_value: float) -> void:
-	var effect = StatusEffect.get_effect_by_equipment_attribute_type(attribute_type)
-	if active_status_effects.has(effect):
-		var active_status = active_status_effects[effect]
-		active_status.rate_chance += rate_value
-		active_status.duration = active_status.base_duration + ((level - 1) * 0.01)
+func update_hit_rate_status_effects(attribute_type: ItemAttribute.TYPE, rate_value: float) -> void:
+	var effect = StatusEffect.get_debuff_effect_by_equipment_attribute_type(attribute_type)
+	if hit_rate_status_effects.has(effect):
+		hit_rate_status_effects[effect].rate_chance += rate_value
+		hit_rate_status_effects[effect].duration = hit_rate_status_effects[effect].base_duration + ((level - 1) * 0.01)
 	else:
-		var new_active_status = StatusEffect.new(effect)
-		new_active_status.effect = effect
-		new_active_status.type = StatusEffect.TYPE.ACTIVE
-		new_active_status.duration = new_active_status.base_duration + ((level - 1) * 0.01)
-		new_active_status.rate_chance = rate_value
-		active_status_effects[effect] = new_active_status
+		var new_status_effect = StatusEffect.new(effect)
+		new_status_effect.effect = effect
+		new_status_effect.type = StatusEffect.TYPE.ACTIVE
+		new_status_effect.category = StatusEffect.CATEGORY.DEBUFF
+		new_status_effect.duration = new_status_effect.base_duration + ((level - 1) * 0.01)
+		new_status_effect.rate_chance = rate_value
+		hit_rate_status_effects[effect] = new_status_effect
 
 # Quando ativado por poções
-func update_passive_status_effects(attribute_type: ItemAttribute.TYPE, value: float) -> void:
-	pass
+func update_active_status_effects(attribute_type: ItemAttribute.TYPE, duration: float, value: float) -> void:
+	var effect = StatusEffect.get_effect_by_potion_atrtibute_type(attribute_type)
+	if active_status_effect.has(effect):
+		active_status_effect[effect].duration = duration
+		active_status_effect[effect].value = value
+	else:
+		var new_status_effect = StatusEffect.new(effect, duration)
+		new_status_effect.effect = effect
+		new_status_effect.value = value
+		new_status_effect.rate_chance = 1.0
+		new_status_effect.type = StatusEffect.TYPE.ACTIVE
+		new_status_effect.category = StatusEffect.CATEGORY.BUFF
+		active_status_effect[effect] = new_status_effect
+	
+	aditional_attribute[effect] = value
+	PlayerEvents.add_new_status_effect(active_status_effect[effect])
 
 func update_knockback_resistance(value: float) -> void:
 	knockback_resistance = value
@@ -255,7 +314,7 @@ func calculate_attack_damage() -> DamageData:
 	if randf() * 100 <= knockback_chance:
 		damage_data.is_knockback_hit = true
 
-	for status_effect in active_status_effects.values():
+	for status_effect in hit_rate_status_effects.values():
 		if randf() * 1.0 <= status_effect.rate_chance:
 			status_effect.is_active = true
 			damage_data.status_effects.append(status_effect)
@@ -284,7 +343,7 @@ func calculate_damage_taken(damage_data: DamageData, enemy_level: int) -> Damage
 	calculated_damage.is_critical = damage_data.is_critical
 	calculated_damage.is_knockback_hit = damage_data.is_knockback_hit
 	calculated_damage.status_effects = damage_data.status_effects.duplicate()
-
+	
 	return calculated_damage
 
 func get_critical_rate() -> float:
@@ -370,23 +429,23 @@ func get_defense_effectiveness_percentage(target_level: int) -> float:
 func calculate_health_at_level(target_level: int) -> float:
 	# Polinominal Progress
 	var growth_factor = float(target_level - 1) / (MAX_LEVEL - 1)
-	return base_max_health + (MAX_TARGET_HEALTH - base_max_health) * pow(growth_factor, 1.5)
+	return BASE_HEALTH + (MAX_TARGET_HEALTH - BASE_HEALTH) * pow(growth_factor, 1.5)
 
 	# Exponencial Progress
-	# var growth_factor = pow(MAX_TARGET_HEALTH / base_max_health, 1.0 / 99.0)
-	# return base_max_health * pow(growth_factor, target_level - 1)
+	# var growth_factor = pow(MAX_TARGET_HEALTH / BASE_MAX_HEALTH, 1.0 / 99.0)
+	# return BASE_MAX_HEALTH * pow(growth_factor, target_level - 1)
 
 
 func calculate_mana_at_level(target_level: int) -> float:
 	# Mana: 25-50 no nível 1, 450-500 no nível 100
-	var growth_factor = pow(MAX_TARGET_MANA / base_max_mana, 1.0 / 99.0)
-	return base_max_mana * pow(growth_factor, target_level - 1)
+	var growth_factor = pow(MAX_TARGET_MANA / BASE_MANA, 1.0 / 99.0)
+	return BASE_MANA * pow(growth_factor, target_level - 1)
 
 
 func calculate_energy_at_level(target_level: int) -> float:
 	# +1.5 a cada nível par (níveis ímpares mantêm o valor do nível anterior)
 	var bonus_levels = floor(float(target_level) / 2)
-	return base_max_energy + bonus_levels * 1.5
+	return BASE_ENERGY + bonus_levels * 1.5
 
 
 func calculate_damage_at_level(target_level: int) -> DamageStats:
@@ -394,11 +453,11 @@ func calculate_damage_at_level(target_level: int) -> DamageStats:
 	var target_min = 10500.0 # Valor médio
 	var target_max = 11000.0 # Valor médio
 
-	var min_growth = pow(target_min / base_min_damage, 1.0 / 99.0)
-	var max_growth = pow(target_max / base_max_damage, 1.0 / 99.0)
+	var min_growth = pow(target_min / BASE_MIN_DAMAGE, 1.0 / 99.0)
+	var max_growth = pow(target_max / BASE_MAX_DAMAGE, 1.0 / 99.0)
 
-	var min_damage_value = base_min_damage * pow(min_growth, target_level - 1)
-	var max_damage_value = base_max_damage * pow(max_growth, target_level - 1)
+	var min_damage_value = BASE_MIN_DAMAGE * pow(min_growth, target_level - 1)
+	var max_damage_value = BASE_MAX_DAMAGE * pow(max_growth, target_level - 1)
 
 	return DamageStats.new(min_damage_value, max_damage_value)
 
@@ -414,14 +473,14 @@ func calculate_exp_to_next_level():
 
 
 func add_experience(amount: float) -> void:
-	total_exp += amount * exp_boost
-	current_exp += amount * exp_boost
+	exp_total += amount * exp_boost
+	exp_current += amount * exp_boost
 	experiance_added.emit(amount)
-	experience_update.emit(current_exp)
+	experience_update.emit(exp_current)
 
 	# Verifica level up
-	while current_exp >= exp_to_next_level and exp_to_next_level > 0:
-		current_exp -= exp_to_next_level
+	while exp_current >= exp_to_next_level and exp_to_next_level > 0:
+		exp_current -= exp_to_next_level
 		add_level()
 
 	emit_attributes_changed()
@@ -494,8 +553,8 @@ func get_attributes() -> PlayerAttributes:
 	player_attributes.defense_rate = get_defense_effectiveness_percentage(level)
 	player_attributes.max_defense_points = get_max_defense_for_current_level()
 	
-	player_attributes.current_exp = current_exp
-	player_attributes.total_exp = total_exp
+	player_attributes.current_exp = exp_current
+	player_attributes.total_exp = exp_total
 	player_attributes.exp_to_next_level = exp_to_next_level
 	player_attributes.exp_boost = exp_boost
 
@@ -503,7 +562,7 @@ func get_attributes() -> PlayerAttributes:
 	player_attributes.knockback_force = knockback_force
 	player_attributes.knockback_chance = knockback_chance
 
-	player_attributes.active_status_effects = active_status_effects.values()
+	player_attributes.hit_rate_status_effects = hit_rate_status_effects.values()
 
 	return player_attributes
 

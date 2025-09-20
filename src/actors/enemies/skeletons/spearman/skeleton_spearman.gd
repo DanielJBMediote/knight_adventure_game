@@ -1,10 +1,8 @@
-class_name SkeletonWarrior
+class_name SkeletonSpearman
 extends TerrestrialEnemy
 
 @onready var hit_flash_animation: AnimationPlayer = $HitFlashAnimation
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
-
-@onready var debug_label: Label = $DebugLabel
 
 enum STATES {IDLE, WANDER, CHASE, ATTACKING}
 var state: STATES = STATES.IDLE
@@ -14,7 +12,7 @@ var is_first_attack_after_chase := false
 func _ready() -> void:
 	super._ready()
 	pick_random_state([STATES.IDLE, STATES.WANDER])
-	attack_names = ["Attack_1", "Attack_2", "Attack_3"]
+	attack_names = ["Attack_1", "Attack_2"]
 
 	if enemy_stats and not enemy_stats.died.is_connected(_on_enemy_stats_died):
 		enemy_stats.died.connect(_on_enemy_stats_died)
@@ -55,6 +53,7 @@ func _physics_process(delta: float) -> void:
 		enemy_hitbox.get_node("CollisionShape2D").set_deferred("disabled", true)
 	else:
 		enemy_hitbox.get_node("CollisionShape2D").set_deferred("disabled", false)
+
 
 	super.apply_gravity(delta)
 	play_animations()
@@ -140,6 +139,7 @@ func handle_chase_state(_delta: float) -> void:
 		update_navigation_path()
 		apply_navigation_movement(3.0)
 
+		# Atualiza direção do sprite
 		face_direction = sign(target_direction.x)
 
 		# Verifica se há parede à frente
@@ -160,8 +160,7 @@ func handle_chase_state(_delta: float) -> void:
 
 		# Lógica de ataque
 		if distance_to_player <= min_attack_distance:
-			velocity.x = 0
-			apply_gravity(_delta)
+			velocity.x = 0 # Mantém apenas o movimento vertical
 
 			if can_attack and attack_timer.time_left <= 0:
 				start_attack()
@@ -228,6 +227,23 @@ func finish_attack():
 	is_first_attack_after_chase = false
 
 
+func _on_enemy_hurtbox_area_entered(area2D: Area2D) -> void:
+	if target_player and area2D.collision_layer == 512:
+		hit_flash_animation.play("hit_flash")
+		var is_knockback = take_hit()
+		if is_knockback:
+			take_knockback(target_player.knockback_force, target_player.global_position)
+
+func _on_hit_flash_animation_animation_finished(anim_name: StringName) -> void:
+	if anim_name == "hit_flash":
+		is_hurting = false
+		is_invulnerable = false
+
+func _on_enemy_stats_died(exp_amount: float) -> void:
+	animation_player.play("Dead_" + direction_str)
+	super._on_enemy_stats_died(exp_amount)
+
+
 func _on_detection_zone_player_entered(player: Player) -> void:
 	target_player = player
 	state = STATES.CHASE
@@ -262,22 +278,3 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 		is_invulnerable = false
 	if anim_name.contains("Dead"):
 		enemy_control_ui.hide()
-
-
-func _on_enemy_hurtbox_area_entered(area2D: Area2D) -> void:
-	if target_player and area2D.collision_layer == 512:
-		hit_flash_animation.play("hit_flash")
-		var is_knockback = take_hit()
-		if is_knockback:
-			take_knockback(target_player.knockback_force, target_player.global_position)
-
-
-func _on_hit_flash_animation_animation_finished(anim_name: StringName) -> void:
-	if anim_name == "hit_flash":
-		is_hurting = false
-		is_invulnerable = false
-
-
-func _on_enemy_stats_died(exp_amount: float) -> void:
-	animation_player.play("Dead_" + direction_str)
-	super._on_enemy_stats_died(exp_amount)

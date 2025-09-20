@@ -17,15 +17,18 @@ const BG_BAR_DURATION := 0.8
 var timer_tick: Timer
 var health_tween: Tween
 
-
 func _ready() -> void:
+	for child in status_effect_list.get_children():
+		child.queue_free()
+	
+	health_bar.max_value = enemy_stats.max_health_points
+	health_bar.value = enemy_stats.health_points
+	health_bar_bg.max_value = enemy_stats.max_health_points
+	health_bar_bg.value = enemy_stats.health_points
 
-	health_bar.max_value = enemy_stats.health_points
-	health_bar.value = enemy_stats.current_health_points
-	health_bar_bg.max_value = enemy_stats.health_points
-	health_bar_bg.value = enemy_stats.current_health_points
+	if enemy_stats and not enemy_stats.health_changed.is_connected(_on_update_health):
+		enemy_stats.health_changed.connect(_on_update_health)
 
-	enemy_stats.health_changed.connect(on_update_health)
 	if not timer_tick:
 		timer_tick = Timer.new()
 	
@@ -38,18 +41,16 @@ func _ready() -> void:
 
 func _on_timeout():
 	var health_regen_per_seconds = enemy_stats.health_regen_per_seconds
-	var health_points = enemy_stats.current_health_points
-	var max_health_points = enemy_stats.health_points
+	var health_points = enemy_stats.health_points
+	var max_health_points = enemy_stats.max_health_points
 	if health_regen_per_seconds > 0 and health_points < max_health_points:
 		health_points += health_regen_per_seconds
-		on_update_health(health_points)
+		_on_update_health(health_points)
 
 
-func animate_bar_change(
-	main_bar: ProgressBar, bg_bar: ProgressBar, new_value: float, is_increasing: bool, tween_ref: Tween
-):
+func animate_bar_change(main_bar: ProgressBar, bg_bar: ProgressBar, new_value: float, is_increasing: bool, tween_ref: Tween):
 	if tween_ref:
-		tween_ref.kill()  # Interrompe animações anteriores
+		tween_ref.kill() # Interrompe animações anteriores
 
 	tween_ref = create_tween().set_parallel(true)
 
@@ -63,9 +64,9 @@ func animate_bar_change(
 		tween_ref.tween_property(bg_bar, "value", new_value, BG_BAR_DURATION).set_delay(BG_BAR_DELAY)
 
 
-func on_update_health(new_health: float) -> void:
+func _on_update_health(new_health: float) -> void:
 	# Calcula se é aumento ou redução
-	var is_increasing = new_health > enemy_stats.health_points
+	var is_increasing = new_health > enemy_stats.max_health_points
 	var health_points = new_health
 	# Atualiza as barras
 	animate_bar_change(health_bar, health_bar_bg, health_points, is_increasing, health_tween)

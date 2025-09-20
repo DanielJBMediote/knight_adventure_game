@@ -122,7 +122,6 @@ func apply_damage_on_player(damage_data: DamageData, enemy_stats: EnemyStats):
 		if status_effect.is_active:
 			PlayerEvents.add_new_status_effect(status_effect)
 
-
 func _physics_process(delta) -> void:
 	if not is_sliding:
 		current_rotation = lerp(current_rotation, 0.0, ROTATION_SPEED * delta)

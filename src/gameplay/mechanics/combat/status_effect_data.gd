@@ -117,7 +117,7 @@ static func _filter_by_buff_effects(_status_effect: StatusEffect) -> bool:
 
 
 # Equipments
-static func get_effect_by_equipment_attribute_type(attribute_type: ItemAttribute.TYPE) -> EFFECT:
+static func get_debuff_effect_by_equipment_attribute_type(attribute_type: ItemAttribute.TYPE) -> EFFECT:
 	match attribute_type:
 			ItemAttribute.TYPE.POISON_HIT_RATE: return EFFECT.POISONING
 			ItemAttribute.TYPE.BLEED_HIT_RATE: return EFFECT.BLEEDING

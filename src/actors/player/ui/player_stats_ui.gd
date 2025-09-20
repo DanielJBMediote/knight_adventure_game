@@ -61,7 +61,7 @@ func _ready() -> void:
 	_update_health_bar(PlayerStats.max_health_points, PlayerStats.health_points)
 	_update_mana_bar(PlayerStats.max_mana_points, PlayerStats.mana_points)
 	_update_energy_bar(PlayerStats.max_energy_points, PlayerStats.energy_points)
-	_update_exp_bar(PlayerStats.exp_to_next_level, PlayerStats.current_exp)
+	_update_exp_bar(PlayerStats.exp_to_next_level, PlayerStats.exp_current)
 	
 	_on_health_updated(PlayerStats.health_points)
 	_on_mana_updated(PlayerStats.mana_points)
@@ -206,4 +206,4 @@ func _on_exp_tween_finished():
 
 func _on_level_update(new_level: int):
 	level_label.text = str("Lv.", new_level)
-	_update_exp_bar(PlayerStats.exp_to_next_level, PlayerStats.current_exp)
+	_update_exp_bar(PlayerStats.exp_to_next_level, PlayerStats.exp_current)

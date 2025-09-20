@@ -191,12 +191,9 @@ func calculate_buff_level_bonus() -> float:
 
 
 func calculate_buff_duration() -> float:
-	# 30s de base
-	var duration = 30.0
-	# Aumento de 30s por raidade - 0/30/60/90/120/150 segundos
-	var rarity_bonus = item_rarity * 30.0
-	# Se for unico adiciona 60s
-	var unique_bonus = 60.0 if is_unique else 0.0
+	var duration = 90.0
+	var rarity_bonus = item_rarity * 45.0
+	var unique_bonus = 120.0 if is_unique else 0.0
 
 	return duration + rarity_bonus + unique_bonus
 
@@ -207,8 +204,8 @@ func _calculate_potion_level(enemy_level: int) -> int:
 
 
 func _setup_potion_action() -> ItemAction:
-	var action = ItemAction.new()
 	var attribute = ItemAttribute.new(potion_type, 0)
+	var action = ItemAction.new()
 
 	# Define se é instantâneo ou buff
 	if potion_type in [ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.MANA, ItemAttribute.TYPE.ENERGY]:

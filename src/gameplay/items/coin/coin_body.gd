@@ -34,8 +34,10 @@ func _ready():
 	# Aplica força inicial aleatória
 	apply_random_force()
 	# Conecta os sinais das áreas
-	collect_zone.body_entered.connect(_on_collect_zone_body_entered)
-	collect_zone.body_exited.connect(_on_collect_zone_body_exited)
+	if collect_zone and collect_zone.body_entered.is_connected(_on_collect_zone_body_entered):
+		collect_zone.body_entered.connect(_on_collect_zone_body_entered)
+	if collect_zone and collect_zone.body_entered.is_connected(_on_collect_zone_body_exited):
+		collect_zone.body_exited.connect(_on_collect_zone_body_exited)
 
 	# Cria timer para verificar quando a moeda parou no chão
 	floor_check_timer = Timer.new()
