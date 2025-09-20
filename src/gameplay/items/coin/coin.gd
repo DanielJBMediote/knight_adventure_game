@@ -17,9 +17,9 @@ enum TYPE {BRONZE, SILVER, GOLD}
 enum SIZE {SMALL, NORMAL, BIG}
 
 const COIN_TYPE_WEIGHT = {
-	TYPE.BRONZE: 60,
-	TYPE.SILVER: 35,
-	TYPE.GOLD: 5
+	TYPE.BRONZE: 90.0,
+	TYPE.SILVER: 9.5,
+	TYPE.GOLD: 0.5
 }
 
 const COIN_SIZE_WEIGHT = {
@@ -35,9 +35,9 @@ const COINS_VALUES = {
 }
 
 const COINS_SIZE_MULTIPLY = {
-	SIZE.SMALL: 250,
-	SIZE.NORMAL: 500,
-	SIZE.BIG: 750
+	SIZE.SMALL: 150,
+	SIZE.NORMAL: 200,
+	SIZE.BIG: 350
 }
 
 @export var coin_value: int
@@ -59,7 +59,7 @@ func generate_random_type() -> TYPE:
 	for weight in COIN_TYPE_WEIGHT.values():
 		total_weight += weight
 
-	var random_value = randi() % total_weight
+	var random_value = randf_range(0, total_weight)
 	var cumulative_weight = 0
 
 	for _coin_type in COIN_TYPE_WEIGHT:

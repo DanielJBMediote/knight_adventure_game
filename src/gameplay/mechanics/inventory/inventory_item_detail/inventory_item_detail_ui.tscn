@@ -1,8 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://crtugfpy0cjod"]
+[gd_scene load_steps=19 format=3 uid="uid://crtugfpy0cjod"]
 
 [ext_resource type="Script" uid="uid://kt6ob3p4g3oh" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/inventory_item_detail_ui.gd" id="1_2ld60"]
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_iwre5"]
-[ext_resource type="Theme" uid="uid://dc8nwn3fsn3ag" path="res://src/ui/themes/base_panel.tres" id="2_m0r25"]
 [ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="3_1icw5"]
 [ext_resource type="Texture2D" uid="uid://clukmo1ygr08m" path="res://src/ui/themes/items_themes/bg_gradient_item_epic.tres" id="3_chuoy"]
 [ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="4_catel"]
@@ -14,14 +13,13 @@
 [ext_resource type="PackedScene" uid="uid://db24xs6jb4xpd" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/equipment_sockets_slots/equip_gem_sockets_slots.tscn" id="8_gv3lo"]
 [ext_resource type="Theme" uid="uid://cjghsixcdlswl" path="res://src/ui/themes/item_info_action_btn.tres" id="8_hdk3s"]
 
-[sub_resource type="Gradient" id="Gradient_chuoy"]
-offsets = PackedFloat32Array(0.130814, 1)
-colors = PackedColorArray(0.317592, 0.291363, 0, 0.635294, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_5ona2"]
-gradient = SubResource("Gradient_chuoy")
-fill_from = Vector2(0, 1)
-fill_to = Vector2(0.286325, 0)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kfg2u"]
+texture = ExtResource("1_iwre5")
+texture_margin_left = 4.0
+texture_margin_top = 4.0
+texture_margin_right = 4.0
+texture_margin_bottom = 4.0
+region_rect = Rect2(784, 208, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n44wp"]
 atlas = ExtResource("4_catel")
@@ -37,15 +35,16 @@ region = Rect2(272, 64, 32, 32)
 atlas = ExtResource("4_catel")
 region = Rect2(208, 16, 32, 32)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_chuoy"]
-texture = ExtResource("1_iwre5")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
-region_rect = Rect2(576, 240, 128, 128)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8rhx0"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.609616, 0.435565, 5.77569e-07, 1)
+border_blend = true
 
-[node name="InventoryItemInfoUI" type="Control"]
+[node name="InventoryItemDetailUI" type="Control"]
 z_index = 2
 layout_mode = 3
 anchors_preset = 15
@@ -82,24 +81,25 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme = ExtResource("2_m0r25")
+theme_override_styles/panel = SubResource("StyleBoxTexture_kfg2u")
+metadata/_edit_lock_ = true
 
-[node name="TextureMargin" type="MarginContainer" parent="Panel"]
+[node name="RarityTexture" type="TextureRect" parent="Panel"]
+custom_minimum_size = Vector2(452, 413)
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -226.0
+offset_top = -206.0
+offset_right = 226.0
+offset_bottom = 206.0
 grow_horizontal = 2
 grow_vertical = 2
-metadata/_edit_use_anchors_ = true
-
-[node name="RarityBackgroundTexture" type="TextureRect" parent="Panel/TextureMargin"]
-layout_mode = 2
 texture = ExtResource("3_chuoy")
-
-[node name="UniqueTexture" type="TextureRect" parent="Panel/TextureMargin"]
-layout_mode = 2
-texture = SubResource("GradientTexture2D_5ona2")
+metadata/_edit_lock_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 1
@@ -296,17 +296,19 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_n44wp")
 icon = SubResource("AtlasTexture_hdk3s")
 icon_alignment = 1
 
-[node name="Border" type="Panel" parent="Panel"]
+[node name="UniqueBorder" type="Panel" parent="Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 3.0
+offset_right = -4.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_chuoy")
-metadata/_edit_use_anchors_ = true
-metadata/_edit_lock_ = true
+theme_override_styles/panel = SubResource("StyleBoxFlat_8rhx0")
 
 [connection signal="pressed" from="Panel/MarginContainer/ScrollContainer/ContentContainer/Footer/TrashItemButton" to="." method="_on_trash_item_button_pressed"]
 [connection signal="pressed" from="Panel/MarginContainer/Buttons/AdvancedViewButton" to="." method="_on_advanced_view_button_pressed"]

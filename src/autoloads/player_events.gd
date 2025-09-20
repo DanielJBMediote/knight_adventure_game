@@ -41,10 +41,7 @@ func _on_use_potion(potion: PotionItem) -> bool:
 			_:
 				return false
 	else:
-		var attribute_type = potion_action.attribute.type
-		var duration = potion_action.duration
-		var value = potion_action.attribute.value
-		PlayerStats.update_active_status_effects(attribute_type, duration, value)
+		PlayerStats.update_active_potions_status_effects(potion_action)
 	
 	InventoryManager.remove_item(potion)
 	PlayerStats.emit_attributes_changed()
@@ -83,18 +80,13 @@ func add_new_status_effect(status_effect: StatusEffect) -> void:
 
 
 func remove_status_effect(effect_data: StatusEffect) -> void:
-	if active_effects_ui.has(effect_data.effect):
-		var effect_ui = active_effects_ui[effect_data.effect]
+	var effect = effect_data.effect
+	if active_effects_ui.has(effect):
+		var effect_ui = active_effects_ui[effect]
 		if effect_ui:
 			effect_ui.queue_free()
-
-			if PlayerStats.aditional_attribute.has(effect_data.effect):
-				PlayerStats.aditional_attribute.erase(effect_data.effect)
-			if PlayerStats.active_status_effect.has(effect_data.effect):
-				PlayerStats.active_status_effect.erase(effect_data.effect)
-
 			# Remove from UI
-			active_effects_ui.erase(effect_data.effect)
+			active_effects_ui.erase(effect)
 			effect_data.is_active = false
 			status_effect_removed.emit(effect_data, effect_ui)
 
@@ -105,8 +97,8 @@ func _create_effect_ui(effect_data: StatusEffect) -> StatusEffectUI:
 
 	var type_str = effect_data.get_category_key_text()
 	var effect_str = effect_data.get_effect_icon_name()
-	var icon_texture = load("res://assets/ui/status_effect_icons/%ss/%s.png" % [type_str, effect_str])
-
-	base_instance.set_icon_texture(icon_texture)
+	var base_path = "res://assets/ui/status_effect_icons/%ss/%s.png" % [type_str, effect_str]
+	var icon_texture = FileUtils.load_texture_with_fallback(base_path)
+	base_instance.set_icon(icon_texture)
 
 	return base_instance

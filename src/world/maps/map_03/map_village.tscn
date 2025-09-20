@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://nxgqn7u057kw"]
+[gd_scene load_steps=17 format=4 uid="uid://nxgqn7u057kw"]
 
 [ext_resource type="Script" uid="uid://dirkxfg16rje0" path="res://src/world/maps/_configs/map_data.gd" id="1_id7sn"]
 [ext_resource type="PackedScene" uid="uid://bgtrneqf6i4of" path="res://src/world/maps/_configs/smart_camera_controller.tscn" id="2_0wnlr"]
@@ -12,9 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bmqja38h84vuw" path="res://src/actors/player/ui/player_ui.tscn" id="9_5ivhs"]
 [ext_resource type="PackedScene" uid="uid://dt7jdj04ndxo7" path="res://src/world/tilesets/props.tscn" id="10_635wq"]
 [ext_resource type="PackedScene" uid="uid://bc0emswvufmdk" path="res://src/world/spawn_zone.tscn" id="10_e0syh"]
-[ext_resource type="PackedScene" uid="uid://cc8hjpk4p2yx7" path="res://src/actors/enemies/bat/bat.tscn" id="11_w4cpr"]
 [ext_resource type="PackedScene" uid="uid://bm3d45tncritm" path="res://src/actors/enemies/skeletons/warrior/skeleton_warrior.tscn" id="12_5kl3p"]
-[ext_resource type="PackedScene" uid="uid://dgebroo7wre5p" path="res://src/actors/enemies/skeletons/spearman/skeleton_spearman.tscn" id="13_k7ufn"]
 [ext_resource type="Texture2D" uid="uid://cnhfvy3bl2w6a" path="res://assets/sprites/backgrounds/night_sky.png" id="14_k7ufn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1cow1"]
@@ -55,7 +53,7 @@ tile_map_data = PackedByteArray("AABGACoABgASAAAAAAAMAD4ABgAKAAIAAADpACoABgASAAA
 
 [node name="Props" parent="MapLayers" instance=ExtResource("10_635wq")]
 scale = Vector2(2, 2)
-tile_map_data = PackedByteArray("AAA7ASoABgAOABYAAAB2ARoABgAGABYAABDBASgABgAAABcAAADRATYABgAGABYAAAAgAkoABAAMAAsAAAAiAkoABAAMAAsAAABpAVAAAwAKABgAABAiAkIABAAIAAcAABDwAVQABAAZAAkAAAD6AVQABAAZAAkAAAA=")
+tile_map_data = PackedByteArray("AAA7ASoABgAOABYAAAB2ARoABgAGABYAABDBASgABgAAABcAAADRATYABgAGABYAAAAgAkoABAAMAAsAAAAiAkoABAAMAAsAAABpAVAAAwAKABgAABDwAVQABAAZAAkAAAD6AVQABAAZAAkAAAAiAkIABAAIAAcAABA=")
 
 [node name="MapProps" type="Node2D" parent="MapLayers"]
 y_sort_enabled = true
@@ -114,8 +112,18 @@ position = Vector2(3258, 766)
 light_interval = 2.0
 flicker_chance = 0.8
 
+[node name="LampPost16" parent="MapLayers/MapProps/Lamps" instance=ExtResource("5_kb73e")]
+position = Vector2(3546, 350)
+light_interval = 2.0
+flicker_chance = 0.8
+
 [node name="LampPost14" parent="MapLayers/MapProps/Lamps" instance=ExtResource("3_umfq5")]
-position = Vector2(3530, 350)
+position = Vector2(3594, 350)
+light_interval = 2.0
+flicker_chance = 0.6
+
+[node name="LampPost17" parent="MapLayers/MapProps/Lamps" instance=ExtResource("3_umfq5")]
+position = Vector2(3290, 766)
 light_interval = 2.0
 flicker_chance = 0.6
 
@@ -233,20 +241,15 @@ position = Vector2(325, 589)
 
 [node name="SpawnZone" parent="." instance=ExtResource("10_e0syh")]
 position = Vector2(3658, 778)
-min_enemy_numbers = 2
-enemy_scenes = Array[PackedScene]([ExtResource("11_w4cpr"), ExtResource("12_5kl3p"), ExtResource("13_k7ufn")])
-max_waves = 3
+max_enemy_numbers = 1
+enemy_scenes = Array[PackedScene]([ExtResource("12_5kl3p")])
+wave_cooldown_time = 60.0
+infinite_waves = true
 disable_smoke_animaiton = true
 metadata/_edit_lock_ = true
 
 [node name="SpawnPoint" type="Marker2D" parent="SpawnZone"]
-position = Vector2(-820, -151)
-
-[node name="SpawnPoint2" type="Marker2D" parent="SpawnZone"]
-position = Vector2(182, -70)
-
-[node name="SpawnPoint3" type="Marker2D" parent="SpawnZone"]
-position = Vector2(155, -355)
+position = Vector2(-42, -74)
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 

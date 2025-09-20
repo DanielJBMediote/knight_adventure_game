@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://b4jvfivs0pe3u" path="res://assets/sprites/entities/enemies/skeleton_spearman/Run+attack.png" id="10_blq78"]
 [ext_resource type="PackedScene" uid="uid://c8and80a8q8yw" path="res://src/actors/enemies/_controllers/enemy_stats.tscn" id="11_qaq3f"]
 [ext_resource type="PackedScene" uid="uid://rtxpfrnud2ta" path="res://src/actors/enemies/_controllers/wander_controller.tscn" id="12_g6b3v"]
-[ext_resource type="Script" uid="uid://26jp3u7gnljs" path="res://src/gameplay/mechanics/combat/status_effect_data.gd" id="12_x3nck"]
+[ext_resource type="Script" uid="uid://26jp3u7gnljs" path="res://src/gameplay/mechanics/combat/status_effect.gd" id="12_x3nck"]
 [ext_resource type="PackedScene" uid="uid://crghd6gyb71w5" path="res://src/actors/enemies/_controllers/detection_zone.tscn" id="13_r1fy1"]
 [ext_resource type="PackedScene" uid="uid://ciaj2edwf0e0c" path="res://src/actors/enemies/_controllers/enemy_control_ui.tscn" id="13_x3nck"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="15_x3nck"]

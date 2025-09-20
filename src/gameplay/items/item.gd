@@ -275,19 +275,11 @@ func load_texture_with_fallback(file_path: String, fallback_path: String, attrib
 	if FileAccess.file_exists(fallback_path):
 		var texture = load(fallback_path)
 		if texture is Texture2D:
-			print("Usando fallback básico para: ", attribute_key)
+			print("Using fallback to: ", attribute_key)
 			return texture
 
-	# Fallback 2: Textura de placeholder genérico
-	#var placeholder_path = "res://assets/sprites/items/potions/placeholder_potion.png"
-	#if FileAccess.file_exists(placeholder_path):
-	#var texture = load(placeholder_path)
-	#if texture is Texture2D:
-	#printerr("Usando placeholder para poção: ", get_potion_resource_key(potion_type))
-	#return texture
-
 	# Fallback 3: Textura programática vermelha de erro
-	printerr("No texture finded for: ", get_category_text(self.item_category), " ", attribute_key)
+	printerr("No texture finded for: ", get_category_text(item_category), " ", attribute_key)
 	return create_error_texture()
 
 

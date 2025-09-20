@@ -101,9 +101,10 @@ var max_energy_points: float = 100.0:
 var energy_points: float = 100.0:
 	get(): return energy_points
 	set(value): energy_points = clampf(value, 0.0, max_energy_points)
-var energy_regen: float = 1.0:
+var energy_regen := 10.0:
 	get(): return energy_regen
-	set(value): energy_regen = clampf(value, 1.0, max_energy_points)
+	set(value):
+		energy_regen = clampf(value + (max_energy_points * 0.1), 1.0, max_energy_points)
 
 var energy_cost_to_roll: float = 20.0
 var energy_cost_to_attack: float = 5.0
@@ -112,33 +113,57 @@ var mana_cost_to_cast_skill_0: float = 0.0
 var mana_cost_to_cast_skill_1: float = 0.0
 var mana_cost_to_cast_skill_2: float = 0.0
 
+var _base_min_damage := 0.0:
+	get: return _base_min_damage
+	set(value): _base_min_damage = maxf(0.0, value)
 var min_damage: float = 0.0:
-	get: return min_damage + aditional_attribute.get(StatusEffect.EFFECT.DAMAGE_BOOST, 0.0)
-	set(value): min_damage = maxf(0.0, value)
+	get:
+		var percentage = _get_value_from_aditional_attributes(StatusEffect.EFFECT.DAMAGE_BOOST)
+		return _base_min_damage + (_base_min_damage * percentage)
+
+var _base_max_damage := 0.0:
+	get: return _base_max_damage
+	set(value): _base_max_damage = maxf(0.0, value)
 var max_damage: float = 0.0:
-	get: return max_damage + aditional_attribute.get(StatusEffect.EFFECT.DAMAGE_BOOST, 0.0)
-	set(value): max_damage = maxf(0.0, value)
-## Critical Points or Critical Rate is used to determine the chance to Critical Hit
-var critical_points: float = 0.0:
-	get: return critical_points + aditional_attribute.get(StatusEffect.EFFECT.CRITICAL_RATE_BOOST, 0.0)
-	set(value): critical_points = maxf(0.0, value)
-## Critical Damage is used to determine the times os damage
-var critical_damage: float = 1.0:
-	get: return critical_damage + aditional_attribute.get(StatusEffect.EFFECT.CRITICAL_DAMAGE_BOOST, 0.0)
-	set(value): critical_damage = clampf(value, 1.0, MAX_CRITICAL_DAMAGE)
-var defense_points: float = 0.0:
-	get: return defense_points + aditional_attribute.get(StatusEffect.EFFECT.DEFENSE_BOOST, 0.0)
-	set(value): defense_points = maxf(0.0, value)
+	get:
+		var percentage = _get_value_from_aditional_attributes(StatusEffect.EFFECT.DAMAGE_BOOST)
+		return _base_max_damage + (_base_max_damage * percentage)
+
+var _base_critical_points := 0.0:
+	get: return _base_critical_points
+	set(value): _base_critical_points = maxf(0.0, value)
+var critical_points := 0.0:
+	get:
+		var percentage = _get_value_from_aditional_attributes(StatusEffect.EFFECT.CRITICAL_RATE_BOOST)
+		return _base_critical_points + (_base_critical_points * percentage)
+
+var _base_critical_damage := 1.0:
+	get: return _base_critical_damage
+	set(value): _base_critical_damage = clampf(value, 1.0, MAX_CRITICAL_DAMAGE)
+var critical_damage := 1.0:
+	get:
+		var percentage = _get_value_from_aditional_attributes(StatusEffect.EFFECT.CRITICAL_DAMAGE_BOOST)
+		return _base_critical_damage + (_base_critical_damage * percentage)
+
+var _base_defense_points := 0.0:
+	get: return _base_defense_points
+	set(value): _base_defense_points = maxf(0.0, value)
+var defense_points := 0.0:
+	get:
+		var percentage = _get_value_from_aditional_attributes(StatusEffect.EFFECT.DEFENSE_BOOST)
+		return _base_defense_points + (_base_defense_points * percentage)
+
 var attack_speed: float = 1.0:
 	get: return attack_speed
 	set(value): attack_speed = clampf(value, 1.0, 2.0)
+
 var move_speed: float = 1.0:
 	get: return move_speed
 	set(value): move_speed = clampf(value, 1.0, 2.0)
 
 var hit_rate_status_effects: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
-var active_status_effect: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
-var aditional_attribute: Dictionary[StatusEffect.EFFECT, float] = {}
+var active_potions_effect: Dictionary[StatusEffect.EFFECT, StatusEffect] = {}
+var aditional_attribute: Dictionary[StatusEffect.EFFECT, ItemAction] = {}
 
 # os valores serão instanciados por um arquivo onde eu vou armazenar
 func _ready() -> void:
@@ -146,6 +171,7 @@ func _ready() -> void:
 	if players.size() > 0:
 		player_ref = players[0]
 
+	PlayerEvents.status_effect_removed.connect(_on_active_buffs_status_ended)
 	# Inicializa com valores base
 	initialize_base_stats()
 	calculate_exp_to_next_level()
@@ -218,29 +244,20 @@ func update_energy_regen(value: float) -> void:
 	var new_energy_regen = energy_regen + value
 	energy_regen = new_energy_regen
 
-
 func update_defense_points(value: float) -> void:
-	var new_defense_points = defense_points + value
-	defense_points = new_defense_points
-
+	_base_defense_points = _base_defense_points + value
 
 func update_min_damage(value: float) -> void:
-	var new_damage = min_damage + value
-	min_damage = new_damage
+	_base_min_damage = _base_min_damage + value
 
 func update_max_damage(value: float) -> void:
-	var new_damage = max_damage + value
-	max_damage = new_damage
+	_base_max_damage = _base_max_damage + value
 	
-
 func update_critical_rate(value: float) -> void:
-	var new_critical_points = critical_points + value
-	critical_points = new_critical_points
-
+	_base_critical_points = _base_critical_points + value
 
 func update_critical_damage(value: float) -> void:
-	var new_critical_damage = critical_damage + value
-	critical_damage = new_critical_damage
+	_base_critical_damage = _base_critical_damage + value
 
 
 func update_attack_speed(value: float) -> void:
@@ -269,11 +286,15 @@ func update_hit_rate_status_effects(attribute_type: ItemAttribute.TYPE, rate_val
 		hit_rate_status_effects[effect] = new_status_effect
 
 # Quando ativado por poções
-func update_active_status_effects(attribute_type: ItemAttribute.TYPE, duration: float, value: float) -> void:
+func update_active_potions_status_effects(item_action: ItemAction) -> void:
+	var attribute_type = item_action.attribute.type
+	var duration = item_action.duration
+	var value = item_action.attribute.value
+
 	var effect = StatusEffect.get_effect_by_potion_atrtibute_type(attribute_type)
-	if active_status_effect.has(effect):
-		active_status_effect[effect].duration = duration
-		active_status_effect[effect].value = value
+	if active_potions_effect.has(effect):
+		active_potions_effect[effect].duration = duration
+		active_potions_effect[effect].value = value
 	else:
 		var new_status_effect = StatusEffect.new(effect, duration)
 		new_status_effect.effect = effect
@@ -281,10 +302,10 @@ func update_active_status_effects(attribute_type: ItemAttribute.TYPE, duration: 
 		new_status_effect.rate_chance = 1.0
 		new_status_effect.type = StatusEffect.TYPE.ACTIVE
 		new_status_effect.category = StatusEffect.CATEGORY.BUFF
-		active_status_effect[effect] = new_status_effect
+		active_potions_effect[effect] = new_status_effect
 	
-	aditional_attribute[effect] = value
-	PlayerEvents.add_new_status_effect(active_status_effect[effect])
+	aditional_attribute[effect] = item_action
+	PlayerEvents.add_new_status_effect(active_potions_effect[effect])
 
 func update_knockback_resistance(value: float) -> void:
 	knockback_resistance = value
@@ -572,3 +593,17 @@ func _load_stats_data() -> void:
 
 func _save_stats_data() -> void:
 	pass
+
+func _get_value_from_aditional_attributes(effect: StatusEffect.EFFECT) -> float:
+	var action = aditional_attribute.get(effect)
+	if action:
+		return action.attribute.value
+	return 0.0
+
+func _on_active_buffs_status_ended(status_effect: StatusEffect, _effect_ui: StatusEffectUI) -> void:
+	if aditional_attribute.has(status_effect.effect):
+		aditional_attribute.erase(status_effect.effect)
+	if active_potions_effect.has(status_effect.effect):
+		active_potions_effect.erase(status_effect.effect)
+	
+	emit_attributes_changed()

@@ -211,6 +211,7 @@ func _hide_item_visuals() -> void:
 	rarity_texture.hide()
 	item_texture.hide()
 	unique_border.hide()
+	info_label.hide()
 	preview_gems_attached.hide()
 
 
@@ -220,6 +221,7 @@ func _show_item_visuals() -> void:
 	
 	rarity_texture.show()
 	item_texture.show()
+	info_label.show()
 	unique_border.visible = current_item.is_unique
 
 	if current_item.item_category == Item.CATEGORY.EQUIPMENTS:

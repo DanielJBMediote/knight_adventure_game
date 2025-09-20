@@ -13,35 +13,32 @@ const POTION_WEIGHTS := {
 	ItemAttribute.TYPE.MOVE_SPEED: 0.5, # 0.5% de chance
 }
 
-# nível 1  # nível 10  # nível 20  # nível 30  # nível 40  # nível 50  # nível 60  # nível 70  # nível 80  # nível 90  # nível 100
-const BONUS_TABLE = {1: 0, 10: 5, 20: 15, 30: 25, 40: 30, 50: 35, 60: 40, 70: 45, 80: 50, 90: 55, 100: 60}
-
 const MAX_STACK = 99
 const LEVEL_INTERVAL = 10
 const BASE_POTION_VALUE = 100
 
 @export var potion_type: ItemAttribute.TYPE
-
+@export var cooldown := 0.0
 
 func _init() -> void:
 	pass
 
 
 func setup(enemy_stats: EnemyStats) -> void:
-	self.potion_type = _generate_random_potion_type()
-	self.item_usable = true
-	self.stackable = true
-	self.max_stack = MAX_STACK
-	self.item_category = Item.CATEGORY.CONSUMABLES
-	self.item_subcategory = Item.SUBCATEGORY.POTION
-	self.item_level = _calculate_potion_level(enemy_stats.level)
-	self.item_rarity = _calculate_potion_rarity()
-	self.spawn_chance = _calculate_potion_spawn_chance()
-	self.item_action = _setup_potion_action()
-	self.item_name = _generate_potion_name()
-	self.item_descriptions = _generate_potion_description()
-	self.item_id = _generate_potion_id()
-	self.item_price = _calculate_item_price(BASE_POTION_VALUE)
+	potion_type = _generate_random_potion_type()
+	item_usable = true
+	stackable = true
+	max_stack = MAX_STACK
+	item_category = Item.CATEGORY.CONSUMABLES
+	item_subcategory = Item.SUBCATEGORY.POTION
+	item_level = _calculate_potion_level(enemy_stats.level)
+	item_rarity = _calculate_potion_rarity()
+	spawn_chance = _calculate_potion_spawn_chance()
+	item_action = _setup_potion_action()
+	item_name = _generate_potion_name()
+	item_descriptions = _generate_potion_description()
+	item_id = _generate_potion_id()
+	item_price = _calculate_item_price(BASE_POTION_VALUE)
 
 	_setup_texture()
 
@@ -89,8 +86,8 @@ func _calculate_potion_spawn_chance() -> float:
 
 func _generate_potion_id() -> String:
 	var potion_resource_name = ItemAttribute.ATTRIBUTE_NAMES.get(potion_type, "UNKNOWN")
-	var rarity_name = Item.get_rarity_text(self.item_rarity)
-	var level_str = str("L", self.item_level)
+	var rarity_name = Item.get_rarity_text(item_rarity)
+	var level_str = str("L", item_level)
 	return Item._generate_item_id(["POTION", potion_resource_name, rarity_name, level_str])
 
 
@@ -122,12 +119,35 @@ func _generate_potion_name() -> String:
 func _generate_potion_description() -> Array[String]:
 	var potion_type_name = ItemAttribute.ATTRIBUTE_KEYS.get(potion_type, "unknown")
 	var base_description = LocalizationManager.get_potion_base_description_text(potion_type_name)
-	var params = {"amount": item_action.attribute.value, "duration": item_action.duration}
+	
+	var color_text = _get_color_text_by_type()
+	var amount_text = "[color=" + color_text + "]{amount}[/color]"
+	var duration_text = "[color=#00FFFF]{duration}[/color]"
+	var params = {"amount": amount_text, "duration": duration_text}
+	
 	base_description = LocalizationManager.format_text_with_params(base_description, params)
+	
+	var formatted_amount = item_action.attribute.value
+	if item_action.action_type == ItemAction.TYPE.BUFF:
+		formatted_amount = StringUtils.format_to_percentage(item_action.attribute.value)
+	
+	params = {"amount": formatted_amount, "duration": item_action.duration}
+	base_description = LocalizationManager.format_text_with_params(base_description, params)
+	
 	return [base_description]
 
+func _get_color_text_by_type() -> String:
+	match potion_type:
+		ItemAttribute.TYPE.HEALTH:
+			return Color.INDIAN_RED.to_html()
+		ItemAttribute.TYPE.MANA:
+			return Color.SKY_BLUE.to_html()
+		ItemAttribute.TYPE.ENERGY:
+			return Color.GREEN_YELLOW.to_html()
+		_:
+			return Color.GOLD.to_html()
 
-func calculate_instant_amount() -> float:
+func _calculate_instant_amount() -> float:
 	var base_multiply = 1.0 if potion_type == ItemAttribute.TYPE.ENERGY else 5.0
 
 	# Valores base para poção nível 1 comum
@@ -149,49 +169,34 @@ func calculate_instant_amount() -> float:
 	return round(base_amount * level_multiplier * rarity_multiplier)
 
 
-func calculate_buff_percentage() -> float:
+func _calculate_buff_percentage() -> float:
 	var base_percentage = 0.0
-	# Aumento por nível = 0/5/15/25/30/35/40/45/50/55/60%
-	var level_bonus = calculate_buff_level_bonus()
-
-	# Aumenta pela raridade = 0/5/10/15/20/25%
-	var rarity_bonus = item_rarity * 5.0
+	var rarity_bonus = item_rarity * 0.05 # +5% per Rarity
 
 	match potion_type:
 		ItemAttribute.TYPE.DEFENSE:
-			base_percentage = 15.0
+			base_percentage = 0.1 # 10% Base for Defense
 		ItemAttribute.TYPE.DAMAGE:
-			base_percentage = 15.0
+			base_percentage = 0.1 # 10% Base for Damage
 		ItemAttribute.TYPE.CRITICAL_RATE:
-			base_percentage = 15.0
+			base_percentage = 0.1 # 10% Base for Crit. Rate
 		ItemAttribute.TYPE.CRITICAL_DAMAGE:
-			base_percentage = 15.0
+			base_percentage = 0.1 # 10% Base for Crit. Damage
 		ItemAttribute.TYPE.ATTACK_SPEED:
-			base_percentage = 5.0
+			base_percentage = 0.05 # 5% Base for Attack Speed
 		ItemAttribute.TYPE.MOVE_SPEED:
-			base_percentage = 2.5
+			base_percentage = 0.05 # 5% Base for Speed
 
-	if [ItemAttribute.TYPE.ATTACK_SPEED, ItemAttribute.TYPE.MOVE_SPEED].has(potion_type):
-		level_bonus = level_bonus / 2.0
+	var total = base_percentage + rarity_bonus
 
-	var total = base_percentage + level_bonus + rarity_bonus
+	# +20% for Unique Buuffs
+	total += 0.2 if is_unique else 0.0
 
-	# Se for unico adiciona +50% do buff
-	total += (total * 0.5) if is_unique else 0.0
-
-	return clamp(total, 0.1, 150.0)
+	return clampf(total, base_percentage, 1.0) # Cap of 100% Max Buff
 
 
-func calculate_buff_level_bonus() -> float:
-	var level_index: int = item_level
-	if BONUS_TABLE.has(level_index):
-		return min(100.0, BONUS_TABLE[level_index])
-	else:
-		return min(100.0, 60.0) # Fallback
-
-
-func calculate_buff_duration() -> float:
-	var duration = 90.0
+func _calculate_buff_duration() -> float:
+	var duration = 10.0
 	var rarity_bonus = item_rarity * 45.0
 	var unique_bonus = 120.0 if is_unique else 0.0
 
@@ -210,11 +215,13 @@ func _setup_potion_action() -> ItemAction:
 	# Define se é instantâneo ou buff
 	if potion_type in [ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.MANA, ItemAttribute.TYPE.ENERGY]:
 		action.action_type = ItemAction.TYPE.INSTANTLY
-		attribute.value = calculate_instant_amount()
+		attribute.value = _calculate_instant_amount()
+		cooldown = 15.0
 	else:
 		action.action_type = ItemAction.TYPE.BUFF
-		attribute.value = calculate_buff_percentage()
-		action.duration = calculate_buff_duration()
+		attribute.value = _calculate_buff_percentage()
+		action.duration = _calculate_buff_duration()
+		cooldown = 5.0
 
 	action.attribute = attribute
 	return action
@@ -225,7 +232,7 @@ func _setup_texture() -> void:
 	var potion_rank = get_potion_rank()
 	var base_path = "res://assets/sprites/items/potions/%s_potion_%s.png" % [resource_key, potion_rank]
 	var texture = load_texture_with_fallback(base_path, base_path, resource_key)
-	self.item_texture = texture
+	item_texture = texture
 
 
 func get_potion_rank() -> String:

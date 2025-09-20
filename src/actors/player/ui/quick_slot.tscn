@@ -7,27 +7,33 @@
 
 [node name="QuickSlot" type="Panel"]
 clip_children = 2
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(80, 80)
 anchors_preset = -1
 anchor_right = 0.075
 anchor_bottom = 0.133
-offset_right = -64.0
-offset_bottom = -63.76
+offset_right = -32.0
+offset_bottom = -31.76
 theme = ExtResource("1_3r6ej")
 script = ExtResource("2_a7re2")
 metadata/_edit_lock_ = true
 
 [node name="RarityTexture" type="TextureRect" parent="."]
-layout_mode = 2
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 91.0
-offset_bottom = 91.0
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -34.0
+offset_top = -34.0
+offset_right = 34.0
+offset_bottom = 34.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_lock_ = true
 
 [node name="UniqueBorder" type="Panel" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -70,4 +76,3 @@ metadata/_edit_lock_ = true
 layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 8
-text = "99"

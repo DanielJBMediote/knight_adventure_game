@@ -1,8 +1,7 @@
 class_name GemAvailableSlotInfoUI
 extends VBoxContainer
 
-@onready var main_label: Label = $MainLabel
-
+@onready var main_label: DefaultLabel = $MainLabel
 @export var equip_slots: Array[EquipmentItem.TYPE]
 
 func _ready():

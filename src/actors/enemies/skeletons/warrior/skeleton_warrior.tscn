@@ -16,7 +16,7 @@
 [ext_resource type="PackedScene" uid="uid://ciaj2edwf0e0c" path="res://src/actors/enemies/_controllers/enemy_control_ui.tscn" id="13_7rc4i"]
 [ext_resource type="PackedScene" uid="uid://rtxpfrnud2ta" path="res://src/actors/enemies/_controllers/wander_controller.tscn" id="14_1v3lw"]
 [ext_resource type="PackedScene" uid="uid://c8and80a8q8yw" path="res://src/actors/enemies/_controllers/enemy_stats.tscn" id="14_kkjuk"]
-[ext_resource type="Script" uid="uid://26jp3u7gnljs" path="res://src/gameplay/mechanics/combat/status_effect_data.gd" id="15_oaf8t"]
+[ext_resource type="Script" uid="uid://26jp3u7gnljs" path="res://src/gameplay/mechanics/combat/status_effect.gd" id="15_oaf8t"]
 [ext_resource type="PackedScene" uid="uid://qcy4stxecqnd" path="res://src/ui/float_damage_control.tscn" id="16_7rc4i"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_oaf8t"]

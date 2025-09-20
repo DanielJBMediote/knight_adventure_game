@@ -19,12 +19,7 @@ func setup_effect(effect_data: StatusEffect) -> void:
 	effect_type = effect_data.effect
 	update_ui(effect_data.duration)
 
-func setup_appearance() -> void:
-	# Isso será sobrescrito pelas classes filhas
-	pass
-
-# Métodos auxiliares para as classes filhas
-func set_icon_texture(texture: Texture2D) -> void:
+func set_icon(texture: Texture2D) -> void:
 	if icon_texture:
 		icon_texture.texture = texture
 
