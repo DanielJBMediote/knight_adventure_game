@@ -11,11 +11,10 @@ func _ready() -> void:
 	socket_button.pressed.connect(func(): socket_button.release_focus())
 
 func update_gem(gem: GemItem) -> void:
-	
 	socket_button.update_button_icon(gem != null)
 
 	if gem:
-		rarity_texture.texture = ItemManager.get_bg_gradient_by_rarity(gem.item_rarity)
+		rarity_texture.texture = ItemManager.get_background_theme_by_rarity(gem.item_rarity)
 		gem_texture.texture = gem.item_texture
 		socket_button.text = LocalizationManager.get_ui_text("remove")
 		attribute_value.show()

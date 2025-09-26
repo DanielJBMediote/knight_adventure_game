@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4odwgwqxexrj"]
+
+[ext_resource type="Script" uid="uid://bhvcmq46sv55" path="res://src/gameplay/mechanics/combat/ui/status_effect_tooltip.gd" id="1_jevi7"]
+[ext_resource type="PackedScene" uid="uid://cn0pvgdkima5h" path="res://src/ui/description_text.tscn" id="1_mhuhk"]
+
+[node name="StatusEffectUITooltip" type="PanelContainer"]
+z_index = 1
+custom_minimum_size = Vector2(224, 24)
+offset_right = 224.0
+offset_bottom = 24.0
+script = ExtResource("1_jevi7")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 2
+color = Color(0, 0, 0, 0.99)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="DescriptionText" parent="MarginContainer" instance=ExtResource("1_mhuhk")]
+layout_mode = 2
+size_flags_vertical = 4
+text = "+ [color=#ff0000]30%[/color] Critical Damage Boost"

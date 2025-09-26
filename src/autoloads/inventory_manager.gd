@@ -3,21 +3,28 @@ extends Node
 signal page_changed
 
 signal inventory_updated
-signal inventory_saved
-signal inventory_loaded
 signal item_drag_started(item: Item, slot_index: int)
 signal item_drag_ended(success: bool)
 signal items_swapped(slot_index_a: int, slot_index_b: int)
-
-signal inventory_oppened(is_open: bool)
-
-var items: Array[Item] = []
-var slots: Array[Item] = []
-var current_page: int = 0
-var unlocked_slots: int = 42
+signal quick_slot_updated(slot_index: int, item: Item)
+signal inventory_opened(is_open: bool)
 
 const MAX_SLOTS: int = 63
 const SLOTS_PER_PAGE: int = 21
+const DEFAULT_UNLOCKED_SLOTS = 21
+
+var items: Array[Item] = []
+var slots: Array[Item] = []
+
+var quick_slots = {
+	1: null,
+	2: null,
+	3: null,
+}
+
+var current_page: int = 0
+var unlocked_slots: int = DEFAULT_UNLOCKED_SLOTS
+
 
 var is_open: bool = false
 var current_select_item: Item
@@ -27,19 +34,15 @@ var drag_slot_index: int = -1
 
 
 func _ready():
-	# Inicializa slots vazios
-	for i in range(MAX_SLOTS): # Número de slots
+	for i in range(MAX_SLOTS):
 		slots.append(null)
 
-	create_ramdon_items()
-
-
-func create_ramdon_items() -> void:
-	if not GameEvents.current_map:
+func create_random_items() -> void:
+	if not GameManager.current_map:
 		return
 	var enemy_stats = EnemyStats.new()
 	var player_level = PlayerStats.level
-	# enemy_stats.level = player_level
+	enemy_stats.level = player_level
 	# var total_itens = 0
 	for i in 50:
 		# var rune = RuneItem.new()
@@ -52,24 +55,24 @@ func create_ramdon_items() -> void:
 		potion.setup(enemy_stats)
 		add_item(potion)
 
-		# if is_addded:
+		# if is_added:
 		# 	total_itens += 1
-	for i in 15:
-		enemy_stats.level = randi_range(maxi(1, player_level - 5), mini(player_level, 115))
-		var equip = EquipmentItem.new()
-		equip.setup(enemy_stats)
-		add_item(equip)
+	# for i in 10:
+	# 	enemy_stats.level = randi_range(maxi(1, player_level - 5), mini(player_level, 115))
+	# 	var equip = EquipmentItem.new()
+	# 	equip.setup(enemy_stats)
+	# 	add_item(equip)
 	# print("Total itens added: ", total_itens)
 
 
 func open_inventory() -> void:
 	is_open = true
-	inventory_oppened.emit(true)
+	inventory_opened.emit(true)
 
 
 func close_inventory() -> void:
 	is_open = false
-	inventory_oppened.emit(false)
+	inventory_opened.emit(false)
 
 
 func is_slot_unlocked(slot_index: int) -> bool:
@@ -82,7 +85,6 @@ func unlock_slots(amount: int) -> void:
 
 
 func add_item(item: Item, slot_index: int = -1) -> bool:
-	# Cria uma cópia do item para trabalhar
 	var item_copy = item.clone()
 
 	# Se o item não for stackable, trata como item único
@@ -125,7 +127,7 @@ func add_single_item(item: Item, slot_index: int = -1) -> bool:
 			return true
 
 	var message = LocalizationManager.get_ui_alerts_text("no_space_in_inventory")
-	GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+	GameManager.show_instant_message(message, InstantMessage.TYPE.WARNING)
 	return false
 
 
@@ -139,8 +141,8 @@ func try_add_to_existing_stacks(item: Item, remaining_stack: int) -> int:
 
 		var is_same_id = slots[i].item_id == item.item_id
 		var is_same_rarity = slots[i].item_rarity == item.item_rarity
-		var isnt_overstacked = slots[i].current_stack < slots[i].max_stack # Verifica se pode adicionar a este stack
-		if is_same_id and is_same_rarity and isnt_overstacked:
+		var is_not_overstocked = slots[i].current_stack < slots[i].max_stack # Verifica se pode adicionar a este stack
+		if is_same_id and is_same_rarity and is_not_overstocked:
 			var available_space = slots[i].max_stack - slots[i].current_stack
 			var amount_to_add = min(available_space, remaining_stack)
 
@@ -438,6 +440,24 @@ func swap_items(from_slot: int, to_slot: int) -> void:
 	items_swapped.emit(from_slot, to_slot)
 
 
+func _assign_quick_slot_item(item: Item, slot_index: int = 1) -> void:
+	if slot_index < 1 or slot_index > 3:
+		return
+	
+	if is_item_in_quick_slots(item):
+		quick_slots[slot_index] = null
+		quick_slot_updated.emit(slot_index, null)
+	else:
+		quick_slots[slot_index] = item
+		quick_slot_updated.emit(slot_index, item)
+
+
+func is_item_in_quick_slots(item: Item) -> bool:
+	for slot_index in quick_slots.keys():
+		if quick_slots[slot_index] == item:
+			return true
+	return false
+
 func is_valid_slot_index(index: int) -> bool:
 	return index >= 0 and index < slots.size()
 
@@ -449,25 +469,36 @@ func get_items_by_subcategory(subcategory: Item.SUBCATEGORY) -> Array[Item]:
 	return items.filter(func(item: Item): return item.item_subcategory == subcategory)
 
 
-func save_inventory():
-	var save_data = {}
-	# Salva no arquivo (usando Godot's File API)
-	var file = FileAccess.open("user://inventory.save", FileAccess.WRITE)
-	file.store_var(save_data)
+func save_data() -> Dictionary:
+	var saved_data = {
+		"current_page": current_page,
+		"unlocked_slots": unlocked_slots,
+		"items": Utils.serialize_array(items),
+		"slots": Utils.serialize_array(slots)
+	}
+	return saved_data
 
-	inventory_saved.emit()
 
+func load_data(data: Dictionary):
+	if data == null or data.is_empty():
+		printerr("Failed to load Inventory.")
+		return
+	
+	current_page = data.get("current_page", 0)
+	unlocked_slots = data.get("unlocked_slots", DEFAULT_UNLOCKED_SLOTS)
 
-func load_inventory():
-	if FileAccess.file_exists("user://inventory.save"):
-		# var file = FileAccess.open("user://inventory.save", FileAccess.READ)
-		# var save_data = file.get_var()
-		# for i in range(min(save_data.size(), items.size())):
-		# 	if save_data[i] != null:
-		# 		var item_data = save_data[i]
-		# 		var item = load("res://items/%s.tres" % item_data["id"])
-		# 		if item:
-		# 			item.current_stack = item_data["current_stack"]
-		# 			items[i] = item
-		inventory_loaded.emit()
-		inventory_updated.emit()
+	items = []
+	var tmp_items = data.get("items", [])
+	if not tmp_items.is_empty():
+		for item_data in tmp_items:
+			var item := Item.load_data(item_data)
+			items.append(item)
+			slots[item.slot_index_ref] = item
+	
+	#var tmp_slots = data.get("slots", [])
+	#if not tmp_slots.is_empty():
+		#for item_data in tmp_slots:
+			#var item := Item.load_data(item_data)
+			#slots.append(item)
+
+	inventory_updated.emit()

@@ -15,7 +15,7 @@ const BASE_SPEED := 100.0
 @export var enemy_name := ""
 ## Define the Level of Entity (Based on game difficult and map levels)
 @export var level: int = 0
-## Enemy type: Mobs Miniboss or Boss
+## Enemy type: Mobs MiniBoss or Boss
 @export var enemy_type: ENEMY_TYPE = ENEMY_TYPE.MOB
 
 # Stats básicos
@@ -23,9 +23,9 @@ const BASE_SPEED := 100.0
 @export var base_health_points := 100.0
 ## Base of Health Regen per seconds
 @export var base_health_points_regen := 1.0
-## Base of minimum dmage
+## Base of minimum damage
 @export var base_min_damage := 100.0
-## Base of maximum dmage
+## Base of maximum damage
 @export var base_max_damage := 100.0
 
 ## Base of Critical Damage: Determine the multiply of damage.
@@ -73,12 +73,12 @@ func _init() -> void:
 	pass
 
 func _ready() -> void:
-	# var difficultty = GameEvents.current_map.get_difficulty()
-	var min_map_level = GameEvents.current_map.get_min_mob_level()
-	var max_map_level = GameEvents.current_map.get_max_mob_level()
+	var min_map_level = GameManager.current_map.get_min_mob_level()
+	var max_map_level = GameManager.current_map.get_max_mob_level()
 
-	var status_modificator = GameEvents.get_stats_modificator_by_difficult()
-	var additional_level = GameEvents.get_additional_levels_modificator_by_difficult()
+	var difficulty = GameManager.current_map.get_difficulty()
+	var status_modifier = GameManager.STATS_DIFFICULT_MODIFIER.get(difficulty, 1.0)
+	var additional_level = GameManager.ENEMY_LEVEL_INCREMENT.get(difficulty, 0)
 
 	level = randi_range(min_map_level, max_map_level) + additional_level
 
@@ -91,33 +91,33 @@ func _ready() -> void:
 	var exp_factor := base_factor + (level - 1) * 0.65 # +65% de atributos por level
 
 	# Calcula stats de vida
-	self.max_health_points = base_health_points * (health_factor * status_modificator)
-	self.health_regen_per_seconds = base_health_points_regen * (level_factor * status_modificator)
+	max_health_points = base_health_points * (health_factor * status_modifier)
+	health_regen_per_seconds = base_health_points_regen * (level_factor * status_modifier)
 
 	# Calcula stats de dano
-	self.min_attack_damage = max(base_min_damage * (damage_factor * status_modificator), 1)
-	self.max_attack_damage = max(base_max_damage * (damage_factor * status_modificator), 1)
+	min_attack_damage = max(base_min_damage * (damage_factor * status_modifier), 1)
+	max_attack_damage = max(base_max_damage * (damage_factor * status_modifier), 1)
 
 	# Calcula stats de velocidade
-	self.attack_speed = clamp(base_attack_speed * status_modificator * level_factor * 0.02, 1.0, 2.0)
-	self.move_speed = BASE_SPEED * clamp(base_move_speed * status_modificator * level_factor * 0.02, base_move_speed, base_move_speed * 2.0)
+	attack_speed = clamp(base_attack_speed * status_modifier * level_factor * 0.02, 1.0, 2.0)
+	move_speed = BASE_SPEED * clamp(base_move_speed * status_modifier * level_factor * 0.02, base_move_speed, base_move_speed * 2.0)
 
 	# Fórmulas balanceadas para CRITICAL RATE e CRITICAL DAMAGE
-	calculate_critical_stats(level_factor, status_modificator)
+	calculate_critical_stats(level_factor, status_modifier)
 
 	# Fórmulas balanceadas para STATUS EFFECTS
-	update_status_effect_values(status_modificator)
+	update_status_effect_values(status_modifier)
 
 	# Inicializa a vida atual
-	self.health_points = max_health_points
-	self.health_changed.emit(health_points)
+	health_points = max_health_points
+	health_changed.emit(health_points)
 
 	# Experiência
-	self.experience = max(1, base_experience * exp_factor * status_modificator)
+	experience = max(1, base_experience * exp_factor * status_modifier)
 
 	# Número Drops
-	self.num_drops = calculate_amount_drops()
-	self.amount_coins = calculate_num_of_coins()
+	num_drops = calculate_amount_drops()
+	amount_coins = calculate_num_of_coins()
 
 
 func _enemy_type_factor() -> float:
@@ -131,7 +131,8 @@ func _enemy_type_factor() -> float:
 
 
 func calculate_amount_drops() -> int:
-	var difficulty_multiply: float = GameEvents.get_drop_modificator_by_difficult()
+	var difficulty = GameManager.current_map.get_difficulty()
+	var difficulty_multiply: float = GameManager.DROP_DIFFICULT_MODIFIER.get(difficulty, 0.8)
 	var level_factor = clampi(ceili(float(level * 0.1)), 1, 10)
 	var amount_drops = base_num_drops + maxi(difficulty_multiply * level_factor, 1)
 	return amount_drops
@@ -139,10 +140,11 @@ func calculate_amount_drops() -> int:
 
 func calculate_num_of_coins() -> int:
 	var base_amount = 1
-	var difficulty_factor = 1.0 + GameEvents.get_drop_modificator_by_difficult()
+	var difficulty = GameManager.current_map.get_difficulty()
+	var difficulty_multiply: float = GameManager.DROP_DIFFICULT_MODIFIER.get(difficulty, 0.8)
 	var level_factor = ceili(1 + (self.level * 0.25))
 	var type_factor = 1 + (enemy_type * 1.0)
-	var _amount_coins = base_amount + ceili(level_factor * type_factor * difficulty_factor)
+	var _amount_coins = base_amount + ceili(level_factor * type_factor * difficulty_multiply)
 	return _amount_coins
 
 func calculate_critical_stats(_level_factor: float, difficulty_factor: float) -> void:

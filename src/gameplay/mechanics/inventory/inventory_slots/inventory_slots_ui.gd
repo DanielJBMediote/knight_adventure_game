@@ -28,7 +28,7 @@ func _on_organize_desc() -> void:
 	InventoryManager.sort_inventory("DESC")
 
 # Toda vez que algum item for atualizado no InventoryManger, 
-# o iventário será atualizado.
+# o inventário será atualizado.
 func _update_inventory():
 	var current_page = InventoryManager.current_page
 	var current_items = InventoryManager.get_current_page_items()

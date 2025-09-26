@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://drw0mk0vsbgrg"]
+[gd_scene load_steps=7 format=3 uid="uid://drw0mk0vsbgrg"]
 
 [ext_resource type="Script" uid="uid://c6w1bse6ldhov" path="res://src/gameplay/mechanics/combat/ui/status_effect_ui.gd" id="1_71nsl"]
 [ext_resource type="Texture2D" uid="uid://85r7ogi1sxyu" path="res://assets/ui/status_effect_icons/debuffs/bleeding.png" id="2_3cfuc"]
+[ext_resource type="PackedScene" uid="uid://b4odwgwqxexrj" path="res://src/gameplay/mechanics/combat/ui/status_effect_tooltip.tscn" id="3_5wxfc"]
 [ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="3_71nsl"]
 
 [sub_resource type="Gradient" id="Gradient_71nsl"]
@@ -13,7 +14,7 @@ gradient = SubResource("Gradient_71nsl")
 use_hdr = true
 
 [node name="StatusEffectUI" type="VBoxContainer" node_paths=PackedStringArray("timer_label", "icon_texture", "timer_progress")]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(32, 64)
 anchors_preset = -1
 anchor_right = 0.025
 anchor_bottom = 0.089
@@ -30,6 +31,7 @@ custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
+mouse_filter = 2
 
 [node name="IconTexture" type="TextureRect" parent="Control"]
 custom_minimum_size = Vector2(32, 32)
@@ -71,6 +73,10 @@ nine_patch_stretch = true
 texture_progress = SubResource("GradientTexture1D_3cfuc")
 metadata/_edit_lock_ = true
 
+[node name="StatusEffectTooltip" parent="Control" instance=ExtResource("3_5wxfc")]
+visible = false
+layout_mode = 2
+
 [node name="TimerLabel" type="Label" parent="."]
 texture_filter = 3
 layout_mode = 2
@@ -81,3 +87,6 @@ theme_override_fonts/font = ExtResource("3_71nsl")
 text = "3:00"
 horizontal_alignment = 1
 vertical_alignment = 2
+
+[connection signal="mouse_entered" from="." to="Control/StatusEffectTooltip" method="toggle" binds= [true]]
+[connection signal="mouse_exited" from="." to="Control/StatusEffectTooltip" method="toggle" binds= [false]]

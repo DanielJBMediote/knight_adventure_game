@@ -7,9 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://dmj65266d6e0o" path="res://assets/sprites/items/icons/bronze_small_coin.png" id="5_n6bml"]
 
 [node name="ItemPrice" type="HBoxContainer"]
-custom_minimum_size = Vector2(0, 32)
+offset_right = 224.0
+offset_bottom = 15.0
 size_flags_vertical = 10
-theme_override_constants/separation = 0
 script = ExtResource("1_lnxiv")
 
 [node name="Label" type="Label" parent="."]
@@ -20,45 +20,42 @@ theme_override_fonts/font = ExtResource("2_c3d4s")
 text = "Item Value: "
 
 [node name="Golds" type="Label" parent="."]
-visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.976471, 0.639216, 0.105882, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("2_c3d4s")
+text = "999"
 
 [node name="GoldCoin" type="TextureRect" parent="."]
-visible = false
 layout_mode = 2
 texture = ExtResource("3_7gbp2")
 expand_mode = 3
 stretch_mode = 3
 
 [node name="Silvers" type="Label" parent="."]
-visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.976471, 0.639216, 0.105882, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("2_c3d4s")
+text = "999"
 
 [node name="SilverCoin" type="TextureRect" parent="."]
-visible = false
 layout_mode = 2
 texture = ExtResource("4_rrbje")
 expand_mode = 3
 stretch_mode = 3
 
 [node name="Bronzes" type="Label" parent="."]
-visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.976471, 0.639216, 0.105882, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("2_c3d4s")
+text = "999"
 
 [node name="BronzeCoin" type="TextureRect" parent="."]
-visible = false
 layout_mode = 2
 texture = ExtResource("5_n6bml")
 expand_mode = 3

@@ -21,7 +21,7 @@ func setup_equipment(equipment: EquipmentItem) -> void:
 	equipment_level.text = "Lv.%d" % equipment.item_level
 	equipment_rarity.text = Item.get_rarity_text(equipment.item_rarity)
 	equipment_rarity.add_theme_color_override("font_color", equipment.get_item_rarity_text_color())
-	rarity_texture.texture = ItemManager.get_bg_gradient_by_rarity(equipment.item_rarity)
+	rarity_texture.texture = ItemManager.get_background_theme_by_rarity(equipment.item_rarity)
 
 	load_equipments_gems(equipment)
 

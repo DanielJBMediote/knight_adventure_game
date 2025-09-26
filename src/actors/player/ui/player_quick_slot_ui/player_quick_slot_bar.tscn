@@ -1,19 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://b0x137mh7f8dt"]
+[gd_scene load_steps=3 format=3 uid="uid://b4bir4bbkfv64"]
 
-[ext_resource type="Script" uid="uid://xeasl0h2yusl" path="res://src/actors/player/ui/player_quick_slotbar.gd" id="1_g3uai"]
-[ext_resource type="PackedScene" uid="uid://bym0hdexvoba8" path="res://src/actors/player/ui/quick_slot.tscn" id="2_4cbie"]
+[ext_resource type="Script" uid="uid://xeasl0h2yusl" path="res://src/actors/player/ui/player_quick_slot_ui/player_quick_slot_bar.gd" id="1_i5ji7"]
+[ext_resource type="PackedScene" uid="uid://jj553xytl1y7" path="res://src/actors/player/ui/player_quick_slot_ui/quick_slot.tscn" id="2_4cbie"]
 
-[node name="PlayerQuickSlotbar" type="Control"]
-custom_minimum_size = Vector2(360, 128)
+[node name="PlayerQuickSlotBar" type="Control"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 3
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -128.0
-offset_right = 360.0
-grow_vertical = 0
-size_flags_vertical = 8
-script = ExtResource("1_g3uai")
+anchors_preset = 0
+offset_right = 256.0
+offset_bottom = 96.0
+script = ExtResource("1_i5ji7")
 metadata/_edit_lock_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -34,11 +30,13 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="QuickSlot" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_4cbie")]
+[node name="QuickSlot1" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_4cbie")]
 layout_mode = 2
 
 [node name="QuickSlot2" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_4cbie")]
 layout_mode = 2
+slot_key = 2
 
 [node name="QuickSlot3" parent="MarginContainer/HBoxContainer" instance=ExtResource("2_4cbie")]
 layout_mode = 2
+slot_key = 3

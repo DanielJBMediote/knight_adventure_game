@@ -30,7 +30,7 @@ func _ready() -> void:
 	interact_area.body_exited.connect(_on_player_interact_area_exited)
 	
 	# Encontrar a UI do jogador
-	player_ui = GameEvents.get_player_ui()
+	player_ui = GameManager.get_player_ui()
 	interact_text = LocalizationManager.get_ui_text("interact")
 
 func _input(event: InputEvent) -> void:

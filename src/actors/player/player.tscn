@@ -2388,8 +2388,8 @@ _data = {
 &"JumpTransitionRight": SubResource("Animation_qdy1o"),
 &"RollingLeft": SubResource("Animation_utg71"),
 &"RollingRight": SubResource("Animation_nq65r"),
-&"RuningLeft": SubResource("Animation_evlgt"),
-&"RuningRight": SubResource("Animation_oyld2"),
+&"RunningLeft": SubResource("Animation_evlgt"),
+&"RunningRight": SubResource("Animation_oyld2"),
 &"SlidingLeft": SubResource("Animation_rxibo"),
 &"SlidingRight": SubResource("Animation_wabo4")
 }
@@ -2454,7 +2454,7 @@ offset = Vector2(-5, -27)
 flip_h = true
 hframes = 12
 vframes = 14
-frame = 96
+frame = 120
 region_enabled = true
 region_rect = Rect2(0, 0, 1440, 1120)
 metadata/_edit_lock_ = true
@@ -2491,6 +2491,7 @@ metadata/_edit_lock_ = true
 libraries = {
 &"": SubResource("AnimationLibrary_hja65")
 }
+speed_scale = 1.5
 
 [node name="HitFlashAnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
@@ -2525,5 +2526,5 @@ wait_time = 0.1
 one_shot = true
 
 [connection signal="area_entered" from="PlayerHurtbox" to="." method="_on_player_hurtbox_area_entered"]
-[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animatioan_finished"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="animation_finished" from="HitFlashAnimationPlayer" to="." method="_on_hit_flash_animation_player_animation_finished"]

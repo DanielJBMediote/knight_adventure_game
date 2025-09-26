@@ -22,7 +22,7 @@ func setup_item(new_item: Item) -> void:
 		item_texture.texture = new_item.item_texture
 		level_label.hide()
 		if new_item.item_category == Item.CATEGORY.EQUIPMENTS:
-			_updade_equipment_styles(new_item as EquipmentItem)
+			_update_equipment_styles(new_item as EquipmentItem)
 			_update_equipment_level()
 	else:
 		item_texture.texture = null
@@ -40,7 +40,7 @@ func _update_lock_status() -> void:
 			self.mouse_filter = Control.MOUSE_FILTER_PASS
 
 
-func _updade_equipment_styles(new_item: EquipmentItem) -> void:
+func _update_equipment_styles(new_item: EquipmentItem) -> void:
 	var equipped = PlayerEquipments.get_equipped_item_type(new_item.equipment_type)
 	if not equipped:
 		equip_comparator.hide()
@@ -113,7 +113,7 @@ func _try_move_to_esgs_equipment_slot(esgs_equipment_slot: ESGSEquipmentItemSlot
 			InventoryManager.item_drag_ended.emit(true)
 		else:
 			var warning = LocalizationManager.get_ui_esgs_text("sockets_unavailable")
-			GameEvents.show_instant_message(warning, InstantMessage.TYPE.WARNING)
+			GameManager.show_instant_message(warning, InstantMessage.TYPE.WARNING)
 			global_position = original_position
 			InventoryManager.cancel_item_drag()
 	else:
@@ -121,7 +121,7 @@ func _try_move_to_esgs_equipment_slot(esgs_equipment_slot: ESGSEquipmentItemSlot
 		var item_a_str = Item.get_category_text(inventory_item.item_category)
 		var params = {"a": item_a_str}
 		alert_message = LocalizationManager.format_text_with_params(alert_message, params)
-		GameEvents.show_instant_message(alert_message, InstantMessage.TYPE.WARNING)
+		GameManager.show_instant_message(alert_message, InstantMessage.TYPE.WARNING)
 
 		global_position = original_position
 		InventoryManager.cancel_item_drag()

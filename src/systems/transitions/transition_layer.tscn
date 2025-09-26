@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://1eaf4q2qthmm"]
 
-[ext_resource type="Script" uid="uid://cyrogax677576" path="res://src/systems/transitions/trasition_layer.gd" id="1_sjbjg"]
+[ext_resource type="Script" uid="uid://cyrogax677576" path="res://src/systems/transitions/transition_layer.gd" id="1_sjbjg"]
 
 [sub_resource type="Animation" id="Animation_sjbjg"]
 length = 0.001

@@ -294,7 +294,7 @@ func drop_loots() -> void:
 
 	# Gera os itens de loot
 	var loot_items = LootManager.generate_loot_for_enemy(enemy_stats, loot_categories)
-	var map = GameEvents.current_map
+	var map = GameManager.current_map
 	
 	# Dropa os itens
 	var spread_distance = 10.0

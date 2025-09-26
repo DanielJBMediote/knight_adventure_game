@@ -146,7 +146,7 @@ func get_player_attributes_formated(new_attributes: PlayerAttributes) -> Diction
 		"stun_hit_rate":
 		{
 			"name": LocalizationManager.get_attribute_text("stun_hit_rate"),
-			"value": StringUtils.format_to_percentage(new_attributes.get_hit_rate_value_by_effect(StatusEffect.EFFECT.STUNING)),
+			"value": StringUtils.format_to_percentage(new_attributes.get_hit_rate_value_by_effect(StatusEffect.EFFECT.STUNNING)),
 			"stats_category": GROUP.OFFENSIVE
 		},
 		"health":

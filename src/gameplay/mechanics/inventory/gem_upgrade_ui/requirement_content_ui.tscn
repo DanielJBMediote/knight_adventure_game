@@ -7,7 +7,7 @@
 [ext_resource type="FontFile" uid="uid://0guru8qhjqfm" path="res://assets/fonts/ari-w9500.ttf" id="4_ovot0"]
 [ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="5_ekvsl"]
 
-[node name="RequerimentContentUI" type="HBoxContainer"]
+[node name="RequirementContentUI" type="HBoxContainer"]
 theme_override_constants/separation = 8
 script = ExtResource("1_kveu2")
 
@@ -44,7 +44,7 @@ texture = ExtResource("3_jx6lx")
 expand_mode = 3
 stretch_mode = 5
 
-[node name="QuatityLabel" type="Label" parent="Panel"]
+[node name="QuantityLabel" type="Label" parent="Panel"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.958

@@ -2,6 +2,8 @@
 class_name StatusEffectUI
 extends VBoxContainer
 
+@onready var status_effect_tooltip: StatusEffectUITooltip = $Control/StatusEffectTooltip
+
 @export var timer_label: Label
 @export var icon_texture: TextureRect
 @export var timer_progress: TextureProgressBar
@@ -17,6 +19,7 @@ var label_tween: Tween
 func setup_effect(effect_data: StatusEffect) -> void:
 	#label.text = effect_data.get_effect_name()
 	effect_type = effect_data.effect
+	status_effect_tooltip.setup_description(effect_data.get_effect_description())
 	update_ui(effect_data.duration)
 
 func set_icon(texture: Texture2D) -> void:
@@ -38,14 +41,14 @@ func start_timer(effect_data: StatusEffect) -> void:
 	
 	update_ui(effect_data.duration)
 
-func updated_effect_duration(duartion: float) -> void:
+func updated_effect_duration(duration: float) -> void:
 	if effect_timer:
 		# var remaining = effect_timer.time_left
 		effect_timer.stop()
-		effect_timer.wait_time = duartion
-		current_duration = duartion
+		effect_timer.wait_time = duration
+		current_duration = duration
 		effect_timer.start()
-		update_ui(duartion)
+		update_ui(duration)
 
 func update_ui(duration: float) -> void:
 	if timer_progress:
@@ -61,7 +64,7 @@ func update_ui(duration: float) -> void:
 		progress_tween.tween_property(timer_progress, "value", 0, duration)
 	
 	if timer_label:
-		timer_label.text = format_timer(duration)
+		timer_label.text = StringUtils.format_seconds_to_minutes(duration)
 		
 		# Interrompe qualquer tween existente do timer_label
 		if label_tween:
@@ -76,12 +79,7 @@ func update_ui(duration: float) -> void:
 func _update_timer_label() -> void:
 	if timer_progress and timer_label:
 		var remaining_time = timer_progress.value
-		timer_label.text = format_timer(remaining_time)
+		timer_label.text = StringUtils.format_seconds_to_minutes(remaining_time)
 
 func _on_timer_timeout(effect_data: StatusEffect) -> void:
 	PlayerEvents.remove_status_effect(effect_data)
-
-func format_timer(seconds: float) -> String:
-	var minutes = int(seconds / 60)
-	var secs = int(seconds) % 60
-	return "%02d:%02d" % [minutes, secs]

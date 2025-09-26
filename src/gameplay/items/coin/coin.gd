@@ -53,7 +53,7 @@ func _init(_enemy_stats: EnemyStats = EnemyStats.new()) -> void:
 
 func generate_random_type() -> TYPE:
 	#var enemy_level = enemy_stats.level
-	#var difficulty = GameEvents.current_map.get_difficulty()
+	#var difficulty = GameManager.current_map.get_difficulty()
 	var total_weight = 0
 
 	for weight in COIN_TYPE_WEIGHT.values():
@@ -71,7 +71,7 @@ func generate_random_type() -> TYPE:
 	
 func generate_random_size() -> SIZE:
 	#var enemy_level = enemy_stats.level
-	#var difficulty = GameEvents.current_map.get_difficulty()
+	#var difficulty = GameManager.current_map.get_difficulty()
 	var total_weight = 0
 
 	for weight in COIN_SIZE_WEIGHT.values():

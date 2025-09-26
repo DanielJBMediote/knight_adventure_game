@@ -33,7 +33,7 @@ func setup(enemy_stats: EnemyStats) -> void:
 func generate_rune_id() -> String:
 	var rune_type_key = RuneConsts.RUNE_TYPE_KEYS.get(self.rune_type, "UNKNOWN")
 	var rune_name = "%s_%d" % [rune_type_key, self.item_level]
-	var rune_id = Item._generate_item_id([rune_name])
+	var rune_id = _generate_item_id([rune_name])
 	return rune_id
 
 
@@ -45,7 +45,7 @@ func generate_rune_name() -> String:
 	return rune_name
 
 
-func generate_rune_descriptions() -> Array[String]:
+func generate_rune_descriptions() -> String:
 	var rune_key = RuneConsts.RUNE_TYPE_KEYS.get(self.rune_type, "UNKNOWN")
 	var next_gem_quality = GemItem.get_next_gem_quality_by_required_rune(self.item_rarity)
 	var next_gem_quality_key = GemConsts.GEM_QUALITY_KEY[next_gem_quality]
@@ -55,7 +55,7 @@ func generate_rune_descriptions() -> Array[String]:
 	var base_description = LocalizationManager.get_rune_description_text(rune_key)
 	var params = {"next_gem_quality": next_gem_name, "gem_quality": prev_gem_name}
 	base_description = LocalizationManager.format_text_with_params(base_description, params)
-	return [base_description]
+	return base_description
 
 func get_random_type() -> TYPE:
 	var total_weight: float = 0.0
@@ -116,8 +116,8 @@ func calculate_spawn_chance(enemy_level: int) -> float:
 	if base_chance == 0.0:
 		return 0.0
 
-	var difficulty = GameEvents.current_map.get_difficulty()
-	var difficulty_multiplier = GameEvents.get_drop_modificator_by_difficult(difficulty)
+	var difficulty = GameManager.current_map.get_difficulty()
+	var difficulty_multiplier = GameManager.DROP_DIFFICULT_MODIFIER.get(difficulty, 0.8)
 	var level_factor = (enemy_level - RuneConsts.MIN_LEVEL) / float(RuneConsts.LEVEL_INTERVAL)
 	var calculated_spawn_chance = base_chance + (level_factor * difficulty_multiplier)
 

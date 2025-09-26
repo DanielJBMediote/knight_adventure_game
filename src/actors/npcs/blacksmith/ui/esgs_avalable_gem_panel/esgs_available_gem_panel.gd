@@ -34,7 +34,7 @@ func _filter_by_corret_socket_type(equip_type: EquipmentItem.TYPE, gem: GemItem)
 func _on_select_gem(equipment: EquipmentItem, selected_gem: GemItem) -> void:
 	if equipment.item_level < selected_gem.item_level:
 		var alert = LocalizationManager.get_ui_alerts_text("equipment_lower_level")
-		GameEvents.show_instant_message(alert, InstantMessage.TYPE.WARNING)
+		GameManager.show_instant_message(alert, InstantMessage.TYPE.WARNING)
 	else:
 		gem_selected.emit(selected_gem)
 		hide()

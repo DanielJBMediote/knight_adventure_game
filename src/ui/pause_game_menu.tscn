@@ -1,0 +1,80 @@
+[gd_scene load_steps=5 format=3 uid="uid://h88cgh6671rk"]
+
+[ext_resource type="Script" uid="uid://qbworgrnphyt" path="res://src/ui/pause_game_menu.gd" id="1_6mohf"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="1_8evov"]
+[ext_resource type="PackedScene" uid="uid://ceqeinrhpcifw" path="res://src/ui/buttons/custom_button.tscn" id="3_8fcdj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_et32p"]
+
+[node name="PauseGameMenu" type="Control" groups=["game_paused_menu"]]
+process_mode = 3
+z_index = 6
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6mohf")
+metadata/_edit_lock_ = true
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0941176, 0.0941176, 0.105882, 1)
+metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(360, 360)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_et32p")
+metadata/_edit_lock_ = true
+
+[node name="DefaultLabel" parent="PanelContainer" instance=ExtResource("1_8evov")]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 64
+text = "Game Paused"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/separation = 16
+
+[node name="ResumeButton" parent="PanelContainer/VBoxContainer" instance=ExtResource("3_8fcdj")]
+layout_mode = 2
+size_flags_vertical = 4
+corner_radius = 0
+border_width = 1
+border_color = Color(0.505882, 0.403922, 0.364706, 1)
+
+[node name="SettingsButton" parent="PanelContainer/VBoxContainer" instance=ExtResource("3_8fcdj")]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Settings"
+corner_radius = 0
+border_width = 1
+border_color = Color(0.505882, 0.403922, 0.364706, 1)
+
+[node name="ExitButton" parent="PanelContainer/VBoxContainer" instance=ExtResource("3_8fcdj")]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Exit"
+corner_radius = 0
+border_width = 1
+border_color = Color(0.505882, 0.403922, 0.364706, 1)
+
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

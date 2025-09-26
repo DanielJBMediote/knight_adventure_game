@@ -1,17 +1,18 @@
-[gd_scene load_steps=19 format=3 uid="uid://crtugfpy0cjod"]
+[gd_scene load_steps=21 format=3 uid="uid://crtugfpy0cjod"]
 
 [ext_resource type="Script" uid="uid://kt6ob3p4g3oh" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/inventory_item_detail_ui.gd" id="1_2ld60"]
 [ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_iwre5"]
 [ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="3_1icw5"]
-[ext_resource type="Texture2D" uid="uid://clukmo1ygr08m" path="res://src/ui/themes/items_themes/bg_gradient_item_epic.tres" id="3_chuoy"]
 [ext_resource type="Texture2D" uid="uid://bup16gck8m42v" path="res://assets/ui/buttons.png" id="4_catel"]
 [ext_resource type="Theme" uid="uid://cplm3n583p8ad" path="res://src/ui/themes/v_scroll_without_bar.tres" id="4_m0r25"]
 [ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="5_1xqwx"]
+[ext_resource type="PackedScene" uid="uid://cn0pvgdkima5h" path="res://src/ui/description_text.tscn" id="5_kfg2u"]
 [ext_resource type="PackedScene" uid="uid://c0c5fotfyaqcc" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/item_price.tscn" id="6_n44wp"]
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="7_0g36l"]
 [ext_resource type="PackedScene" uid="uid://bhgraytntqqmu" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/gem_available_slot_info_ui.tscn" id="7_5ona2"]
-[ext_resource type="Texture2D" uid="uid://d3i02shfxgboc" path="res://assets/sprites/items/potions/critical_damage_potion_03.png" id="8_3v8mp"]
 [ext_resource type="PackedScene" uid="uid://db24xs6jb4xpd" path="res://src/gameplay/mechanics/inventory/inventory_item_detail/equipment_sockets_slots/equip_gem_sockets_slots.tscn" id="8_gv3lo"]
 [ext_resource type="Theme" uid="uid://cjghsixcdlswl" path="res://src/ui/themes/item_info_action_btn.tres" id="8_hdk3s"]
+[ext_resource type="Theme" uid="uid://btcervn7s00qx" path="res://src/ui/themes/button_toggle.tres" id="9_8rhx0"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kfg2u"]
 texture = ExtResource("1_iwre5")
@@ -20,6 +21,8 @@ texture_margin_top = 4.0
 texture_margin_right = 4.0
 texture_margin_bottom = 4.0
 region_rect = Rect2(784, 208, 48, 48)
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_kfg2u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n44wp"]
 atlas = ExtResource("4_catel")
@@ -66,7 +69,7 @@ color = Color(0, 0, 0, 0.882353)
 metadata/_edit_lock_ = true
 
 [node name="Panel" type="Panel" parent="."]
-custom_minimum_size = Vector2(460, 420)
+custom_minimum_size = Vector2(420, 420)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -75,7 +78,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -230.0
 offset_top = -210.0
-offset_right = 230.0
+offset_right = 170.0
 offset_bottom = 210.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -85,20 +88,19 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_kfg2u")
 metadata/_edit_lock_ = true
 
 [node name="RarityTexture" type="TextureRect" parent="Panel"]
-custom_minimum_size = Vector2(452, 413)
+custom_minimum_size = Vector2(420, 420)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -226.0
-offset_top = -206.0
-offset_right = 226.0
-offset_bottom = 206.0
+offset_left = -210.0
+offset_top = -210.0
+offset_right = 210.0
+offset_bottom = 210.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_chuoy")
 metadata/_edit_lock_ = true
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel"]
@@ -133,7 +135,7 @@ size_flags_vertical = 0
 theme_override_constants/separation = 8
 
 [node name="ItemName" type="Label" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Header"]
-custom_minimum_size = Vector2(300, 32)
+custom_minimum_size = Vector2(380, 32)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
@@ -201,47 +203,82 @@ layout_mode = 2
 size_flags_vertical = 0
 theme_override_constants/separation = 16
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content"]
+[node name="MainAttributesContent" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content"]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="AttributeContainer" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/HBoxContainer"]
+[node name="AttributeList" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/MainAttributesContent"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 alignment = 1
 
-[node name="ItemTextureRect" type="TextureRect" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/HBoxContainer"]
+[node name="ItemTextureRect" type="TextureRect" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/MainAttributesContent"]
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
-texture = ExtResource("8_3v8mp")
 expand_mode = 3
 stretch_mode = 5
 metadata/_edit_use_anchors_ = true
 
-[node name="DescriptionContainer" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content"]
-custom_minimum_size = Vector2(0, 1)
+[node name="DescriptionText" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content" instance=ExtResource("5_kfg2u")]
 layout_mode = 2
-size_flags_vertical = 2
 
 [node name="GemAvailableSlotInfo" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content" instance=ExtResource("7_5ona2")]
+visible = false
 layout_mode = 2
 
 [node name="EquipmentGemSocketsSlots" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content" instance=ExtResource("8_gv3lo")]
+visible = false
 layout_mode = 2
 
-[node name="AttributeBonusContainer" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content"]
+[node name="SetBonusAttributesContent" type="VBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content"]
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/AttributeBonusContainer"]
+[node name="Label" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/SetBonusAttributesContent" instance=ExtResource("7_0g36l")]
 layout_mode = 2
-size_flags_vertical = 10
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("5_1xqwx")
-text = "Set Attributes:"
+text = "Set Bonus:"
+
+[node name="ItemQuickSlotSelection" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content"]
+layout_mode = 2
+
+[node name="DefaultLabel" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/ItemQuickSlotSelection" instance=ExtResource("7_0g36l")]
+layout_mode = 2
+size_flags_vertical = 4
+text = "Quick Slot:"
+
+[node name="Button1" type="Button" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/ItemQuickSlotSelection"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+theme = ExtResource("9_8rhx0")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_kfg2u")
+text = "1"
+
+[node name="Button2" type="Button" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/ItemQuickSlotSelection"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+theme = ExtResource("9_8rhx0")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_kfg2u")
+text = "2"
+
+[node name="Button3" type="Button" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/ItemQuickSlotSelection"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+theme = ExtResource("9_8rhx0")
+toggle_mode = true
+button_group = SubResource("ButtonGroup_kfg2u")
+text = "3"
+
+[node name="PotionCooldownInfo" type="HBoxContainer" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content"]
+layout_mode = 2
+
+[node name="CooldownLabel" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content/PotionCooldownInfo" instance=ExtResource("7_0g36l")]
+layout_mode = 2
+text = "Cooldown:"
 
 [node name="ItemPrice" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Content" instance=ExtResource("6_n44wp")]
 layout_mode = 2
@@ -258,7 +295,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("8_hdk3s")
-text = "Action"
+text = "Does Something..."
 clip_text = true
 
 [node name="TrashItemButton" type="Button" parent="Panel/MarginContainer/ScrollContainer/ContentContainer/Footer"]
@@ -284,6 +321,7 @@ theme = ExtResource("3_1icw5")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_n44wp")
 icon = SubResource("AtlasTexture_3tkmh")
 icon_alignment = 1
+expand_icon = true
 
 [node name="CloseButton" type="Button" parent="Panel/MarginContainer/Buttons"]
 custom_minimum_size = Vector2(32, 32)
@@ -295,8 +333,11 @@ theme = ExtResource("3_1icw5")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_n44wp")
 icon = SubResource("AtlasTexture_hdk3s")
 icon_alignment = 1
+expand_icon = true
+metadata/_edit_use_anchors_ = true
 
 [node name="UniqueBorder" type="Panel" parent="Panel"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

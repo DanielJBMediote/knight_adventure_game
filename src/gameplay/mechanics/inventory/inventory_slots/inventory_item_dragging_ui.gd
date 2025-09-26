@@ -68,7 +68,7 @@ func set_item_rarity_texture(rarity: Item.RARITY) -> void:
 	match rarity:
 		Item.RARITY.COMMON:
 			# Azul para itens Normais
-			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_COMMOM
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_COMMON
 
 		Item.RARITY.UNCOMMON:
 			# Azul para itens Bons

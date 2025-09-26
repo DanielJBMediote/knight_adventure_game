@@ -90,7 +90,7 @@ func get_item_rarity_name_text(key: String) -> String:
 func get_item_rarity_prefix_text(key: String) -> String:
 	return get_translation("items_general", "rarity_prefix." + key)
 
-func get_item_rarity_sufix_text(key: String) -> String:
+func get_item_rarity_suffix_text(key: String) -> String:
 	return get_translation("items_general", "rarity_sufix." + key)
 
 func get_item_category_name_text(key: String) -> String:

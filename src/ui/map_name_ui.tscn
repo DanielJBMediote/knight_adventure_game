@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://bc2n7y8gfsroh"]
+
+[ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="1_fr88s"]
+[ext_resource type="Script" uid="uid://d0bd7atenbfit" path="res://src/ui/map_name_ui.gd" id="1_v7tc4"]
+
+[node name="MapNameUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_v7tc4")
+metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.475
+anchor_top = 0.298
+anchor_right = 0.475
+anchor_bottom = 0.298
+offset_left = -192.0
+offset_top = -22.56
+offset_right = 195.0
+offset_bottom = 22.44
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_fr88s")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 48
+text = "Map_Name_Here"
+horizontal_alignment = 1
+vertical_alignment = 1

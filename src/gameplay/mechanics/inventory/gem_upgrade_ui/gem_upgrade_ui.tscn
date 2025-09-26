@@ -156,19 +156,19 @@ stretch_mode = 5
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="RequerimentContainer" type="VBoxContainer" parent="Panel/MarginContainer/Content"]
+[node name="RequirementContainer" type="VBoxContainer" parent="Panel/MarginContainer/Content"]
 layout_mode = 2
 size_flags_vertical = 10
 theme_override_constants/separation = 8
 
-[node name="RequerimentLabel" type="Label" parent="Panel/MarginContainer/Content/RequerimentContainer"]
+[node name="RequirementLabel" type="Label" parent="Panel/MarginContainer/Content/RequirementContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 theme = ExtResource("4_1u48s")
 theme_override_font_sizes/font_size = 18
-text = "Requeriments:"
+text = "Requirements:"
 
-[node name="RequerimentItems" type="GridContainer" parent="Panel/MarginContainer/Content/RequerimentContainer"]
+[node name="RequerimentItems" type="GridContainer" parent="Panel/MarginContainer/Content/RequirementContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_constants/h_separation = 16

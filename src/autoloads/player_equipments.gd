@@ -44,7 +44,7 @@ func can_equip(equipment: EquipmentItem) -> bool:
 		var part_1 = LocalizationManager.get_ui_text("insufficient_level")
 		var part_2 = LocalizationManager.get_ui_text("level_required")
 		var message = str(part_1, "! ", part_2, ": ", equipment.item_level, ".")
-		GameEvents.show_instant_message(message, InstantMessage.TYPE.DANGER)
+		GameManager.show_instant_message(message, InstantMessage.TYPE.DANGER)
 		return false
 
 	# Verifica se o slot está disponível

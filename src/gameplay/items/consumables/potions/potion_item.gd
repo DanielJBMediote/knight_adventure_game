@@ -17,7 +17,7 @@ const MAX_STACK = 99
 const LEVEL_INTERVAL = 10
 const BASE_POTION_VALUE = 100
 
-@export var potion_type: ItemAttribute.TYPE
+@export var potion_type := ItemAttribute.TYPE.NONE
 @export var cooldown := 0.0
 
 func _init() -> void:
@@ -45,10 +45,10 @@ func setup(enemy_stats: EnemyStats) -> void:
 
 func _calculate_potion_rarity() -> Item.RARITY:
 	var player_level = PlayerStats.level
-	var map_level = GameEvents.current_map.get_min_mob_level()
-	var difficutly = GameEvents.current_map.get_difficulty()
+	var map_level = GameManager.current_map.get_min_mob_level()
+	var difficulty = GameManager.current_map.get_difficulty()
 
-	var rarity = get_item_rarity_by_difficult_and_player_level(player_level, map_level, difficutly)
+	var rarity = get_item_rarity_by_difficult_and_player_level(player_level, map_level, difficulty)
 	return rarity
 
 
@@ -70,25 +70,26 @@ func _calculate_potion_spawn_chance() -> float:
 
 	# Multiplicador baseado na diferença do nível do jogador
 	var player_level = PlayerStats.level # Assumindo que você tem acesso ao nível do jogador
-	var map_level = GameEvents.current_map.level_mob_min
+	var map_level = GameManager.current_map.level_mob_min
 	var player_level_modifier = Item.get_player_level_modifier(player_level, map_level)
 
 	# Calcula a chance final
-	var current_difficulty = GameEvents.current_map.difficulty
-	var difficulty_factor = GameEvents.get_drop_modificator_by_difficult(current_difficulty)
+	var difficulty = GameManager.current_map.get_difficulty()
+	var difficulty_multiply = GameManager.DROP_DIFFICULT_MODIFIER.get(difficulty, 0.8)
 	var rarity_factor = rarity_multiplier.get(item_rarity, 1.0)
 
-	var final_chance = base_chance * difficulty_factor * rarity_factor * level_multiplier * player_level_modifier
+	var final_chance = base_chance * difficulty_multiply * rarity_factor * level_multiplier * player_level_modifier
 
 	# Garante que a chance esteja entre 1% e 100%
 	return clamp(final_chance, 0.01, 1.0)
 
 
 func _generate_potion_id() -> String:
-	var potion_resource_name = ItemAttribute.ATTRIBUTE_NAMES.get(potion_type, "UNKNOWN")
+	var potion_name = ItemAttribute.ATTRIBUTE_NAMES.get(potion_type, "UNKNOWN")
 	var rarity_name = Item.get_rarity_text(item_rarity)
 	var level_str = str("L", item_level)
-	return Item._generate_item_id(["POTION", potion_resource_name, rarity_name, level_str])
+	var potion_id = super._generate_item_id(["POTION", potion_name, rarity_name, level_str])
+	return potion_id
 
 
 func _generate_random_potion_type() -> ItemAttribute.TYPE:
@@ -112,11 +113,12 @@ func _generate_potion_name() -> String:
 	var potion_key = ItemAttribute.ATTRIBUTE_KEYS[potion_type].to_lower()
 	var base_name = LocalizationManager.get_potion_name_text(potion_key)
 	var rarity_prefix = Item.get_rarity_prefix_text(item_rarity)
-	var rarity_sufix = Item.get_rarity_sufix_text(item_rarity)
-	return "%s %s %s" % [rarity_prefix, base_name, rarity_sufix]
+	var rarity_suffix = Item.get_rarity_suffix_text(item_rarity)
+	var potion_name = "%s %s %s" % [rarity_prefix, base_name, rarity_suffix]
+	return potion_name
 
 
-func _generate_potion_description() -> Array[String]:
+func _generate_potion_description() -> String:
 	var potion_type_name = ItemAttribute.ATTRIBUTE_KEYS.get(potion_type, "unknown")
 	var base_description = LocalizationManager.get_potion_base_description_text(potion_type_name)
 	
@@ -134,7 +136,7 @@ func _generate_potion_description() -> Array[String]:
 	params = {"amount": formatted_amount, "duration": item_action.duration}
 	base_description = LocalizationManager.format_text_with_params(base_description, params)
 	
-	return [base_description]
+	return base_description
 
 func _get_color_text_by_type() -> String:
 	match potion_type:
@@ -162,16 +164,19 @@ func _calculate_instant_amount() -> float:
 
 	# Multiplicadores de raridade (0 a 5)
 	var rarity_multipliers = [1.0, 1.5, 1.75, 2.0, 2.5, 3.0]
-
-	var base_amount = base_values[potion_type]
 	var rarity_multiplier = rarity_multipliers[clamp(item_rarity, 0, 5)]
 
-	return round(base_amount * level_multiplier * rarity_multiplier)
+	var base_amount = base_values[potion_type]
+	
+	var amount = round(base_amount * level_multiplier * rarity_multiplier)
+
+	return amount
 
 
 func _calculate_buff_percentage() -> float:
 	var base_percentage = 0.0
 	var rarity_bonus = item_rarity * 0.05 # +5% per Rarity
+	var unique_bonus = 0.2 if is_unique else 0.0
 
 	match potion_type:
 		ItemAttribute.TYPE.DEFENSE:
@@ -187,20 +192,18 @@ func _calculate_buff_percentage() -> float:
 		ItemAttribute.TYPE.MOVE_SPEED:
 			base_percentage = 0.05 # 5% Base for Speed
 
-	var total = base_percentage + rarity_bonus
+	var buff_percentage = base_percentage + rarity_bonus + unique_bonus
 
-	# +20% for Unique Buuffs
-	total += 0.2 if is_unique else 0.0
-
-	return clampf(total, base_percentage, 1.0) # Cap of 100% Max Buff
+	return clampf(buff_percentage, base_percentage, 1.0) # Cap of 100% Max Buff
 
 
 func _calculate_buff_duration() -> float:
-	var duration = 10.0
+	var base_duration = 90.0 # 1m30s
 	var rarity_bonus = item_rarity * 45.0
 	var unique_bonus = 120.0 if is_unique else 0.0
+	var buff_duration = base_duration + rarity_bonus + unique_bonus
 
-	return duration + rarity_bonus + unique_bonus
+	return maxf(base_duration, buff_duration)
 
 
 func _calculate_potion_level(enemy_level: int) -> int:
@@ -215,7 +218,9 @@ func _setup_potion_action() -> ItemAction:
 	# Define se é instantâneo ou buff
 	if potion_type in [ItemAttribute.TYPE.HEALTH, ItemAttribute.TYPE.MANA, ItemAttribute.TYPE.ENERGY]:
 		action.action_type = ItemAction.TYPE.INSTANTLY
-		attribute.value = _calculate_instant_amount()
+		var base_value = _calculate_instant_amount()
+		attribute.base_value = base_value
+		attribute.value = base_value
 		cooldown = 15.0
 	else:
 		action.action_type = ItemAction.TYPE.BUFF
@@ -226,12 +231,12 @@ func _setup_potion_action() -> ItemAction:
 	action.attribute = attribute
 	return action
 
-
 func _setup_texture() -> void:
 	var resource_key = ItemAttribute.ATTRIBUTE_KEYS.get(potion_type)
 	var potion_rank = get_potion_rank()
 	var base_path = "res://assets/sprites/items/potions/%s_potion_%s.png" % [resource_key, potion_rank]
 	var texture = load_texture_with_fallback(base_path, base_path, resource_key)
+	
 	item_texture = texture
 
 

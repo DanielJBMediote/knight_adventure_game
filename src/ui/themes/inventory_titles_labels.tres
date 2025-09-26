@@ -5,6 +5,7 @@
 [resource]
 HeaderLarge/base_type = &"Label"
 HeaderLarge/font_sizes/font_size = 32
+HeaderLarge/fonts/font = ExtResource("1_smk5l")
 HeaderMedium/base_type = &"Label"
 HeaderMedium/font_sizes/font_size = 24
 HeaderSmall/base_type = &"Label"

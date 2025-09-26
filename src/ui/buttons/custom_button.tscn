@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://ceqeinrhpcifw"]
+
+[ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="1_8ygs4"]
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="2_pnlrx"]
+[ext_resource type="Script" uid="uid://50fdk8cn0ed6" path="res://src/ui/buttons/custom_button.gd" id="3_pnlrx"]
+
+[node name="CustomButton" type="Button"]
+custom_minimum_size = Vector2(0, 64)
+anchors_preset = -1
+anchor_right = 0.09375
+anchor_bottom = 0.0888889
+theme = ExtResource("1_8ygs4")
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("2_pnlrx")
+theme_override_font_sizes/font_size = 32
+text = "Resume"
+script = ExtResource("3_pnlrx")
+metadata/_edit_use_anchors_ = true

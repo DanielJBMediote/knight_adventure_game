@@ -11,18 +11,20 @@
   "damage": "Damage",
   "damage_boost": "Damage Boost",
   "critical_rate": "Critical Rate",
+  "critical_rate_boost": "Critical Rate Boost",
   "critical_damage": "Critical Damage",
+  "critical_damage_boost": "Critical Damage Boost",
   "attack_speed": "Attack Speed",
   "attack_speed_boost": "Attack Speed Boost",
   "move_speed": "Speed",
-  "move_speed_boost": "Speed",
+  "move_speed_boost": "Speed Boost",
   "experience": "Experience",
   "exp_boost": "Additional Experience",
 
   "poison": "Poison",
   "poisoned": "Poisoned",
   "poisoning": "Poisoning",
-  "poison_hit_rate": "Posion Hit Rate",
+  "poison_hit_rate": "Poison Hit Rate",
 
   "bleed": "Bleed",
   "bled": "Bled",
@@ -31,7 +33,7 @@
 
   "stun": "Stun",
   "stunned": "Stunned",
-  "stuning": "Stuning",
+  "stunning": "Stunning",
   "stun_hit_rate": "Stun Hit Rate",
 
   "freeze": "Freeze",
@@ -42,5 +44,7 @@
   "burn": "Burn",
   "burned": "Burned",
   "burning": "Burning",
-  "burn_hit_rate": "Burn Hit Rate"
+  "burn_hit_rate": "Burn Hit Rate",
+
+  "none": "None"
 }

@@ -35,8 +35,19 @@ static func format_currency(value: float) -> String:
 		else:
 			return str(snapped(value, 0.01))
 
-static func format_decimal(value: float) -> String:
-	return str(snapped(value, 0.01))
+static func format_decimal(value: float, decimal_size: int = 2) -> String:
+	return str(snapped(value, pow(0.1, decimal_size)))
 
-static func format_to_percentage(value: float) -> String:
-	return str(snapped(value * 100, 0.01), "%")
+static func format_to_percentage(value: float, decimal_size: int = 2) -> String:
+	return str(snapped(value * 100, pow(0.1, decimal_size)), "%")
+
+static func format_to_timer(elapsed_game_time: float) -> String:
+	var hours := int(elapsed_game_time / 3600)
+	var minutes := int(float(int(elapsed_game_time) % 3600) / 60)
+	var seconds := int(elapsed_game_time) % 60
+	return "%02d:%02d:%02d" % [hours, minutes, seconds]
+
+static func format_seconds_to_minutes(seconds: float) -> String:
+	var minutes = int(seconds / 60)
+	var secs = int(seconds) % 60
+	return "%02d:%02d" % [minutes, secs]

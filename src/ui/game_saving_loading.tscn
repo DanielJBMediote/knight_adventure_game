@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://bod1rellwbylm"]
+
+[ext_resource type="PackedScene" uid="uid://dh3yligryu8qj" path="res://src/ui/default_label.tscn" id="1_7y50k"]
+[ext_resource type="Script" uid="uid://blq14nq3uvk3" path="res://src/ui/game_saving_loading.gd" id="1_115jn"]
+
+[node name="GameSavingLoading" type="Control"]
+layout_mode = 3
+anchor_left = 0.987
+anchor_top = 0.022
+anchor_right = 0.987
+anchor_bottom = 0.022
+offset_left = -191.36
+offset_top = 0.159999
+offset_right = 0.639893
+offset_bottom = 32.16
+grow_horizontal = 0
+script = ExtResource("1_115jn")
+metadata/_edit_lock_ = true
+
+[node name="LoadingLabel" parent="." instance=ExtResource("1_7y50k")]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -144.0
+offset_top = -15.0
+offset_right = 0.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Loading..."
+metadata/_edit_lock_ = true

@@ -1,28 +1,15 @@
 extends Node
 
-signal use_potion(potion: PotionItem)
-# signal use_food(food: Item)
-
 signal selected_item_updated(item: Item)
 
-const BG_GRADIENT_ITEM_COMMOM = preload("res://src/ui/themes/items_themes/bg_gradient_item_common.tres")
+const BG_GRADIENT_ITEM_COMMON = preload("res://src/ui/themes/items_themes/bg_gradient_item_common.tres")
 const BG_GRADIENT_ITEM_UNCOMMON = preload("res://src/ui/themes/items_themes/bg_gradient_item_uncommon.tres")
 const BG_GRADIENT_ITEM_RARE = preload("res://src/ui/themes/items_themes/bg_gradient_item_rare.tres")
 const BG_GRADIENT_ITEM_EPIC = preload("res://src/ui/themes/items_themes/bg_gradient_item_epic.tres")
 const BG_GRADIENT_ITEM_LEGENDARY = preload("res://src/ui/themes/items_themes/bg_gradient_item_legendary.tres")
 const BG_GRADIENT_ITEM_MITICAL = preload("res://src/ui/themes/items_themes/bg_gradient_item_mitical.tres")
 
-
 var current_selected_item: Item
-
-func consume_item(item: Item) -> void:
-	match item.item_subcategory:
-		Item.SUBCATEGORY.POTION:
-			use_potion.emit(item as PotionItem)
-		# ItemSubCategory.FOOD:
-		# 	use_food.emit(item)
-		_:
-			return
 
 func update_selected_item(item: Item) -> void:
 	if item:
@@ -34,10 +21,10 @@ func update_selected_item(item: Item) -> void:
 func compare_player_level(item_level: int) -> bool:
 	return PlayerStats.level >= item_level or PlayerStats.level == 100
 
-func get_bg_gradient_by_rarity(rarity: Item.RARITY) -> GradientTexture2D:
+func get_background_theme_by_rarity(rarity: Item.RARITY) -> GradientTexture2D:
 	match rarity:
 		Item.RARITY.COMMON:
-			return BG_GRADIENT_ITEM_COMMOM
+			return BG_GRADIENT_ITEM_COMMON
 		Item.RARITY.UNCOMMON:
 			return BG_GRADIENT_ITEM_UNCOMMON
 		Item.RARITY.RARE:
@@ -49,4 +36,4 @@ func get_bg_gradient_by_rarity(rarity: Item.RARITY) -> GradientTexture2D:
 		Item.RARITY.MYTHICAL:
 			return BG_GRADIENT_ITEM_MITICAL
 		_:
-			return BG_GRADIENT_ITEM_COMMOM
+			return BG_GRADIENT_ITEM_COMMON

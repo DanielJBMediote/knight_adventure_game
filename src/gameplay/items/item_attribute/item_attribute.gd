@@ -19,7 +19,8 @@ enum TYPE {
 	BLEED_HIT_RATE,
 	FREEZE_HIT_RATE,
 	STUN_HIT_RATE,
-	BURN_HIT_RATE
+	BURN_HIT_RATE,
+	NONE
 }
 
 # Mapeamento de tipos que devem ser convertidos para porcentagem
@@ -112,14 +113,10 @@ const COLOR_PERFECT = Color.FUCHSIA # 🟣 Perfeito (125%+)
 	get: return base_value * 1.25
 	set(value): max_value = value
 
-var attribute_name: String:
-	get: return ATTRIBUTE_NAMES.get(type, "Unknown")
-
-func _init(_type: TYPE, _value: float) -> void:
+func _init(_type: TYPE = TYPE.NONE, _base_value: float = 0.0) -> void:
 	type = _type
-	value = _value
-	attribute_name = ATTRIBUTE_NAMES.get(type, "Unknown")
-	base_value = _value
+	value = _base_value
+	base_value = _base_value
 
 func get_max_value_range() -> float:
 	return max_value
@@ -128,6 +125,33 @@ func get_max_value_range() -> float:
 func get_min_value_range() -> float:
 	return min_value
 
+
+func save_data() -> Dictionary:
+	return Utils.serialize_object(self)
+
+func load_data(data: Dictionary) -> ItemAttribute:
+	return Utils.deserialize_object(data) as ItemAttribute
+
+# func save() -> Dictionary:
+# 	return {
+# 		"__resource_type": "ItemAttribute",
+# 		"__script_path": self.get_script().resource_path,
+# 		"type": type,
+# 		"base_value": base_value,
+# 		"value": value,
+# 		"min_value": min_value,
+# 		"max_value": max_value
+# 	}
+
+# func load_data(data: Dictionary) -> void:
+# 	if data.is_empty():
+# 		return
+	
+# 	type = data.get("type", TYPE.NONE)
+# 	base_value = data.get("base_value", 0.0)
+# 	value = data.get("value", 0.0)
+# 	min_value = data.get("min_value", base_value * 0.75)
+# 	max_value = data.get("max_value", base_value * 1.25)
 
 static func get_attribute_type_name(_attribute_type: TYPE) -> String:
 	return LocalizationManager.get_attribute_text(ATTRIBUTE_KEYS[_attribute_type])
@@ -158,3 +182,9 @@ static func format_value(_attribute_type: TYPE, _value: float) -> String:
 		return "%.1f%%" % (_value * 100)
 	else:
 		return str(roundi(_value))
+
+static func get_attribute_type_by_effect(effect: StatusEffect.EFFECT) -> TYPE:
+	for attribute_type in StatusEffect.ATTRIBUTE_TO_EFFECT.keys():
+		if StatusEffect.ATTRIBUTE_TO_EFFECT[attribute_type] == effect:
+			return attribute_type
+	return TYPE.NONE

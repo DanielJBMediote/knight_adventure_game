@@ -18,7 +18,7 @@ var gem: GemItem
 func _ready() -> void:
 	socket_button.pressed.connect(_on_select)
 	
-	rarity_texture.texture = ItemManager.get_bg_gradient_by_rarity(gem.item_rarity)
+	rarity_texture.texture = ItemManager.get_background_theme_by_rarity(gem.item_rarity)
 	gem_texture.texture = gem.item_texture
 	gem_level.text = str("Lv. ", gem.item_level)
 	gem_level.set_color(get_level_color())

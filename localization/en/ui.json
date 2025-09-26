@@ -1,5 +1,6 @@
 {
-  "game_name": "Knight Adventure",
+  "game_name": "The Lost Journey",
+  "welcome_to": "Welcome to",
   "id": "ID",
   "level": "Level",
   "level_required": "Level Required",
@@ -15,7 +16,7 @@
   "gem_upgrade_ui": {
     "title": "Gem Upgrade",
     "subtitle": "Upgrading {gem} to {next_gem}.",
-    "requeriments_label": "Requeriments"
+    "requirements_label": "Requirements"
   },
   "item_detail_modal": {
     "gem_equip_slots": "Can equip in"
@@ -27,13 +28,15 @@
     "available_gems": "Available Gems",
     "incompatible_type": "{a} are incompatible."
   },
+  "status_effect_base_description": "Increases {effect_name} by {value}.",
   "maximized": "Maximized",
   "unique": "Unique",
   "upgrade_gem": "Upgrade Gem",
-  "upgrage_gem_desc": "Upgrading {gem} to {next_gem}",
+  "upgrade_gem_desc": "Upgrading {gem} to {next_gem}",
   "rune_required": "Rune Required",
   "price_required": "Price Required",
   "insufficient_level": "Insufficient level",
+  "cooldown": "Cooldown",
   "use": "Use",
   "sell": "Sell",
   "quick_sell": "Quick Sell",
@@ -72,10 +75,17 @@
   "buy_sell": "Buy/Sell",
   "new_game": "New Game",
   "load_game": "Load Game",
-  "settigns": "Settings",
+  "save": "Save",
+  "load": "Load",
+  "saving": "Saving...",
+  "loading": "Loading...",
+  "pause": "Pause",
+  "resume": "Resume",
+  "game_paused": "Game Paused",
+  "settings": "Settings",
   "exit": "Exit",
   "language": "Language",
-  "comfirmation_dialogs": {
+  "confirmation_dialogs": {
     "sell": "Are you sure you want to sell {item}?",
     "upgrade": "Are you sure you want to upgrade {item}?"
   },

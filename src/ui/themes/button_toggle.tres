@@ -1,0 +1,42 @@
+[gd_resource type="Theme" load_steps=5 format=3 uid="uid://btcervn7s00qx"]
+
+[ext_resource type="FontFile" uid="uid://cs7pj0a4nowjm" path="res://assets/fonts/alagard.ttf" id="1_5yk2p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5yk2p"]
+content_margin_left = 2.0
+content_margin_right = 1.0
+bg_color = Color(0.0941176, 0.0941176, 0.105882, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.764706, 0.72549, 0.611765, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qt5s7"]
+content_margin_left = 2.0
+content_margin_right = 1.0
+bg_color = Color(0.14902, 0.137255, 0.141176, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bxcmw"]
+content_margin_left = 2.0
+content_margin_right = 1.0
+bg_color = Color(0.0941176, 0.0941176, 0.105882, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.764706, 0.72549, 0.611765, 1)
+
+[resource]
+Button/colors/font_color = Color(0.764706, 0.72549, 0.611765, 1)
+Button/colors/font_outline_color = Color(0, 0, 0, 1)
+Button/constants/outline_size = 2
+Button/fonts/font = ExtResource("1_5yk2p")
+Button/styles/hover = SubResource("StyleBoxFlat_5yk2p")
+Button/styles/normal = SubResource("StyleBoxFlat_qt5s7")
+Button/styles/pressed = SubResource("StyleBoxFlat_bxcmw")

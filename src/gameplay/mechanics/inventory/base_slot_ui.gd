@@ -38,7 +38,7 @@ func _ready() -> void:
 
 	# Timer para diferenciar clique de drag
 	click_timer = Timer.new()
-	click_timer.wait_time = 0.2
+	click_timer.wait_time = 0.4
 	click_timer.one_shot = true
 	add_child(click_timer)
 
@@ -253,7 +253,7 @@ func _update_item_rarity_texture() -> void:
 		return
 	match current_item.item_rarity:
 		Item.RARITY.COMMON:
-			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_COMMOM
+			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_COMMON
 		Item.RARITY.UNCOMMON:
 			rarity_texture.texture = ItemManager.BG_GRADIENT_ITEM_UNCOMMON
 		Item.RARITY.RARE:

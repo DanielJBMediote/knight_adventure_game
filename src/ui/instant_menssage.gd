@@ -4,11 +4,12 @@ extends Control
 @onready var message: Label = $Label
 @onready var timer: Timer = $Timer
 
-enum TYPE {SUCCESS, DANGER, WARNING}
+enum TYPE {SUCCESS, DANGER, WARNING, INFO}
 
 const COLORS = {
 	TYPE.SUCCESS: Color.WEB_GREEN,
 	TYPE.WARNING: Color.YELLOW,
+	TYPE.INFO: Color.SKY_BLUE,
 	TYPE.DANGER: Color.RED
 }
 

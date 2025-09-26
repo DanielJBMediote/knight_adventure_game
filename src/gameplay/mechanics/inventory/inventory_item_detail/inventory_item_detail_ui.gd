@@ -1,8 +1,8 @@
 class_name InventoryItemDetailUI
 extends Control
 
-const PANEL_MIN_SIZE = Vector2(460, 420)
-const PANEL_MAX_SIZE = Vector2(460, 620)
+const PANEL_MIN_SIZE = Vector2(420, 420)
+const PANEL_MAX_SIZE = Vector2(420, 620)
 
 @onready var panel = $Panel
 @onready var overlay: ColorRect = $Overlay
@@ -15,24 +15,25 @@ const PANEL_MAX_SIZE = Vector2(460, 620)
 
 @onready var item_name: Label = $Panel/MarginContainer/ScrollContainer/ContentContainer/Header/ItemName
 @onready var item_type: Label = $Panel/MarginContainer/ScrollContainer/ContentContainer/Header/ItemType
+@onready var level_container: HBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Header/LevelContainer
 @onready var base_stats_container: HBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Header/BaseStatsContainer
+@onready var item_quick_slot_selection: HBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/ItemQuickSlotSelection
 
 # Content
-@onready var attribute_container: VBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/HBoxContainer/AttributeContainer
-@onready var description_container: VBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/DescriptionContainer
+@onready var attribute_list: VBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/MainAttributesContent/AttributeList
+@onready var item_texture_rect: TextureRect = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/MainAttributesContent/ItemTextureRect
+@onready var description_text: DescriptionText = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/DescriptionText
 @onready var gem_available_slot_info: GemAvailableSlotInfoUI = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/GemAvailableSlotInfo
 @onready var equipment_gem_sockets_slots: EquipmentGemSocketSlots = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/EquipmentGemSocketsSlots
-
-@onready var attribute_bonus_container: VBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/AttributeBonusContainer
-@onready var level_container: HBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Header/LevelContainer
-
+@onready var set_bonus_attributes_content: VBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/SetBonusAttributesContent
+@onready var potion_cooldown_info: HBoxContainer = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/PotionCooldownInfo
+@onready var cooldown_label: DefaultLabel = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/PotionCooldownInfo/CooldownLabel
 @onready var item_price: ItemPriceUI = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/ItemPrice
 
 # Footer
 @onready var action_button: Button = $Panel/MarginContainer/ScrollContainer/ContentContainer/Footer/ActionButton
 @onready var trash_item_button: Button = $Panel/MarginContainer/ScrollContainer/ContentContainer/Footer/TrashItemButton
 
-@onready var item_texture_rect: TextureRect = $Panel/MarginContainer/ScrollContainer/ContentContainer/Content/HBoxContainer/ItemTextureRect
 @onready var rarity_texture: TextureRect = $Panel/RarityTexture
 @onready var unique_border: Panel = $Panel/UniqueBorder
 
@@ -46,6 +47,13 @@ var target_mouse_entered = null
 
 
 func _ready() -> void:
+	base_stats_container.hide()
+	item_quick_slot_selection.hide()
+	gem_available_slot_info.hide()
+	equipment_gem_sockets_slots.hide()
+	advanced_view_button.hide()
+	set_bonus_attributes_content.hide()
+
 	overlay.mouse_entered.connect(func(): target_mouse_entered = true)
 	overlay.mouse_exited.connect(func(): target_mouse_entered = false)
 
@@ -60,25 +68,31 @@ func _ready() -> void:
 	panel.custom_minimum_size = PANEL_MIN_SIZE
 	panel.size = PANEL_MIN_SIZE
 
+	_setup()
 
-func setup(item: Item) -> void:
+
+func _setup() -> void:
+	var item = ItemManager.current_selected_item
+	if item == null:
+		return
+
 	scroll_container.scroll_vertical = 0
 	showing_advanced = false
 	_update_unique_border_texture(item.is_unique)
 
 	# Configurar botões baseado no tipo de item
-	_update_header_butons_visibility(item)
+	_update_header_buttons_visibility(item)
 
-	_update_header_informations(item)
+	_update_header_information(item)
 
 	match item.item_category:
 		Item.CATEGORY.EQUIPMENTS:
 			advanced_view_button.icon.region = VIEW_ICON_OPEN
-			_update_equipment_informations(item as EquipmentItem)
+			_update_equipment_information(item as EquipmentItem)
 		Item.CATEGORY.CONSUMABLES:
-			_update_consumables_informations(item)
+			_update_consumables_information(item)
 		Item.CATEGORY.LOOTS:
-			_update_loot_informations(item)
+			_update_loot_information(item)
 		_:
 			pass
 
@@ -92,13 +106,13 @@ func setup(item: Item) -> void:
 	# Configurar textura do item
 	item_texture_rect.texture = item.item_texture
 	# Configurar fundo baseado na raridade
-	rarity_texture.texture = ItemManager.get_bg_gradient_by_rarity(item.item_rarity)
+	rarity_texture.texture = ItemManager.get_background_theme_by_rarity(item.item_rarity)
 
 	# show()
 	call_deferred("_adjust_panel_size")
 
 
-func _update_header_informations(item: Item) -> void:
+func _update_header_information(item: Item) -> void:
 	item_name.text = item.item_name
 	item_name.add_theme_color_override("font_color", item.get_item_rarity_text_color())
 
@@ -132,12 +146,11 @@ func _update_sell_price_info(price: int, _stacks: int) -> void:
 	item_price.update_bronzes(coins.bronzes, coins.silvers >= 1)
 
 
-func _update_equipment_informations(equipment: EquipmentItem) -> void:
-	gem_available_slot_info.hide()
-	equipment_gem_sockets_slots.show()
+func _update_equipment_information(equipment: EquipmentItem) -> void:
 	base_stats_container.show()
-	trash_item_button.show()
 	advanced_view_button.show()
+	equipment_gem_sockets_slots.show()
+	
 	_update_base_stats_info(equipment)
 	_update_gem_sockets_info(equipment)
 	_update_bonus_attributes_info(equipment)
@@ -175,29 +188,29 @@ func _update_base_stats_info(item: EquipmentItem) -> void:
 
 func _update_bonus_attributes_info(equipment: EquipmentItem) -> void:
 	if equipment.equipment_set not in EquipmentConsts.UNIQUES_SETS:
-		attribute_bonus_container.hide()
+		set_bonus_attributes_content.hide()
 		return
 
-	attribute_bonus_container.show()
+	set_bonus_attributes_content.show()
 	var set_info: SetUIInfo = SetBonus.get_set_ui_info(equipment.equipment_set)
 
-	var set_name_label = attribute_bonus_container.get_node("Label")
+	var set_name_label = set_bonus_attributes_content.get_node("Label")
 	var set_name_key = EquipmentConsts.EQUIPMENTS_SET_KEYS.get(equipment.equipment_set)
 	set_name_label.text = LocalizationManager.get_equipment_text("uniques.%s.set_name" % set_name_key) + ":"
 
 	for piece_info in set_info.get_equipped_pieces():
 		var equip_name_label = DefaultLabel.new()
-		attribute_bonus_container.add_child(equip_name_label)
+		set_bonus_attributes_content.add_child(equip_name_label)
 		equip_name_label.text = str("  ", piece_info.get_name())
 		equip_name_label.set_color(Color.ROYAL_BLUE if piece_info.is_equipped() else Color.DIM_GRAY)
 
 	var bonus_label = DefaultLabel.new()
-	attribute_bonus_container.add_child(bonus_label)
+	set_bonus_attributes_content.add_child(bonus_label)
 	bonus_label.text = LocalizationManager.get_ui_text("set_bonus") + ":"
 
 	for attrib_info in set_info.get_active_bonuses():
 		var bonus_attrib_label = DefaultLabel.new()
-		attribute_bonus_container.add_child(bonus_attrib_label)
+		set_bonus_attributes_content.add_child(bonus_attrib_label)
 		bonus_attrib_label.text = str("  ", attrib_info.get_description())
 		bonus_attrib_label.set_color(Color.ROYAL_BLUE if attrib_info.is_active() else Color.DIM_GRAY)
 
@@ -216,38 +229,46 @@ func _update_gem_sockets_info(equipment_item: EquipmentItem) -> void:
 	equipment_gem_sockets_slots.setup()
 
 
-func _update_consumables_informations(item: Item) -> void:
-	base_stats_container.hide()
-	trash_item_button.show()
-	equipment_gem_sockets_slots.hide()
-	advanced_view_button.hide()
-	gem_available_slot_info.hide()
-	attribute_bonus_container.hide()
+func _update_consumables_information(item: Item) -> void:
+	item_quick_slot_selection.show()
+	
+	var is_item_assigned = InventoryManager.is_item_in_quick_slots(item)
+
+	for child in item_quick_slot_selection.get_children():
+		if child.name.contains("Button"):
+			var button = child as Button
+			var index = int(button.name.get_slice("Button", 1))
+			
+			if InventoryManager.quick_slots[index] == item:
+				button.button_pressed = is_item_assigned
+
+			button.pressed.connect(InventoryManager._assign_quick_slot_item.bind(item, index))
+
+	if item.item_subcategory == Item.SUBCATEGORY.POTION:
+		cooldown_label.show()
+		var potion_item = item as PotionItem
+		var cooldown_text = LocalizationManager.get_ui_text("cooldown")
+		var cooldown_remaining = PlayerEvents.get_potion_cooldown_remaining(potion_item.item_id)
+		cooldown_remaining = str(int(cooldown_remaining), "s")
+		cooldown_label.text = str(cooldown_text, ": ", cooldown_remaining)
 
 	action_button.text = LocalizationManager.get_ui_text("use")
 
 
-func _update_loot_informations(item: Item) -> void:
-	equipment_gem_sockets_slots.hide()
-	attribute_bonus_container.hide()
-	base_stats_container.hide()
-	advanced_view_button.hide()
-	trash_item_button.show()
-
+func _update_loot_information(item: Item) -> void:
 	match item.item_subcategory:
 		Item.SUBCATEGORY.RESOURCE:
 			action_button.text = LocalizationManager.get_ui_text("quick_sell")
 		Item.SUBCATEGORY.GEM:
-			_update_gem_informations(item as GemItem)
+			_update_gem_information(item as GemItem)
 		_:
 			action_button.text = LocalizationManager.get_ui_text("quick_sell")
 
-	action_button.show()
 
-
-func _update_gem_informations(gem: GemItem) -> void:
+func _update_gem_information(gem: GemItem) -> void:
 	var possible_equip_types = gem.available_equipments_type
 
+	action_button.show()
 	level_container.show()
 	gem_available_slot_info.show()
 
@@ -265,21 +286,21 @@ func _update_item_attributes_info(item: Item) -> void:
 	var attributes: Array[ItemAttribute] = item.item_attributes
 	var is_equipments = item.item_category == Item.CATEGORY.EQUIPMENTS
 
-	for child in attribute_container.get_children():
+	for child in attribute_list.get_children():
 		child.queue_free()
 
 	# Caso sem atributos
 	if attributes.is_empty():
 		var attribute_label = DefaultLabel.new()
-		attribute_container.add_child(attribute_label)
+		attribute_list.add_child(attribute_label)
 		attribute_label.text = LocalizationManager.get_ui_text("no_attributes")
 		return
 
 	for attribute in attributes:
-		attribute_container.add_theme_constant_override("separation", 0)
+		attribute_list.add_theme_constant_override("separation", 0)
 
 		var main_attribute_label = DefaultLabel.new()
-		attribute_container.add_child(main_attribute_label)
+		attribute_list.add_child(main_attribute_label)
 
 		var formatted_value = _format_attribute_value(attribute.value, attribute.type)
 		var attribute_name = ItemAttribute.get_attribute_type_name(attribute.type)
@@ -295,48 +316,55 @@ func _update_item_attributes_info(item: Item) -> void:
 			var min_formatted = _format_attribute_value(attribute.min_value, attribute.type)
 			var max_formatted = _format_attribute_value(attribute.max_value, attribute.type)
 
-			attribute_container.add_child(advanced_label)
+			attribute_list.add_child(advanced_label)
 			advanced_label.text = str("(", min_formatted, " - ", max_formatted, ")")
 			advanced_label.set_color(Color.SLATE_GRAY)
 
 
-func _update_item_descriptions(descriptions: Array[String]) -> void:
-	for desc in descriptions:
-		var new_label = DescriptionText.new()
-		description_container.add_child(new_label)
-		new_label.text = desc
+func _update_item_descriptions(description: String) -> void:
+	description_text.text = description
 
 static func _format_attribute_value(value: float, attribute_type: ItemAttribute.TYPE) -> String:
-	# Tipos que devem ser exibidos como porcentagem
 	if attribute_type in ItemAttribute.PERCENTAGE_TYPES:
-		return "%.2f%%" % (value * 100)
+		return StringUtils.format_decimal(value)
 	else:
 		return "%.0f" % value
 
 
-func _update_header_butons_visibility(item: Item) -> void:
-	var is_equipable = item.item_category == Item.CATEGORY.EQUIPMENTS
-	advanced_view_button.visible = is_equipable
+func _update_header_buttons_visibility(item: Item) -> void:
+	var is_equippable = item.item_category == Item.CATEGORY.EQUIPMENTS
+	advanced_view_button.visible = is_equippable
 
 
 func _on_action_button_pressed() -> void:
 	var current_item = ItemManager.current_selected_item
-	var is_consumable = current_item.item_category == Item.CATEGORY.CONSUMABLES
-	var is_equipable = current_item.item_category == Item.CATEGORY.EQUIPMENTS
-	var is_loots = current_item.item_category == Item.CATEGORY.LOOTS
+	if not current_item:
+		return
 
-	# Lógica para usar ou equipar o item
-	if current_item:
-		if current_item.item_action != null and is_consumable:
-			ItemManager.consume_item(current_item)
-		elif is_equipable:
-			PlayerEvents.equip_item(current_item)
-		elif is_loots:
-			match current_item.item_subcategory:
-				Item.SUBCATEGORY.RESOURCE:
-					pass
-				Item.SUBCATEGORY.GEM:
-					handle_gem_action(current_item as GemItem)
+	var is_usable = current_item.item_usable
+	
+	
+	if is_usable:
+		var category = current_item.item_category
+		var subcategory = current_item.item_subcategory
+
+		match category:
+			Item.CATEGORY.CONSUMABLES:
+				match subcategory:
+					Item.SUBCATEGORY.POTION:
+						PlayerEvents.use_potion(current_item as PotionItem)
+					_:
+						return
+
+			Item.CATEGORY.EQUIPMENTS:
+				PlayerEvents.equip_item(current_item as EquipmentItem)
+
+			Item.CATEGORY.LOOTS:
+				match subcategory:
+					Item.SUBCATEGORY.RESOURCE:
+						pass
+					Item.SUBCATEGORY.GEM:
+						handle_gem_action(current_item as GemItem)
 
 	queue_free()
 
@@ -401,8 +429,10 @@ func _input(event: InputEvent) -> void:
 
 
 func _on_trash_item_button_pressed() -> void:
-	ItemManager.update_selected_item(null)
-	queue_free()
+	var item = ItemManager.current_selected_item
+	if InventoryManager.remove_item(item):
+		ItemManager.update_selected_item(null)
+		queue_free()
 
 
 func _on_close_button_pressed() -> void:

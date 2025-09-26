@@ -25,26 +25,26 @@ func get_sort_value() -> int:
 func setup(enemy_stats: EnemyStats) -> void:
 	gem_type = get_random_gem_type()
 	
-	self.stackable = true
-	self.max_stack = GemConsts.MAX_STACKS
-	self.item_category = Item.CATEGORY.LOOTS
-	self.item_subcategory = Item.SUBCATEGORY.GEM
-	self.item_level = calculate_gem_level(enemy_stats.level)
-	self.gem_quality = get_gem_quality()
-	#self.can_upgrade = can_upgrade_gem()
-	self.spawn_chance = _calculate_spawn_chance(enemy_stats.level)
-	self.item_rarity = get_gem_rarity()
-	self.item_action = null
-	self.is_unique = setup_gem_unique()
-	self.item_attributes = _generate_attributes()
-	self.available_equipments_type = get_available_equip_slots()
-	self.item_name = _generate_gem_name()
-	self.item_descriptions = _generate_gem_descriptions()
-	self.item_id = _generate_gem_id()
-	self.item_price = _calculate_item_price(int(GemConsts.BASE_GEM_PRICE))
-	self.num_runes_to_upgrade = GemConsts.NUM_RUNES_TO_UPGRADE if can_upgrade_gem() else 0
-	self.price_to_upgrade = calculate_price_to_upgrade() if can_upgrade_gem() else 0
-	self.item_texture = generate_gem_texture()
+	stackable = true
+	max_stack = GemConsts.MAX_STACKS
+	item_category = Item.CATEGORY.LOOTS
+	item_subcategory = Item.SUBCATEGORY.GEM
+	item_level = calculate_gem_level(enemy_stats.level)
+	gem_quality = get_gem_quality()
+	#can_upgrade = can_upgrade_gem()
+	spawn_chance = _calculate_spawn_chance(enemy_stats.level)
+	item_rarity = get_gem_rarity()
+	item_action = null
+	is_unique = setup_gem_unique()
+	item_attributes = _generate_attributes()
+	available_equipments_type = get_available_equip_slots()
+	item_name = _generate_gem_name()
+	item_descriptions = _generate_gem_descriptions()
+	item_id = _generate_gem_id()
+	item_price = _calculate_item_price(int(GemConsts.BASE_GEM_PRICE))
+	num_runes_to_upgrade = GemConsts.NUM_RUNES_TO_UPGRADE if can_upgrade_gem() else 0
+	price_to_upgrade = calculate_price_to_upgrade() if can_upgrade_gem() else 0
+	item_texture = generate_gem_texture()
 
 func can_upgrade_gem() -> bool:
 	return gem_quality >= QUALITY.FRAGMENTED and gem_quality < QUALITY.PRISTINE
@@ -75,7 +75,7 @@ func _generate_gem_id() -> String:
 	var quality_str = GemConsts.GEM_QUALITY_KEY[quality]
 	var type_str = ItemAttribute.ATTRIBUTE_KEYS[gem_type]
 	var unique_str = "UNIQUE" if is_unique else ""
-	var gem_id = Item._generate_item_id(["GEM", quality_str, type_str, unique_str])
+	var gem_id = _generate_item_id(["GEM", quality_str, type_str, unique_str])
 	return gem_id
 
 
@@ -91,7 +91,7 @@ func _generate_gem_name() -> String:
 	return base_name
 
 
-func _generate_gem_descriptions() -> Array[String]:
+func _generate_gem_descriptions() -> String:
 	var type_str = ItemAttribute.ATTRIBUTE_KEYS.get(gem_type)
 	var base_Description = LocalizationManager.get_gem_base_description_text(type_str)
 
@@ -107,7 +107,7 @@ func _generate_gem_descriptions() -> Array[String]:
 		else:
 			unique_description = LocalizationManager.get_gem_base_description_text("unique_gem")
 
-	return [base_Description, unique_description]
+	return base_Description + "\n" + unique_description
 
 
 func get_gem_quality() -> QUALITY:
@@ -220,36 +220,36 @@ static func get_next_gem_quality_by_required_rune(rune_rarity: Item.RARITY) -> Q
 			return QUALITY.FRAGMENTED
 
 
-func upgrade_gem(runes: Array[Item], gems: Array[Item], quanity: int = 1) -> bool:
-	var amount_gems_in_inventory = gems.reduce(func(acc, _gem): return acc + _gem.current_stack, -1) * quanity
-	var amount_runes_in_inventory = runes.reduce(func(acc, _rune): return acc + _rune.current_stack, 0) * quanity
+func upgrade_gem(runes: Array[Item], gems: Array[Item], quantity: int = 1) -> bool:
+	var amount_gems_in_inventory = gems.reduce(func(acc, _gem): return acc + _gem.current_stack, -1) * quantity
+	var amount_runes_in_inventory = runes.reduce(func(acc, _rune): return acc + _rune.current_stack, 0) * quantity
 	
 	if amount_gems_in_inventory == 0:
 		# var message = LocalizationManager.get_gem_alert_text("gem_upgrade_max_gem")
-		var message = "Not enought Gems of same type to upgrade."
-		GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+		var message = "Not enough Gems of same type to upgrade."
+		GameManager.show_instant_message(message, InstantMessage.TYPE.WARNING)
 		return false
 
 	# Verifica se tem runas suficientes
 	if amount_runes_in_inventory < num_runes_to_upgrade:
 		var message = LocalizationManager.get_gem_alert_text("gem_upgrade_no_runes")
-		GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+		GameManager.show_instant_message(message, InstantMessage.TYPE.WARNING)
 		return false
 
 	if not can_upgrade_gem():
 		var message = LocalizationManager.get_gem_alert_text("gem_upgrade_max_gem")
-		GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+		GameManager.show_instant_message(message, InstantMessage.TYPE.WARNING)
 		return false
 
 	if CurrencyManager.get_total_coins() < price_to_upgrade:
 		var message = LocalizationManager.get_gem_alert_text("gem_upgrade_no_money")
-		GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+		GameManager.show_instant_message(message, InstantMessage.TYPE.WARNING)
 		return false
 
 	# Verifica se o nível do jogador é suficiente
 	if PlayerStats.level < self.item_level:
 		var message = LocalizationManager.get_gem_alert_text("gem_upgrade_level_required")
-		GameEvents.show_instant_message(message, InstantMessage.TYPE.DANGER)
+		GameManager.show_instant_message(message, InstantMessage.TYPE.DANGER)
 		return false
 	
 	# Verifica se todas as runas são válidas
@@ -272,21 +272,21 @@ func upgrade_gem(runes: Array[Item], gems: Array[Item], quanity: int = 1) -> boo
 		new_gem.is_unique = new_gem.setup_gem_unique()
 		new_gem.item_attributes = new_gem._generate_attributes()
 		new_gem.item_texture = new_gem.generate_gem_texture()
-		new_gem.current_stack = quanity
+		new_gem.current_stack = quantity
 		
 		
 		if InventoryManager.add_item(new_gem):
 			CurrencyManager.remove_coins(price_to_upgrade)
-			InventoryManager.remove_items(runes, quanity * num_runes_to_upgrade)
-			InventoryManager.remove_items(gems, quanity * 2)
+			InventoryManager.remove_items(runes, quantity * num_runes_to_upgrade)
+			InventoryManager.remove_items(gems, quantity * 2)
 			
 			var message = LocalizationManager.get_gem_alert_text("gem_upgrade_success")
-			message = LocalizationManager.format_text_with_params(message, {"amount": quanity, "gem": new_gem.item_name})
-			GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+			message = LocalizationManager.format_text_with_params(message, {"amount": quantity, "gem": new_gem.item_name})
+			GameManager.show_instant_message(message, InstantMessage.TYPE.WARNING)
 			return true
 		else:
 			var message = LocalizationManager.get_gem_alert_text("gem_no_slots_free")
-			GameEvents.show_instant_message(message, InstantMessage.TYPE.WARNING)
+			GameManager.show_instant_message(message, InstantMessage.TYPE.WARNING)
 			return false
 
 	return false
@@ -346,24 +346,24 @@ func _calculate_spawn_chance(enemy_level: int) -> float:
 			quality_modifier = 1.0
 
 	# Modificador de dificuldade
-	var difficulty = GameEvents.current_map.get_difficulty()
-	var difficulty_modifier = GameEvents.get_drop_modificator_by_difficult(difficulty)
+	var difficulty = GameManager.current_map.get_difficulty()
+	var difficulty_multiply = GameManager.DROP_DIFFICULT_MODIFIER.get(difficulty, 0.8)
 	
 	# Modificador de nível da gema
 	var level_modifier = 1.0 - (item_level / 100.0)
 
-	var calculated_spawn_chance = base_chance * quality_modifier * difficulty_modifier * level_modifier
+	var calculated_spawn_chance = base_chance * quality_modifier * difficulty_multiply * level_modifier
 	return clamp(calculated_spawn_chance, 0.01, 1.0)
 
 
 func _generate_attributes() -> Array[ItemAttribute]:
 	var attributes: Array[ItemAttribute] = []
-	var attribute = ItemAttribute.new(gem_type, 0)
-	attribute.type = gem_type
-
 	var base_value = _calculate_final_attribute_value()
+
+	var attribute = ItemAttribute.new()
 	attribute.base_value = base_value
 	attribute.value = base_value
+	attribute.type = gem_type
 
 	if self.gem_quality == QUALITY.PRISTINE and is_unique:
 		attribute.value *= 1.5
@@ -413,23 +413,23 @@ func setup_gem_unique() -> bool:
 	if gem_type in GemConsts.UNIQUE_GEMS_KEYS:
 		return true
 
-	# Gemas Mythical (PRISTINE) têm 50% de chance de serem únicase terem 1 atributo a mais
-	if self.gem_quality == QUALITY.PRISTINE:
+	# Gemas Mythical (PRISTINE) têm 50% de chance de serem únicas e terem 1 atributo a mais
+	if gem_quality == QUALITY.PRISTINE:
 		return randf() <= 0.5
 
 	return false
 
 
 func calculate_price_to_upgrade() -> int:
-	var base_price = self.item_price
+	var base_price = item_price
 	var quality_multiplier = get_quality_multiplier()
-	var rune_cost = num_runes_to_upgrade * self.item_price * 0.1 # Cada runa custa 10% do preço da gema atual
+	var rune_cost = num_runes_to_upgrade * item_price * 0.1 # Cada runa custa 10% do preço da gema atual
 	return int(base_price * quality_multiplier + rune_cost)
 
 
 func generate_gem_texture() -> Texture2D:
 	var color = GemConsts.GEM_COLOR_NAME_KEY.get(gem_type, "default")
-	var quality_key = GemConsts.GEM_QUALITY_KEY[self.gem_quality]
+	var quality_key = GemConsts.GEM_QUALITY_KEY[gem_quality]
 
 	var file_path = ""
 	if is_unique and gem_type in GemConsts.UNIQUE_GEMS_KEYS:

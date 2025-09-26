@@ -12,8 +12,8 @@ class CoinDictionary:
 	var silvers: int
 	var bronzes: int
 
-	func _init(_godls: int = 0, _silvers: int = 0, _bronzes: int = 0) -> void:
-		golds = _godls
+	func _init(_golds: int = 0, _silvers: int = 0, _bronzes: int = 0) -> void:
+		golds = _golds
 		silvers = _silvers
 		bronzes = _bronzes
 
@@ -99,3 +99,16 @@ func has_enough_coins(amount: int) -> bool:
 # Função para converter valores (útil para outras partes do código)
 func convert_to_bronze(gold: int, silver: int, bronze: int) -> int:
 	return (gold * GOLD_TO_SILVER * SILVER_TO_BRONZE) + (silver * SILVER_TO_BRONZE) + bronze
+
+
+func save_data() -> Dictionary:
+	return {
+		"gold_coins": gold_coins,
+		"silver_coins": silver_coins,
+		"bronze_coins": bronze_coins
+	}
+
+func load_data(data: Dictionary):
+	gold_coins = data.get("gold_coins", 0)
+	silver_coins = data.get("silver_coins", 0)
+	bronze_coins = data.get("bronze_coins", 0)

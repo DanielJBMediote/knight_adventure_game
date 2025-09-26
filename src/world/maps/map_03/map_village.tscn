@@ -23,11 +23,16 @@ vertices = PackedVector2Array(4438, 10, 4438, 598, 4118, 598, 3978, 548.141, 397
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3, 4), PackedInt32Array(4, 5, 6, 0), PackedInt32Array(7, 8, 9), PackedInt32Array(2, 10, 11, 12), PackedInt32Array(13, 0, 6, 9), PackedInt32Array(12, 3, 2), PackedInt32Array(14, 12, 11, 15), PackedInt32Array(16, 14, 15, 17), PackedInt32Array(18, 17, 15, 19), PackedInt32Array(20, 21, 19, 15, 22), PackedInt32Array(22, 15, 23, 24), PackedInt32Array(24, 23, 13, 25), PackedInt32Array(6, 26, 7), PackedInt32Array(9, 25, 13), PackedInt32Array(9, 6, 7)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(2624, 672, 3104, 672, 3104, 768, 4128, 768, 4128, 608, 4448, 608, 4448, 0, 2624, 0), PackedVector2Array(2816, 160, 2944, 160, 2944, 256, 3136, 256, 3200, 352, 3680, 352, 3680, 480, 3968, 480, 3968, 544, 3904, 608, 3520, 608, 3456, 480, 3360, 480, 3328, 448, 3232, 448, 3168, 416, 2944, 416, 2880, 480, 2816, 480)])
 
-[node name="MapVillage" type="Node2D" groups=["maps"]]
+[node name="MapVillage" type="Node2D" node_paths=PackedStringArray("start_position") groups=["maps"]]
 script = ExtResource("1_id7sn")
-map_name = "Village"
+map_name = "Farmers Village"
+start_position = NodePath("StartPosition")
 level_mob_min = 1
 level_mob_max = 5
+
+[node name="StartPosition" type="Marker2D" parent="."]
+position = Vector2(123, 589)
+metadata/_edit_lock_ = true
 
 [node name="CameraMapController" parent="." instance=ExtResource("2_0wnlr")]
 right_marker_position = Vector2(4480, 360)
@@ -237,7 +242,7 @@ tile_map_data = PackedByteArray("AADOAHkAAwAQAAIAAADhAGwAAwASAAIAAACeAHwAAwADACA
 position = Vector2(1408, 512)
 
 [node name="Player" parent="Entities" instance=ExtResource("4_p7nqb")]
-position = Vector2(325, 589)
+position = Vector2(1056, 454)
 
 [node name="SpawnZone" parent="." instance=ExtResource("10_e0syh")]
 position = Vector2(3658, 778)

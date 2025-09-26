@@ -1,6 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://cf0qdgwe72vtp"]
+[gd_scene load_steps=8 format=3 uid="uid://cf0qdgwe72vtp"]
 
-[ext_resource type="Texture2D" uid="uid://en2ws0o3r862" path="res://assets/ui/user_interface.png" id="1_doq6e"]
+[ext_resource type="Theme" uid="uid://dc8nwn3fsn3ag" path="res://src/ui/themes/base_panel.tres" id="1_46ssm"]
 [ext_resource type="Script" uid="uid://0dcg17eebqna" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_and_equips_panel_ui.gd" id="2_iqjlt"]
 [ext_resource type="Theme" uid="uid://cjexjpecooqvc" path="res://src/ui/themes/inventory_titles_labels.tres" id="2_xven0"]
 [ext_resource type="Theme" uid="uid://bt4xc82v1emtq" path="res://src/ui/themes/btn_close_inventory.tres" id="3_iqjlt"]
@@ -8,19 +8,11 @@
 [ext_resource type="PackedScene" uid="uid://3lxtv3ol7qqs" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/equipments_content_ui.tscn" id="7_d3dn8"]
 [ext_resource type="PackedScene" uid="uid://bvg01jmtkcafx" path="res://src/gameplay/mechanics/inventory/stats_and_equips_panel/stats_content_ui.tscn" id="8_d3dn8"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ad3cl"]
-texture = ExtResource("1_doq6e")
-texture_margin_left = 51.0
-texture_margin_top = 44.0
-texture_margin_right = 45.0
-texture_margin_bottom = 48.0
-region_rect = Rect2(25, 112, 144, 136)
-
 [node name="StatsAndEquipsUI" type="Panel"]
 custom_minimum_size = Vector2(420, 420)
 offset_right = 420.0
 offset_bottom = 420.0
-theme_override_styles/panel = SubResource("StyleBoxTexture_ad3cl")
+theme = ExtResource("1_46ssm")
 script = ExtResource("2_iqjlt")
 metadata/_edit_lock_ = true
 

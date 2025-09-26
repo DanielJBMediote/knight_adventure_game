@@ -130,13 +130,13 @@ func _calculate_spawn_chance() -> float:
 	# Modificador de raridade (itens mais raros são mais raros)
 	var rarity_modifier = 1.0 - (item_rarity * 0.1)
 
-	# Modificador de dificultade
-	var difficulty = GameEvents.current_map.difficulty
-	var difficulty_modifier = GameEvents.get_drop_modificator_by_difficult(difficulty)
+	# Modificador de dificuldade
+	var difficulty = GameManager.current_map.get_difficulty()
+	var difficulty_multiply = GameManager.DROP_DIFFICULT_MODIFIER.get(difficulty, 0.8)
 
 	# Modificador de nível (itens de nível mais alto são mais raros)
 	var level_modifier = 1.0 - (item_level * 0.005)
-	var calculated_spawn_chance = base_chance * type_weight * rarity_modifier * level_modifier * difficulty_modifier
+	var calculated_spawn_chance = base_chance * type_weight * rarity_modifier * level_modifier * difficulty_multiply
 	return clamp(calculated_spawn_chance, 0.001, 1.0)
 
 
@@ -179,7 +179,7 @@ func _determine_equipment_subcategory() -> Item.SUBCATEGORY:
 		return Item.SUBCATEGORY.ACCESSORY
 
 
-## Determina se vai ser do grupo Communs ou Únicos
+## Determina se vai ser do grupo Comuns ou Únicos
 func _determine_equipment_group() -> GROUPS:
 	var total_weight = 0
 
@@ -227,8 +227,8 @@ func _calculate_item_rarity(_enemy_stats: EnemyStats) -> Item.RARITY:
 		return EquipmentConsts.UNIQUE_SETS_RARITY[equipment_set]
 	else:
 		var player_level = PlayerStats.level
-		var map_level = GameEvents.current_map.get_min_mob_level()
-		var difficulty = GameEvents.current_map.difficulty
+		var map_level = GameManager.current_map.get_min_mob_level()
+		var difficulty = GameManager.current_map.difficulty
 		return Item.get_item_rarity_by_difficult_and_player_level(player_level, map_level, difficulty)
 
 
@@ -326,7 +326,7 @@ func _generate_equipment_id() -> String:
 	var equip_set_str = EquipmentConsts.EQUIPMENTS_SET_KEYS[equipment_set]
 	var equip_type_str = EquipmentConsts.EQUIPMENT_TYPE_KEYS[equipment_type]
 	var id_parts: Array[String] = ["EQUIPMENT", equip_set_str, equip_type_str, str("L", item_level), RARITY_KEYS[item_rarity]]
-	return Item._generate_item_id(id_parts)
+	return _generate_item_id(id_parts)
 
 
 func _generate_name() -> String:
@@ -349,7 +349,7 @@ func _generate_name() -> String:
 	return base_name
 
 
-func _generate_equipment_descriptions() -> Array[String]:
+func _generate_equipment_descriptions() -> String:
 	var set_name_key = EquipmentConsts.EQUIPMENTS_SET_KEYS[equipment_set]
 	var base_description = LocalizationManager.get_equipment_text("base_set_description")
 
@@ -367,7 +367,8 @@ func _generate_equipment_descriptions() -> Array[String]:
 		# complementary_desc = LocalizationManager.get_equipment_text(base_desc)
 
 	base_description = LocalizationManager.format_text_with_params(base_description, params)
-	return [base_description, complementary_desc]
+
+	return base_description + "\n" + complementary_desc
 
 
 func _setup_base_values() -> void:

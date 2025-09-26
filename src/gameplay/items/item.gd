@@ -31,13 +31,13 @@ const SUBCATEGORY_KEYS = {
 	SUBCATEGORY.RESOURCE: "resource",
 }
 
-@export var item_id: String
-@export var item_name: String
-@export var item_descriptions: Array[String] = []
+@export var item_id: String = ""
+@export var item_name: String = ""
+@export var item_descriptions: String = ""
 @export var item_category: CATEGORY = CATEGORY.MISCELLANEOUS
 @export var item_subcategory: SUBCATEGORY = SUBCATEGORY.RESOURCE
 @export var item_rarity: RARITY = RARITY.COMMON
-@export var item_texture: Texture2D
+@export var item_texture: Texture2D = null
 @export var item_price: int = 0
 @export var item_level: int = 0
 @export var item_usable: bool = false
@@ -48,7 +48,7 @@ const SUBCATEGORY_KEYS = {
 @export var current_stack: int = 1
 @export var is_unique: bool = false
 
-## Refencence of Inventory Slots
+## Reference of Inventory Slots
 var slot_index_ref: int = -1
 
 var _item_action: ItemAction
@@ -89,7 +89,7 @@ func get_sort_value() -> int:
 	return self.item_subcategory
 
 
-static func _generate_item_id(strings: Array[String]) -> String:
+func _generate_item_id(strings: Array[String]) -> String:
 	var joined_strings = "_".join(strings)
 	return ("ITEM_ID_" + joined_strings).to_upper()
 
@@ -148,6 +148,148 @@ func _calculate_item_price(base_value: int = 1) -> int:
 	return roundi(value)
 
 
+func get_item_action(_item: Item = self) -> ItemAction:
+	return _item.item_action
+
+
+func get_item_attributes(_item: Item = self) -> Array[ItemAttribute]:
+	return _item.item_attributes
+
+## Return de corresponding Color of item rarity
+func get_item_rarity_text_color() -> Color:
+	match item_rarity:
+		RARITY.COMMON:
+			return Color.WHITE_SMOKE
+		RARITY.UNCOMMON:
+			return Color.WEB_GREEN
+		RARITY.RARE:
+			return Color(0.2, 0.4, 0.6, 1.0)
+		RARITY.EPIC:
+			return Color(0.5, 0.0, 0.85, 1.0) # Roxo
+		RARITY.LEGENDARY:
+			return Color.ORANGE_RED
+		RARITY.MYTHICAL:
+			return Color.RED
+		_:
+			return Color.WHITE_SMOKE
+
+
+func load_texture_with_fallback(file_path: String, fallback_path: String, attribute_key: String) -> Texture2D:
+	# Primeiro tenta carregar a textura específica
+	if FileAccess.file_exists(file_path):
+		var texture = load(file_path)
+		if texture is Texture2D:
+			return texture
+		else:
+			printerr("-- File founded! But invalid texture: ", file_path)
+
+	# Fallback 1: Tenta a versão básica sem rank
+	if FileAccess.file_exists(fallback_path):
+		var texture = load(fallback_path)
+		if texture is Texture2D:
+			print("Using fallback to: ", attribute_key)
+			return texture
+
+	# Fallback 3: Textura programática vermelha de erro
+	printerr("No texture found for: ", get_category_text(item_category), " ", attribute_key)
+	return create_error_texture()
+
+
+## Cria uma textura vermelha de erro programaticamente
+func create_error_texture() -> Texture2D:
+	var image = Image.create(64, 64, false, Image.FORMAT_RGBA8)
+	image.fill(Color.RED)
+
+	var texture = ImageTexture.create_from_image(image)
+	return texture
+
+func save_data() -> Dictionary:
+	return Utils.serialize_object(self)
+
+static func load_data(data: Dictionary) -> Item:
+	return Utils.deserialize_object(data) as Item
+
+# func save_data() -> Dictionary:
+# 	var saved_data = {
+# 		"__resource_type": "Item",
+# 		"item_id": item_id,
+# 		"item_name": item_name,
+# 		"item_descriptions": item_descriptions,
+# 		"item_category": item_category,
+# 		"item_subcategory": item_subcategory,
+# 		"item_rarity": item_rarity,
+# 		"item_price": item_price,
+# 		"item_level": item_level,
+# 		"item_usable": item_usable,
+# 		"spawn_chance": spawn_chance,
+# 		"stackable": stackable,
+# 		"max_stack": max_stack,
+# 		"current_stack": current_stack,
+# 		"is_unique": is_unique,
+# 		"slot_index_ref": slot_index_ref
+# 	}
+	
+# 	# Adiciona a textura se existir
+# 	if item_texture and item_texture.resource_path:
+# 		saved_data["item_texture_path"] = item_texture.resource_path
+	
+# 	# Serializa o item_action
+# 	if item_action:
+# 		saved_data["item_action"] = item_action.save()
+	
+# 	# Serializa os atributos
+# 	if not item_attributes.is_empty():
+# 		var attributes_data = []
+# 		for attr in item_attributes:
+# 			attributes_data.append(attr.save())
+# 		saved_data["item_attributes"] = attributes_data
+	
+# 	return saved_data
+
+# func load_data(data: Dictionary) -> void:
+# 	if data.is_empty():
+# 		return
+	
+# 	# Carrega propriedades básicas
+# 	item_id = data.get("item_id", "")
+# 	item_name = data.get("item_name", "")
+# 	item_descriptions = data.get("item_descriptions", [])
+# 	item_category = data.get("item_category", CATEGORY.MISCELLANEOUS)
+# 	item_subcategory = data.get("item_subcategory", SUBCATEGORY.RESOURCE)
+# 	item_rarity = data.get("item_rarity", RARITY.COMMON)
+# 	item_price = data.get("item_price", 0)
+# 	item_level = data.get("item_level", 0)
+# 	item_usable = data.get("item_usable", false)
+# 	spawn_chance = data.get("spawn_chance", 1.0)
+# 	stackable = data.get("stackable", false)
+# 	max_stack = data.get("max_stack", 1)
+# 	current_stack = data.get("current_stack", 1)
+# 	is_unique = data.get("is_unique", false)
+# 	slot_index_ref = data.get("slot_index_ref", -1)
+	
+# 	# Carrega a textura se existir caminho
+# 	if data.has("item_texture_path"):
+# 		var texture_path = data["item_texture_path"]
+# 		if ResourceLoader.exists(texture_path):
+# 			item_texture = load(texture_path)
+	
+# 	# Carrega o item_action
+# 	if data.has("item_action"):
+# 		var action_data = data["item_action"]
+# 		if item_action == null:
+# 			item_action = ItemAction.new()
+# 		item_action.load_data(action_data)
+	
+# 	# Carrega os atributos
+# 	if data.has("item_attributes"):
+# 		var attributes_data = data["item_attributes"]
+# 		item_attributes.clear()
+# 		for attr_data in attributes_data:
+# 			var attr = ItemAttribute.new()
+# 			attr.load_data(attr_data)
+# 			item_attributes.append(attr)
+
+
 ## Calcula um modificador baseado na diferença entre nível do jogador e nível do mapa
 static func get_player_level_modifier(player_level: int, map_level: int) -> float:
 	var level_difference = player_level - map_level
@@ -199,10 +341,10 @@ static func get_item_rarity_by_difficult_and_player_level(
 
 	# Chances base para cada dificuldade
 	var base_thresholds = {
-		GameEvents.DIFFICULTY.NORMAL: [0.70, 0.20, 0.07, 0.025, 0.004, 0.001],
-		GameEvents.DIFFICULTY.PAINFUL: [0.50, 0.30, 0.12, 0.05, 0.025, 0.005],
-		GameEvents.DIFFICULTY.FATAL: [0.30, 0.35, 0.20, 0.10, 0.04, 0.01],
-		GameEvents.DIFFICULTY.INFERNAL: [0.15, 0.25, 0.30, 0.15, 0.10, 0.05]
+		GameManager.DIFFICULTY.NORMAL: [0.70, 0.20, 0.07, 0.025, 0.004, 0.001],
+		GameManager.DIFFICULTY.PAINFUL: [0.50, 0.30, 0.12, 0.05, 0.025, 0.005],
+		GameManager.DIFFICULTY.FATAL: [0.30, 0.35, 0.20, 0.10, 0.04, 0.01],
+		GameManager.DIFFICULTY.INFERNAL: [0.15, 0.25, 0.30, 0.15, 0.10, 0.05]
 	}
 
 	# Aplica o modificador de qualidade (reduz chance de comum, aumenta chance de raro)
@@ -236,62 +378,6 @@ static func get_item_rarity_by_difficult_and_player_level(
 	return RARITY.COMMON
 
 
-func get_item_action(_item: Item = self) -> ItemAction:
-	return _item.item_action
-
-
-func get_item_attributes(_item: Item = self) -> Array[ItemAttribute]:
-	return _item.item_attributes
-
-## Return de corresponding Color of item rarity
-func get_item_rarity_text_color() -> Color:
-	match item_rarity:
-		RARITY.COMMON:
-			return Color.WHITE_SMOKE
-		RARITY.UNCOMMON:
-			return Color.WEB_GREEN
-		RARITY.RARE:
-			return Color(0.2, 0.4, 0.6, 1.0)
-		RARITY.EPIC:
-			return Color(0.5, 0.0, 0.85, 1.0) # Roxo
-		RARITY.LEGENDARY:
-			return Color.ORANGE_RED
-		RARITY.MYTHICAL:
-			return Color.RED
-		_:
-			return Color.WHITE_SMOKE
-
-
-func load_texture_with_fallback(file_path: String, fallback_path: String, attribute_key: String) -> Texture2D:
-	# Primeiro tenta carregar a textura específica
-	if FileAccess.file_exists(file_path):
-		var texture = load(file_path)
-		if texture is Texture2D:
-			return texture
-		else:
-			printerr("-- File founded! But invalid texture: ", file_path)
-
-	# Fallback 1: Tenta a versão básica sem rank
-	if FileAccess.file_exists(fallback_path):
-		var texture = load(fallback_path)
-		if texture is Texture2D:
-			print("Using fallback to: ", attribute_key)
-			return texture
-
-	# Fallback 3: Textura programática vermelha de erro
-	printerr("No texture finded for: ", get_category_text(item_category), " ", attribute_key)
-	return create_error_texture()
-
-
-## Cria uma textura vermelha de erro programaticamente
-func create_error_texture() -> Texture2D:
-	var image = Image.create(64, 64, false, Image.FORMAT_RGBA8)
-	image.fill(Color.RED)
-
-	var texture = ImageTexture.create_from_image(image)
-	return texture
-
-
 ## Returns the Category name of Item
 static func get_category_text(_category_key: CATEGORY) -> String:
 	var category_key = CATEGORY_KEYS[_category_key]
@@ -314,9 +400,9 @@ static func get_rarity_prefix_text(_rarity: RARITY) -> String:
 	return LocalizationManager.get_item_rarity_prefix_text(rarity_key)
 
 
-static func get_rarity_sufix_text(_rarity: RARITY) -> String:
+static func get_rarity_suffix_text(_rarity: RARITY) -> String:
 	var rarity_key = RARITY_KEYS[_rarity]
-	return LocalizationManager.get_item_rarity_sufix_text(rarity_key)
+	return LocalizationManager.get_item_rarity_suffix_text(rarity_key)
 
 
 static func get_random_rarity() -> RARITY:

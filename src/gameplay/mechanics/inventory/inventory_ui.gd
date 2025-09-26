@@ -67,13 +67,6 @@ func _find_dragging_slot():
 	return null
 
 
-# func _show_item_detail_modal(item: Item) -> void:
-# 	if item:
-# 		var item_info_modal = invenory_item_detail_scene.instantiate() as InventoryItemDetailUI
-# 		GameEvents.get_player_ui().add_child(item_info_modal)
-# 		item_info_modal.setup(item)
-
-
 func _on_prev_page_pressed():
 	InventoryManager.change_page(-1)
 	update_inventory_actions_buttons()
@@ -92,4 +85,4 @@ func update_inventory_actions_buttons() -> void:
 func _on_close_inventory_button_pressed():
 	self.hide()
 	InventoryManager.is_open = false
-	InventoryManager.inventory_oppened.emit(false)
+	InventoryManager.inventory_opened.emit(false)

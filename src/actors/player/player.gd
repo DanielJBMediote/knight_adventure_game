@@ -32,19 +32,19 @@ const DASH_DURATION := 0.2
 const DASH_COOLDOWN := 0.5
 const COYOTE_TIME_DURATION := 0.15
 
-# Váriaveis responsável pela direções
+# Variáveis responsável pela direções
 var input_direction := 0.0
 var face_direction: int = 1 # Direção do jogador
 
-# Váriaveis responsável pelo pulo do personagem
+# Variáveis responsável pelo pulo do personagem
 var has_started_jump := false # valor para manipular as transições entre o Jump e o Fall
-var has_played_peak_animation := false # Valor true quando o pulo atinge o a alturamaxima
+var has_played_peak_animation := false # Valor true quando o pulo atinge o a altura maxima
 
 # Distância entre o jogador e a plataforma
 var distance_to_floor_down: float = 0.0
 var distance_to_floor_up: float = 0.0
 
-# Váriaveis responsável por calcular o terreno/angula e rampas
+# Variáveis responsável por calcular o terreno/angula e rampas
 var floor_angle: float = 0.0 # Angulo com relação ao chão
 var slope_angle: float = 0.0 # Angulo da rampa
 var slope_direction: float = 1.0 # 1 para Direita e -1 para Esquerda
@@ -58,7 +58,7 @@ var air_dash_count := 1
 
 var coyote_time_active := false
 
-# Váriaveis responsável pela transição do crouch
+# Variáveis responsável pela transição do crouch
 var is_crouch_transition_complete = false # Valor que manipula a transição de Crouch
 
 @export var knockback_resistance: float = 1.0:
@@ -73,7 +73,7 @@ var is_crouch_transition_complete = false # Valor que manipula a transição de 
 		if PlayerStats:
 			PlayerStats.set_knockback_force(value)
 
-# Váriaveis responsável pelos ataques/combos
+# Variáveis responsável pelos ataques/combos
 var attack_count: int = 0
 
 var is_idle := false
@@ -91,7 +91,7 @@ var is_invulnerable := false
 
 func _ready() -> void:
 	add_to_group("player")
-
+	PlayerStats.set_player_reference(self)
 	if PlayerStats:
 		PlayerStats.update_knockback_resistance(knockback_resistance)
 		PlayerStats.update_knockback_force(knockback_force)
@@ -110,7 +110,7 @@ func _ready() -> void:
 
 	float_damage_control.hitted.connect(_on_take_damage)
 	PlayerStats.level_updated.connect(_show_level_up_effect)
-	PlayerStats.experiance_added.connect(_show_experience_effect)
+	PlayerStats.experience_added.connect(_show_experience_effect)
 
 
 func apply_damage_on_player(damage_data: DamageData, enemy_stats: EnemyStats):
@@ -191,8 +191,15 @@ func calculate_distance_to_floors() -> void:
 
 
 func handle_actions() -> void:
-	if Input.is_action_just_pressed("Test"):
+	if Input.is_action_just_pressed("key_test"):
+		InventoryManager.create_random_items()
+		CurrencyManager.add_coins(45987321)
 		PlayerStats.add_experience(PlayerStats.exp_to_next_level + 1)
+		PlayerStats.update_hit_rate_status_effects(ItemAttribute.TYPE.POISON_HIT_RATE, 0.3)
+		GameManager.update_checkpoint()
+	if Input.is_action_just_pressed("save_game"):
+		GameManager.save_game()
+		# PlayerStats.add_experience(PlayerStats.exp_to_next_level + 1)
 	if is_on_floor():
 		handle_actions_when_on_floor()
 	else:
@@ -236,7 +243,7 @@ func handle_actions_when_on_floor() -> void:
 		velocity.y = - JUMP_FORCE
 		is_jumping = true
 		has_started_jump = true
-		coyote_time_active = false # Resetar coyote time após pular
+		coyote_time_active = false # Reset coyote time após pular
 		coyote_timer.stop()
 
 	if can_crouch() and Input.is_action_just_pressed("crouch"):
@@ -247,7 +254,7 @@ func handle_actions_when_on_floor() -> void:
 	if input_direction != 0 and Input.is_action_just_pressed("roll"):
 		if can_roll() and PlayerStats.has_energy_to_roll():
 			is_rolling = true
-			PlayerStats.update_energy(PlayerStats.energy_cost_to_roll * -1)
+			PlayerStats.update_energy(PlayerStats.ENERGY_COST_TO_ROLL * -1)
 
 	if can_attack():
 		is_attacking = Input.get_action_strength("attack")
@@ -483,7 +490,7 @@ func handle_air_animations(anim_direction: String):
 
 
 func handle_ground_animations(anim_direction: String):
-	# Reseta rotação quando no chão
+	# Restaurar rotação quando no chão
 	current_rotation = lerp(current_rotation, 0.0, ROTATION_SPEED * get_physics_process_delta_time())
 	sprite_2d.rotation_degrees = current_rotation
 
@@ -497,7 +504,7 @@ func handle_ground_animations(anim_direction: String):
 
 	# Movimento básico no chão
 	if is_moving and abs(velocity.x) > 0:
-		animation_player.play("Runing" + anim_direction)
+		animation_player.play("Running" + anim_direction)
 	elif is_idle:
 		if not animation_player.current_animation.begins_with("Crouch"):
 			animation_player.play("Idle" + anim_direction)
@@ -525,7 +532,7 @@ func handle_crouch_animations(anim_direction: String):
 		animation_player.play("Crouching" + anim_direction)
 
 
-func update_colision_shape_when_crouch() -> void:
+func update_collision_shape_when_crouch() -> void:
 	if is_crouching:
 		collision_shape.shape.size = Vector2(64, 100)
 		collision_shape.position.y = -22
@@ -535,10 +542,10 @@ func update_colision_shape_when_crouch() -> void:
 	pass
 
 
-func _on_animation_player_animatioan_finished(anim_name: StringName) -> void:
+func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name.begins_with("Attack") or anim_name.begins_with("CrouchAttack"):
 		is_attacking = false
-		PlayerStats.update_energy(PlayerStats.energy_cost_to_attack * -1)
+		PlayerStats.update_energy(PlayerStats.ENERGY_COST_TO_ATTACK * -1)
 	if anim_name.begins_with("Rolling"):
 		is_rolling = false
 	if anim_name.begins_with("CrouchingTransition"):
